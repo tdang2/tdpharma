@@ -25,6 +25,21 @@ module Pharma
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Set up amazon s3 and paperclip
+    config.paperclip_defaults = {
+        :storage => :s3,
+        :s3_credentials => {
+            :bucket => ENV['S3_BUCKET_NAME'],
+            :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+            :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+        },
+        :url =>':s3_domain_url',                                    # Need these to get correct end point
+        :path => ':class/:attachment/:id/:style/:filename',         # Need these to get correct end point
+    }
+
+    config.action_mailer.asset_host = ENV["ASSET_HOST"]
+    config.action_mailer.default_url_options = { host: ENV["ASSET_HOST"] }
+
     config.middleware.use Rack::Cors do
       allow do
         origins '*'
@@ -34,5 +49,12 @@ module Pharma
                  :methods => [:get, :post, :options, :delete, :put, :patch]
       end
     end
+
+    # Set up generators
+    config.generators do |generate|
+      generate.test_framework :rspec
+      generate.fixture_replacement :factory_girl
+    end
+
   end
 end

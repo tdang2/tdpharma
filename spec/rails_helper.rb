@@ -5,6 +5,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require "shoulda/matchers"
+require 'database_cleaner'
 require "webmock/rspec"
 require 'factory_girl_rails'
 
@@ -53,4 +54,24 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
+
+  # Factory Girl and database cleaner configuration
+  config.include FactoryGirl::Syntax::Methods
+  config.before(:suite) do
+    begin
+      DatabaseCleaner.clean_with(:truncation)
+      DatabaseCleaner.start
+      FactoryGirl.lint
+    ensure
+      DatabaseCleaner.clean
+    end
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+
+  # Set up devise
+  config.include Devise::TestHelpers, type: :controller
+
 end

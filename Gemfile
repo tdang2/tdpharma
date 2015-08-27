@@ -46,7 +46,7 @@ group :development, :test do
   gem 'spring'
   gem "dotenv-rails"
   gem "awesome_print"
-  gem "factory_girl_rails", :require => false
+  gem "factory_girl_rails"
   gem 'rspec-rails', '~> 3.0'
   gem "pry-rails"
 end

@@ -39,8 +39,8 @@ class Ability
 
   def owner
     can :manage, User
-    can :assign_roles, User
     can :manage, Role
+    can :assign_roles, User
     can :read, :all
   end
 

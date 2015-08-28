@@ -8,19 +8,19 @@ FactoryGirl.define do
 
     factory :owner do
       after(:create) do |u|
-        u.roles << create(:owner_role)
+        u.roles << Role.find_or_create_by(name: 'owner')
       end
     end
 
     factory :manager do
       after(:create) do |u|
-        u.roles << create(:manager_role)
+        u.roles << Role.find_or_create_by(name: 'manger')
       end
     end
 
     factory :employee do
       after(:create) do |u|
-        u.roles << create(:employee_role)
+        u.roles << Role.find_or_create_by(name: 'employee')
       end
     end
 

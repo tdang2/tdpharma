@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_many :employees, class_name: User, foreign_key: :manager_id
   belongs_to :manager, class_name: User
+  belongs_to :store
 
   ### Callbacks ####################################################################################
 

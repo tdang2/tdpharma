@@ -67,6 +67,18 @@ RSpec.configure do |config|
     end
   end
 
+  # Example to set up company, stores, users, and roles
+  # config.before(:each) do
+  #   @company = create(:company)
+  #   @owner = @company.stores.first.employees.first
+  #   @owner.roles << Role.find_or_create_by!(name: 'owner')
+  #   @company.stores.first.employees.where.not(id: @owner.id).each do |e|
+  #     e.roles << Role.find_or_create_by!(name: 'employee')
+  #   end
+  #   @company.stores.first.employees.last.roles << Role.find_or_create_by!(name: 'manager')
+  #   @manager = @company.stores.first.employees.last
+  # end
+
   config.after(:each) do
     DatabaseCleaner.clean
   end

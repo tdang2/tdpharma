@@ -5,6 +5,14 @@ FactoryGirl.define do
     description 'My awesome company'
     phone '123-123-1234'
     website 'company.com'
+
+    # Store association
+    transient do
+      stores_count 3
+    end
+    after(:create) do |com, eva|
+      create_list(:store, eva.stores_count, company: com)
+    end
   end
 
 end

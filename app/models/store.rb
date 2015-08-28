@@ -1,4 +1,4 @@
-class Company < ActiveRecord::Base
+class Store < ActiveRecord::Base
   ### Attributes ###################################################################################
 
   ### Constants ####################################################################################
@@ -6,7 +6,8 @@ class Company < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_many :stores
+  belongs_to :company
+  has_many   :employees, class_name: User
 
   ### Callbacks ####################################################################################
 

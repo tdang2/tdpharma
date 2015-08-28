@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
   it {should have_and_belong_to_many :roles}
   it {should have_many :employees}
   it {should belong_to :manager}
+  it {should belong_to :store}
 
   it {expect(create(:owner)).to be_valid}
   it {expect(create(:manager)).to be_valid}

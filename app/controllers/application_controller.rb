@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password, :first_name, :last_name, :phone )}
   end
 
+
   def authenticate_user_from_token!
     if params[:email] and params[:token]
       user = User.find_by(email: params[:email])

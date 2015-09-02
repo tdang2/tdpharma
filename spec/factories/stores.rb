@@ -3,6 +3,7 @@ FactoryGirl.define do
     sequence(:name) {|n| "Store#{n}"}
     phone '431-128-1298'
     company
+    association :location, factory: :location
 
     # Employee association
     transient do

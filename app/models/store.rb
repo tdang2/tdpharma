@@ -8,6 +8,7 @@ class Store < ActiveRecord::Base
   ### Associations #################################################################################
   belongs_to :company
   has_many   :employees, class_name: User
+  has_one :location, as: :locationable
 
   ### Callbacks ####################################################################################
 

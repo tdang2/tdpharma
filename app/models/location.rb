@@ -1,18 +1,19 @@
-class Company < ActiveRecord::Base
+class Location < ActiveRecord::Base
   ### Attributes ###################################################################################
+  after_validation :geocode, :if => :address_changed?
 
   ### Constants ####################################################################################
 
   ### Includes and Extensions ######################################################################
+  geocoded_by :address
 
   ### Associations #################################################################################
-  has_many :stores
-  has_one :location, as: :locationable
+  belongs_to :locationable, polymorphic: true
 
   ### Callbacks ####################################################################################
 
   ### Validations ##################################################################################
-  validates :name, presence: true
+  validates :address, presence: true
 
   ### Scopes #######################################################################################
 

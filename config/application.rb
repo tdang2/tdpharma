@@ -25,6 +25,8 @@ module Pharma
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    config.active_job.queue_adapter = :delayed_job
+
     # Set up amazon s3 and paperclip
     config.paperclip_defaults = {
         :storage => :s3,

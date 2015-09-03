@@ -4,11 +4,12 @@ require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require "shoulda/matchers"
+require 'shoulda/matchers'
 require 'database_cleaner'
-require "webmock/rspec"
+require 'webmock/rspec'
 require 'devise'
 require 'factory_girl_rails'
+require 'paperclip/matchers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -86,5 +87,8 @@ RSpec.configure do |config|
 
   # Set up devise
   config.include Devise::TestHelpers, type: :controller
+
+  # Set up paperclip
+  config.include Paperclip::Shoulda::Matchers
 
 end

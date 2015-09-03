@@ -5,5 +5,6 @@ RSpec.describe Store, type: :model do
   it {should have_many :employees}
   it {should belong_to :company}
   it {should have_one :location}
+  it {should have_one :image}
 
 end

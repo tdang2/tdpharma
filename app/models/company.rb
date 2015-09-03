@@ -6,8 +6,10 @@ class Company < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_many :stores
-  has_one :location, as: :locationable
+  has_many :stores, dependent: :destroy
+  has_many :employees, through: :stores, dependent: :destroy
+  has_many :locations, through: :stores, dependent: :destroy
+  has_one :image, as: :imageable, dependent: :destroy
 
   ### Callbacks ####################################################################################
 
@@ -17,6 +19,9 @@ class Company < ActiveRecord::Base
   ### Scopes #######################################################################################
 
   ### Other ########################################################################################
+  accepts_nested_attributes_for :image
+  accepts_nested_attributes_for :locations
+  accepts_nested_attributes_for :stores
 
   ### Class Methods ################################################################################
 

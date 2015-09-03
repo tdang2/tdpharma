@@ -8,7 +8,8 @@ class Store < ActiveRecord::Base
   ### Associations #################################################################################
   belongs_to :company
   has_many   :employees, class_name: User
-  has_one :location, as: :locationable
+  has_one :location, as: :locationable, dependent: :destroy
+  has_one :image, as: :imageable, dependent: :destroy
 
   ### Callbacks ####################################################################################
 
@@ -18,6 +19,8 @@ class Store < ActiveRecord::Base
   ### Scopes #######################################################################################
 
   ### Other ########################################################################################
+  accepts_nested_attributes_for :location
+  accepts_nested_attributes_for :image
 
   ### Class Methods ################################################################################
 

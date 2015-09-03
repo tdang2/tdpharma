@@ -5,7 +5,6 @@ FactoryGirl.define do
     description 'My awesome company'
     phone '123-123-1234'
     website 'company.com'
-    association :location, factory: :location
 
     # Store association
     transient do

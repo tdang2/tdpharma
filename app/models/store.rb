@@ -20,8 +20,9 @@ class Store < ActiveRecord::Base
   ### Scopes #######################################################################################
 
   ### Other ########################################################################################
-  accepts_nested_attributes_for :location
-  accepts_nested_attributes_for :image
+  accepts_nested_attributes_for :location, allow_destroy: :true
+  accepts_nested_attributes_for :image, allow_destroy: :true
+  accepts_nested_attributes_for :documents, allow_destroy: :true
 
   ### Class Methods ################################################################################
 

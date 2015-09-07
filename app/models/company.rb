@@ -10,6 +10,7 @@ class Company < ActiveRecord::Base
   has_many :employees, through: :stores, dependent: :destroy
   has_many :locations, through: :stores, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
+  has_many :documents, through: :stores, dependent: :destroy
 
   ### Callbacks ####################################################################################
 

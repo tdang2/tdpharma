@@ -1,7 +1,7 @@
 class Image < ActiveRecord::Base
   ### Attributes ###################################################################################
   has_attached_file :photo, :styles => { :medium => '300x300', :thumb => '100x100'},
-                    :default_url => '/images/medicine.svg'
+                    :default_url => :set_default_url_on_type
 
   ### Constants ####################################################################################
   DIRECT_UPLOAD_URL_FORMAT = ENV['DIRECT_UPLOAD_URL_FORMAT']
@@ -60,4 +60,10 @@ class Image < ActiveRecord::Base
   end
 
   private
+
+  def set_default_url_on_type
+    "/images/#{imageable_type.downcase}.svg"
+  end
+
+
 end

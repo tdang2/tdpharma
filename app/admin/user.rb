@@ -3,7 +3,7 @@ ActiveAdmin.register User do
   controller do
     def permitted_params
       params.permit :utf8, :_method, :_method, :authenticity_token, :commit, :id,
-          user: [:id, :email, :first_name, :password, :phone, :last_name], role_ids: []
+          user: [:id, :email, :first_name, :password, :phone, :last_name, role_ids: []]
     end
 
     def update
@@ -50,12 +50,21 @@ ActiveAdmin.register User do
       row :first_name
       row :last_name
       row :phone
-      row :roles
       row :sign_in_count
       row :created_at
       row :updated_at
       row :manager
       row :employee
+    end
+    if user.roles.count > 0
+      panel 'Role' do
+        table_for g=user.roles do |d|
+          if g.present?
+            column('ID', :sortable => :id) {|d| link_to "#{d.id}", admin_role_path(d)}
+            column :name
+          end
+        end
+      end
     end
   end
 

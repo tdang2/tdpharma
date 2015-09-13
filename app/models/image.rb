@@ -43,6 +43,7 @@ class Image < ActiveRecord::Base
       self.processed = false
       self.photo_file_name = photo_name
       self.photo_file_size = s3_photo.content_length
+      # TODO: Perform a check for content type before save so user can't just upload anything
       self.photo_content_type = s3_photo.content_type
     end
   rescue Aws::S3::Errors::NoSuchKey => e

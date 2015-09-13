@@ -43,6 +43,7 @@ class Document < ActiveRecord::Base
       s3_doc = S3_PUBLIC_BUCKET.object(doc_name)
       self.processed = false
       self.photo_file_name = doc_name
+      # TODO: Perform a check for content type before save so user can't just upload anything
       self.photo_file_size = s3_doc.content_length
       self.photo_content_type = s3_doc.content_type
     end

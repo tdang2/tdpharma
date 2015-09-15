@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915033614) do
+ActiveRecord::Schema.define(version: 20150915035320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,15 +113,16 @@ ActiveRecord::Schema.define(version: 20150915033614) do
     t.float    "avg_sale_amount"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.integer  "store_id"
   end
 
-  create_table "inventory_items_medicines", id: false, force: :cascade do |t|
-    t.integer "medicine_id"
+  create_table "inventory_items_med_batches", id: false, force: :cascade do |t|
+    t.integer "med_batch_id"
     t.integer "inventory_item_id"
   end
 
-  add_index "inventory_items_medicines", ["inventory_item_id"], name: "index_inventory_items_medicines_on_inventory_item_id", using: :btree
-  add_index "inventory_items_medicines", ["medicine_id"], name: "index_inventory_items_medicines_on_medicine_id", using: :btree
+  add_index "inventory_items_med_batches", ["inventory_item_id"], name: "index_inventory_items_med_batches_on_inventory_item_id", using: :btree
+  add_index "inventory_items_med_batches", ["med_batch_id"], name: "index_inventory_items_med_batches_on_med_batch_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "name"
@@ -189,6 +190,20 @@ ActiveRecord::Schema.define(version: 20150915033614) do
   add_index "mailboxer_receipts", ["notification_id"], name: "index_mailboxer_receipts_on_notification_id", using: :btree
   add_index "mailboxer_receipts", ["receiver_id", "receiver_type"], name: "index_mailboxer_receipts_on_receiver_id_and_receiver_type", using: :btree
 
+  create_table "med_batches", force: :cascade do |t|
+    t.date     "mfg_date"
+    t.date     "expire_date"
+    t.string   "package"
+    t.string   "mfg_location"
+    t.integer  "amount_per_pkg"
+    t.string   "amount_unit"
+    t.integer  "medicine_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree
+
   create_table "medicines", force: :cascade do |t|
     t.string   "name"
     t.integer  "concentration"
@@ -227,8 +242,9 @@ ActiveRecord::Schema.define(version: 20150915033614) do
     t.string   "name"
     t.string   "phone"
     t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "inventory_items_count"
   end
 
   add_index "stores", ["company_id"], name: "index_stores_on_company_id", using: :btree

@@ -1,4 +1,4 @@
-class Medicine < ActiveRecord::Base
+class MedBatch < ActiveRecord::Base
   ### Attributes ###################################################################################
 
   ### Constants ####################################################################################
@@ -6,13 +6,13 @@ class Medicine < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_many :med_batches, dependent: :destroy
-  has_many :inventory_items, through: :med_batches
+  belongs_to :medicine
+  has_and_belongs_to_many :inventory_items
 
   ### Callbacks ####################################################################################
 
   ### Validations ##################################################################################
-  validates :name, :med_form, presence: true
+  validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, presence: true
 
   ### Scopes #######################################################################################
 

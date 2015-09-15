@@ -11,6 +11,8 @@ class Store < ActiveRecord::Base
   has_one :location, as: :locationable, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
   has_many :documents, as: :documentable, dependent: :destroy
+  has_many :inventory_items, dependent: :destroy, counter_cache: true
+  has_many :medicines, through: :inventory_items
 
   ### Callbacks ####################################################################################
 

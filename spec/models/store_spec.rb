@@ -7,5 +7,7 @@ RSpec.describe Store, type: :model do
   it {should have_one :location}
   it {should have_one :image}
   it {should have_many :documents}
+  it {should have_many :inventory_items}
+  it {should have_many(:medicines).through(:inventory_items)}
 
 end

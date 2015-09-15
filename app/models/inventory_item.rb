@@ -6,7 +6,9 @@ class InventoryItem < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_and_belongs_to_many :medicines
+  belongs_to :store
+  has_and_belongs_to_many :med_batches
+  has_one :medicine, through: :med_batches
 
   ### Callbacks ####################################################################################
 

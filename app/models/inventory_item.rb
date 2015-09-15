@@ -1,4 +1,4 @@
-class Medicine < ActiveRecord::Base
+class InventoryItem < ActiveRecord::Base
   ### Attributes ###################################################################################
 
   ### Constants ####################################################################################
@@ -6,12 +6,12 @@ class Medicine < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_and_belongs_to_many :inventory_items
+  has_and_belongs_to_many :medicines
 
   ### Callbacks ####################################################################################
 
   ### Validations ##################################################################################
-  validates :name, :concentration, :concentration_unit, :med_form, presence: true
+
 
   ### Scopes #######################################################################################
 

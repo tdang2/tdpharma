@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914210003) do
+ActiveRecord::Schema.define(version: 20150915033614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,24 @@ ActiveRecord::Schema.define(version: 20150914210003) do
   end
 
   add_index "images", ["imageable_id"], name: "index_images_on_imageable_id", using: :btree
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.integer  "amount",              default: 0
+    t.float    "avg_purchase_price"
+    t.float    "avg_sale_price"
+    t.float    "avg_purchase_amount"
+    t.float    "avg_sale_amount"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  create_table "inventory_items_medicines", id: false, force: :cascade do |t|
+    t.integer "medicine_id"
+    t.integer "inventory_item_id"
+  end
+
+  add_index "inventory_items_medicines", ["inventory_item_id"], name: "index_inventory_items_medicines_on_inventory_item_id", using: :btree
+  add_index "inventory_items_medicines", ["medicine_id"], name: "index_inventory_items_medicines_on_medicine_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "name"

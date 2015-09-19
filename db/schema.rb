@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915035320) do
+ActiveRecord::Schema.define(version: 20150919143416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,30 @@ ActiveRecord::Schema.define(version: 20150915035320) do
 
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "depth",          default: 0
+    t.integer  "children_count", default: 0
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "categories", ["lft"], name: "index_categories_on_lft", using: :btree
+  add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
+  add_index "categories", ["rgt"], name: "index_categories_on_rgt", using: :btree
+
+  create_table "categories_stores", id: false, force: :cascade do |t|
+    t.integer "store_id"
+    t.integer "category_id"
+    t.integer "discount"
+  end
+
+  add_index "categories_stores", ["category_id"], name: "index_categories_stores_on_category_id", using: :btree
+  add_index "categories_stores", ["store_id"], name: "index_categories_stores_on_store_id", using: :btree
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
@@ -114,6 +138,8 @@ ActiveRecord::Schema.define(version: 20150915035320) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.integer  "store_id"
+    t.integer  "status",              default: 0
+    t.integer  "category_id"
   end
 
   create_table "inventory_items_med_batches", id: false, force: :cascade do |t|

@@ -8,6 +8,7 @@ class InventoryItem < ActiveRecord::Base
 
   ### Associations #################################################################################
   belongs_to :store
+  belongs_to :category
   has_and_belongs_to_many :med_batches
   has_one :medicine, through: :med_batches
 

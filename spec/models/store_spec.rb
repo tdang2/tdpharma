@@ -9,5 +9,6 @@ RSpec.describe Store, type: :model do
   it {should have_many :documents}
   it {should have_many :inventory_items}
   it {should have_many(:medicines).through(:inventory_items)}
+  it {should have_and_belong_to_many :categories}
 
 end

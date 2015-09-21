@@ -13,6 +13,7 @@ class MedBatch < ActiveRecord::Base
 
   ### Validations ##################################################################################
   validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, presence: true
+  validate :must_have_medicine
 
   ### Scopes #######################################################################################
 
@@ -26,4 +27,7 @@ class MedBatch < ActiveRecord::Base
 
 
   private
+  def must_have_medicine
+    errors.add(:medicine, 'does not exist') if medicine.nil?
+  end
 end

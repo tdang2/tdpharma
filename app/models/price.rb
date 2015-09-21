@@ -11,7 +11,7 @@ class Price < ActiveRecord::Base
   ### Callbacks ####################################################################################
 
   ### Validations ##################################################################################
-  validates :amount, presence: true
+  validates :amount, presence: true, numericality: {greater_than: 0}
 
   ### Scopes #######################################################################################
 

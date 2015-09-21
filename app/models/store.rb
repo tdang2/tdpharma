@@ -14,6 +14,8 @@ class Store < ActiveRecord::Base
   has_many :inventory_items, dependent: :destroy, counter_cache: true
   has_many :medicines, through: :inventory_items
   has_and_belongs_to_many :categories
+  has_many :purchases, class_name: Transaction, foreign_key: :buyer_id
+  has_many :sales, class_name: Transaction, foreign_key: :seller_id
 
   ### Callbacks ####################################################################################
 

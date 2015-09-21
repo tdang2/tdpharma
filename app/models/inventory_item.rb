@@ -11,6 +11,8 @@ class InventoryItem < ActiveRecord::Base
   belongs_to :category
   has_and_belongs_to_many :med_batches
   has_one :medicine, through: :med_batches
+  has_many :sales, class_name: Transaction, foreign_key: :seller_item_id
+  has_many :purchases, class_name: Transaction, foreign_key: :buyer_item_id
 
   ### Callbacks ####################################################################################
 

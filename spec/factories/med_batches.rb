@@ -6,6 +6,7 @@ FactoryGirl.define do
     amount_per_pkg 20
     amount_unit 'tablets'
     mfg_location 'Vietnam'
+    association :medicine, factory: :medicine
   end
 
 end

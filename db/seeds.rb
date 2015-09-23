@@ -6,9 +6,9 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-# Role.create(name: 'owner')
-# Role.create(name: 'manager')
-# Role.create(name: 'employee')
+Role.create(name: 'owner')
+Role.create(name: 'manager')
+Role.create(name: 'employee')
 
 # First level category
 c1 = Category.create(name: "Baby & Kids")

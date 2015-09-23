@@ -236,7 +236,6 @@ ActiveRecord::Schema.define(version: 20150923023818) do
     t.string   "med_form"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.integer  "med_batches_count"
   end
 
   create_table "prices", force: :cascade do |t|

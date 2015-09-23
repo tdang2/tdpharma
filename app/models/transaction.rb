@@ -21,8 +21,9 @@ class Transaction < ActiveRecord::Base
 
   ### Validations ##################################################################################
   # A store can sell to patients which does not have a buyer_id and buyer_item_id
-  validates :amount, :due_date, :seller_id, :seller_item_id, :sale_user_id ,presence: true
-  validate :price_existence
+  validates :amount, :due_date, presence: true
+  validate :price_existence, :author_existence, :item_existence
+
 
   ### Scopes #######################################################################################
 
@@ -41,6 +42,14 @@ class Transaction < ActiveRecord::Base
   end
 
   def price_existence
-    errors.add(:price, 'must exist') if price.nil?
+    errors.add(:price, 'must exist') if self.price.nil?
+  end
+
+  def item_existence
+    errors.add(:transaction, 'must have an item') if seller_item_id.nil? and buyer_item_id.nil?
+  end
+
+  def author_existence
+    errors.add(:transaction, 'needs an user to sign off') if sale_user_id.nil? and purchase_user_id.nil?
   end
 end

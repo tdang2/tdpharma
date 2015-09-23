@@ -6,8 +6,8 @@ class Medicine < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
+  has_many :inventory_items, as: :itemable
   has_many :med_batches, dependent: :destroy
-  has_many :inventory_items, through: :med_batches
 
   accepts_nested_attributes_for :med_batches
 

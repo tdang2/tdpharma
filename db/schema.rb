@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921035837) do
+ActiveRecord::Schema.define(version: 20150923023818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,15 +140,9 @@ ActiveRecord::Schema.define(version: 20150921035837) do
     t.integer  "store_id"
     t.integer  "status",              default: 0
     t.integer  "category_id"
+    t.integer  "itemable_id"
+    t.string   "itemable_type"
   end
-
-  create_table "inventory_items_med_batches", id: false, force: :cascade do |t|
-    t.integer "med_batch_id"
-    t.integer "inventory_item_id"
-  end
-
-  add_index "inventory_items_med_batches", ["inventory_item_id"], name: "index_inventory_items_med_batches_on_inventory_item_id", using: :btree
-  add_index "inventory_items_med_batches", ["med_batch_id"], name: "index_inventory_items_med_batches_on_med_batch_id", using: :btree
 
   create_table "locations", force: :cascade do |t|
     t.string   "name"
@@ -224,8 +218,13 @@ ActiveRecord::Schema.define(version: 20150921035837) do
     t.integer  "amount_per_pkg"
     t.string   "amount_unit"
     t.integer  "medicine_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "inventory_item_id"
+    t.integer  "store_id"
+    t.integer  "total_units"
+    t.integer  "user_id"
+    t.float    "price"
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree
@@ -237,6 +236,7 @@ ActiveRecord::Schema.define(version: 20150921035837) do
     t.string   "med_form"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "med_batches_count"
   end
 
   create_table "prices", force: :cascade do |t|

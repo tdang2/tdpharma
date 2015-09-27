@@ -3,13 +3,14 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
-      resource :users, only: [:index, :show, :update, :destroy]
-      resource :categories, only: [:index, :show, :update, :destroy, :create]
+      resources :users, only: [:show, :update, :destroy, :index]
+      resources :categories, only: [:index, :show, :update, :destroy, :create]
     end
   end
 
   devise_for :users, controllers: {
-     registrations: 'users/registrations'
+     registrations: 'users/registrations',
+     sessions: 'users/sessions'
   }
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

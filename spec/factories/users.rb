@@ -4,7 +4,6 @@ FactoryGirl.define do
     password 'password'
     sequence(:first_name) {|n| "Tri#{n}"}
     last_name 'Dang'
-    authentication_token SecureRandom.base64
     store
 
     factory :owner do
@@ -16,7 +15,7 @@ FactoryGirl.define do
 
     factory :manager do
       after(:create) do |u|
-        u.roles << Role.find_or_create_by(name: 'manger')
+        u.roles << Role.find_or_create_by(name: 'manager')
         u.save!
       end
     end

@@ -31,16 +31,13 @@ class Ability
   end
 
   def manager
-    can :manage, User, id: @user.id
-    can :assign_roles, User
-    cannot :destroy, User
+    can :manage, User, store_id: @user.store_id
     can :read, :all
   end
 
   def owner
-    can :manage, User
+    can :manage, User, store_id: @user.store_id
     can :manage, Role
-    can :assign_roles, User
     can :read, :all
   end
 

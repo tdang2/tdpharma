@@ -1,0 +1,19 @@
+require 'rails_helper'
+require 'helpers/user_helper'
+
+RSpec.describe Users::SessionsController, type: :controller do
+  describe 'Sign in User' do
+    include_context 'user params'
+    before do
+      u1    # create user 1
+    end
+
+    it 'should sign in user as json' do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      post :create, user: user_sign_in_params, :format => :json
+      expect(response.status).to eq 201
+      expect(JSON.parse(response.body)['email']).to eq u1.email
+      expect(JSON.parse(response.body)['authentication_token']).not_to eq nil
+    end
+  end
+end

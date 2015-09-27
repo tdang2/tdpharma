@@ -1,4 +1,4 @@
-module CategoryHelper
+module CategoryDataHelper
   def prepare_data
     @s = create(:store)
     @c1 = create(:category)    # master categories
@@ -13,6 +13,6 @@ module CategoryHelper
 end
 
 RSpec.configure do |config|
-  config.include CategoryHelper
+  config.include CategoryDataHelper
 end
 

@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   has_many :purchases, class_name: Transaction, foreign_key: :purchase_user_id
 
   ### Callbacks ####################################################################################
+  before_save :ensure_authentication_token
 
   ### Validations ##################################################################################
   validates :first_name, :last_name, presence: true
@@ -31,8 +32,8 @@ class User < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
-  def ensure_authentication_token
-    if authentication_token.blank?
+  def ensure_authentication_token(force=false)
+    if authentication_token.blank? or force == true
       self.authentication_token = generate_authentication_token
       self.save!
     end

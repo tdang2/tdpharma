@@ -5,13 +5,18 @@ class Api::V1::UsersController < ApplicationController
   load_and_authorize_resource
 
   def index
-
+    begin
+      @users = current_user.store.employees
+      render json: @users.as_json(only: [:email, :first_name, :last_name]), status: 200
+    rescue StandardError => e
+      render json: {errors: e.message}.to_json, status: 400
+    end
   end
 
   def update
     begin
-      @user.update!(user_params)
-      authorize! :assign_roles, @user if params[:role_ids]
+      @user.update!(user_params) if params[:user] and current_user == @user
+      assign_roles if params[:role_ids] and (current_user.has_role?(:manager) or current_user.has_role?(:owner))
       render json: @user.as_json(include: :roles), status: 200
     rescue StandardError => e
       render json: {errors: e.message}.to_json,  status: 400
@@ -28,6 +33,7 @@ class Api::V1::UsersController < ApplicationController
 
   def destroy
     begin
+      sign_out current_user if @user == current_user
       @user.destroy!
       render json: {message: 'success'}.to_json, status: 200
     rescue StandardError => e
@@ -37,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
 
   private
   def set_user
-    @user = current_user
+    @user = params[:id].nil? ? current_user : User.find(params[:id])
   end
 
   def assign_roles

@@ -9,8 +9,10 @@ class Category < ActiveRecord::Base
 
   ### Associations #################################################################################
   has_many :inventory_items
+  has_one :image, as: :imageable
   has_and_belongs_to_many :stores
 
+  accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
 

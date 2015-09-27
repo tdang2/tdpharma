@@ -16,4 +16,23 @@ RSpec.describe Users::SessionsController, type: :controller do
       expect(JSON.parse(response.body)['authentication_token']).not_to eq nil
     end
   end
+
+  describe 'Sign out User' do
+    include_context 'user params'
+    it 'should sign out user as json' do
+      @request.env['devise.mapping'] = Devise.mappings[:user]
+      sign_in u1
+      delete :destroy, :format => :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['message']).to eq 'Log out successfully'
+    end
+    it 'should sign out after sign in as json' do
+      u1
+      @request.env['devise.mapping'] = Devise.mappings[:user]
+      post :create, user: user_sign_in_params, :format => :json
+      delete :destroy, :format => :json
+      expect(response.status).to eq 200
+      expect(subject.current_user).to eq nil
+    end
+  end
 end

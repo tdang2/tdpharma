@@ -37,13 +37,18 @@ class Category < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
+  def get_info(store_id)
+    res = self.as_json
+    res[:children] = self.get_children(store_id)
+    res
+  end
+
   def get_children(store_id)
     res = []
     return res if self.children_count == 0
     Store.find(store_id).categories.where(parent_id: id).order(:name).each_with_index do |c, i|
       res[i] = c.as_json
-      res[i][:children] = []
-      res[i][:children] << c.get_children(store_id)
+      res[i][:children] = c.get_children(store_id)
     end
     res
   end

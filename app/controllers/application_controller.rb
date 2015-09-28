@@ -25,4 +25,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def prepare_json(result)
+    {
+        authentication_token: current_user.authentication_token,
+        data: result
+    }
+  end
+
 end

@@ -9,7 +9,7 @@ class Api::V1::UsersController < ApplicationController
       @users = current_user.store.employees
       render json: @users.as_json(only: [:email, :first_name, :last_name]), status: 200
     rescue StandardError => e
-      render json: {errors: e.message}.to_json, status: 400
+      render json: prepare_json({errors: e.message}), status: 400
     end
   end
 
@@ -19,7 +19,7 @@ class Api::V1::UsersController < ApplicationController
       assign_roles if params[:role_ids] and (current_user.has_role?(:manager) or current_user.has_role?(:owner))
       render json: @user.as_json(include: :roles), status: 200
     rescue StandardError => e
-      render json: {errors: e.message}.to_json,  status: 400
+      render json: prepare_json({errors: e.message}),  status: 400
     end
   end
 
@@ -27,7 +27,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       render json: @user.as_json(include: :roles), status: 200
     rescue StandardError => e
-      render json: {errors: e.message}.to_json, status: 400
+      render json: prepare_json({errors: e.message}), status: 400
     end
   end
 
@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
       @user.destroy!
       render json: {message: 'success'}.to_json, status: 200
     rescue StandardError => e
-      render json: {errors: e.message}.to_json, status: 400
+      render json: prepare_json({errors: e.message}), status: 400
     end
   end
 

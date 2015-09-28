@@ -16,3 +16,11 @@ RSpec.configure do |config|
   config.include CategoryDataHelper
 end
 
+RSpec.shared_context 'category params', :cat_a => :cat_b do
+  let(:category_params) do
+    {
+        name: 'whatever',
+        parent_id: @c3.id,
+    }
+  end
+end

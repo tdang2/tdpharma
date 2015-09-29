@@ -10,6 +10,7 @@ class MedBatch < ActiveRecord::Base
   belongs_to :store
   belongs_to :user
   belongs_to :inventory_item
+  belongs_to :category
 
   ### Callbacks ####################################################################################
   after_create :add_inventory_item
@@ -36,7 +37,7 @@ class MedBatch < ActiveRecord::Base
 
   def add_inventory_item
     if store_id and user_id
-      inventory = Store.find(store_id).inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id)
+      inventory = Store.find(store_id).inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       if inventory
         t = inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
                                         due_date: DateTime.now, paid: true, performed: true,

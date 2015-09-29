@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:show, :update, :destroy, :index]
       resources :categories, only: [:index, :show, :update, :destroy, :create]
+      resources :medicines, only: [:index, :show, :update, :destroy, :create]
     end
   end
 

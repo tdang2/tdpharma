@@ -47,6 +47,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def assign_roles
+    @user.roles.clear
     @user.roles << Role.where(id: params[:role_ids])
   end
 

@@ -9,5 +9,6 @@ RSpec.describe MedBatch, type: :model do
   it {should belong_to :inventory_item}
   it {should belong_to :medicine}
   it {should belong_to :user}
+  it {should belong_to :category}
 
 end

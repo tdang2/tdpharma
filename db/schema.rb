@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923023818) do
+ActiveRecord::Schema.define(version: 20150929033335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,7 @@ ActiveRecord::Schema.define(version: 20150923023818) do
     t.integer  "total_units"
     t.integer  "user_id"
     t.float    "price"
+    t.integer  "category_id"
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree

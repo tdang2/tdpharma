@@ -36,5 +36,8 @@ class Store < ActiveRecord::Base
 
 
   private
+  def photo_thumb
+    self.image.photo.url(:thumb)
+  end
 
 end

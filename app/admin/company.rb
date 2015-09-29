@@ -1,5 +1,5 @@
 ActiveAdmin.register Company do
-  menu priority: 5
+  menu priority: 6
 
   controller do
     def permitted_params

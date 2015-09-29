@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.2.2"
+ruby "2.2.3"
 
 gem 'airbrake'
 gem 'awesome_nested_set'
@@ -29,7 +29,7 @@ gem 'aws-sdk-v1'            # Need this for paperclip Jul-14-2015
 gem 'workflow'
 gem 'mailboxer', :git => 'git://github.com/div/mailboxer.git', :branch => 'rails42-foreigner'
 gem 'lazy_high_charts'
-gem 'rails', '4.2.1'
+gem 'rails', '~> 4.2.1'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'

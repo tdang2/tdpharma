@@ -1,5 +1,5 @@
 ActiveAdmin.register Store do
-  menu priority: 6
+  menu priority: 7
 
   controller do
     def permitted_params

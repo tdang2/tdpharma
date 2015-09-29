@@ -32,5 +32,8 @@ class Company < ActiveRecord::Base
 
 
   private
+  def photo_url
+    self.image.photo.url(:thumb)
+  end
 
 end

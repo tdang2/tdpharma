@@ -6,7 +6,7 @@ class Medicine < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
 
   ### Associations #################################################################################
-  has_many :inventory_items, as: :itemable
+  has_many :inventory_items, as: :itemable, dependent: :destroy
   has_many :med_batches, dependent: :destroy
   has_one :image, as: :imageable
 
@@ -30,4 +30,8 @@ class Medicine < ActiveRecord::Base
 
 
   private
+  def photo_thumb
+    self.image.photo.url(:thumb)
+  end
+
 end

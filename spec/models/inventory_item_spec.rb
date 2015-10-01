@@ -7,4 +7,6 @@ RSpec.describe InventoryItem, type: :model do
   it {should belong_to :itemable}
   it {should have_many :purchases}
   it {should have_many :sales}
+  it {should have_one :sale_price}
+
 end

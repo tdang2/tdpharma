@@ -21,6 +21,7 @@ RSpec.shared_context 'category params', :cat_a => :cat_b do
     {
         name: 'whatever',
         parent_id: @c3.id,
+        image_attributes: {photo: nil}
     }
   end
 end

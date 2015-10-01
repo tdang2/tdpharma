@@ -29,7 +29,7 @@ class Category < ActiveRecord::Base
   def self.get_store_categories(store_id)
     res = []
     Store.find(store_id).categories.where(parent_id: nil).order(:name).each do |c|
-      x = c.as_json(methods: :photo_url)
+      x = c.as_json(methods: :photo_thumb)
       x[:children] = c.get_children(store_id)
       res << x
     end
@@ -38,8 +38,12 @@ class Category < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
+  def photo_thumb
+    self.image.photo.url(:thumb) if self.image
+  end
+
   def get_info(store_id)
-    res = self.as_json(methods: :photo_url)
+    res = self.as_json(methods: :photo_thumb)
     res[:children] = self.get_children(store_id)
     res
   end
@@ -48,16 +52,13 @@ class Category < ActiveRecord::Base
     res = []
     return res if self.children_count == 0
     Store.find(store_id).categories.where(parent_id: id).order(:name).each_with_index do |c, i|
-      res[i] = c.as_json(methods: :photo_url)
+      res[i] = c.as_json(methods: :photo_thumb)
       res[i][:children] = c.get_children(store_id)
     end
     res
   end
 
   private
-  def photo_url
-    self.image.photo.url(:thumb)
-  end
 
 
 end

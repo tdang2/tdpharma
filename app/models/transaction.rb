@@ -12,17 +12,14 @@ class Transaction < ActiveRecord::Base
   belongs_to :buyer_item, class_name: InventoryItem, foreign_key: :buyer_item_id
   belongs_to :sale_user, class_name: User, foreign_key: :sale_user_id
   belongs_to :purchase_user, class_name: User, foreign_key: :purchase_user_id
-  has_one :price, as: :priceable
-
-  accepts_nested_attributes_for :price
 
   ### Callbacks ####################################################################################
   after_save :update_inventories
 
   ### Validations ##################################################################################
   # A store can sell to patients which does not have a buyer_id and buyer_item_id
-  validates :amount, :due_date, presence: true
-  validate :price_existence, :author_existence, :item_existence
+  validates :amount, :total_price, :due_date, presence: true
+  validate :author_existence, :item_existence
 
 
   ### Scopes #######################################################################################
@@ -39,10 +36,6 @@ class Transaction < ActiveRecord::Base
   private
   def update_inventories
     # After a transaction, must update inventories of the seller.
-  end
-
-  def price_existence
-    errors.add(:price, 'must exist') if self.price.nil?
   end
 
   def item_existence

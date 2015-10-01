@@ -39,12 +39,12 @@ class MedBatch < ActiveRecord::Base
     if store_id and user_id
       inventory = Store.find(store_id).inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       if inventory
-        t = inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
+        self.update!(inventory_item_id: inventory.id)
+        inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
                                         due_date: DateTime.now, paid: true, performed: true,
-                                        purchase_user_id: user_id, buyer_item_id: inventory.id,
-                                        price_attributes: {amount: price, discount: 0})
+                                        purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price)
         inventory.update!(amount: inventory.amount + self.total_units,
-                          avg_purchase_price: inventory.purchases.average(:amount),
+                          avg_purchase_price: inventory.purchases.average(:total_price),
                           avg_purchase_amount: inventory.purchases.average(:amount))
       end
     end

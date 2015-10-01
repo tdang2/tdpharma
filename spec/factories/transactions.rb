@@ -1,10 +1,10 @@
 FactoryGirl.define do
   factory :transaction do
     amount 100
+    total_price 120.5
     delivery_time DateTime.now
     due_date DateTime.now
     association :seller, factory: :store
-    association :price, factory: :price
     association :seller_item, factory: :inventory_item
 
     trait :paid do

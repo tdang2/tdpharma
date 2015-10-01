@@ -7,14 +7,10 @@ FactoryGirl.define do
     amount_unit 'tablets'
     mfg_location 'Vietnam'
     total_units 100
-    price 200.5
+    total_price 200.5
     association :user, factory: :user
     association :store, factory: :store
     association :medicine, factory: :medicine
-
-    after(:build) do |t|
-
-    end
   end
 
 end

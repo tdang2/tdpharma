@@ -27,11 +27,11 @@ class Medicine < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
-
+  def photo_thumb
+    self.image.photo.url(:thumb) if self.image
+  end
 
   private
-  def photo_thumb
-    self.image.photo.url(:thumb)
-  end
+
 
 end

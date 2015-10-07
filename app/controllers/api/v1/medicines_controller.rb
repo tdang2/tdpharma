@@ -14,7 +14,7 @@ class Api::V1::MedicinesController < ApplicationController
 
   def create
     begin
-      med = Medicine.find_or_create_by!(medicine_params)
+      med = Medicine.create(medicine_params)
       item = @store.inventory_items.find_by(itemable: med)
       render json: prepare_json(item.as_json(include: [itemable: {methods: :photo_thumb}])), status: 200
     rescue StandardError => e

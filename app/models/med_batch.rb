@@ -11,9 +11,6 @@ class MedBatch < ActiveRecord::Base
   belongs_to :user
   belongs_to :inventory_item
   belongs_to :category
-  has_one :image, as: :imageable, dependent: :destroy
-
-  accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
   after_create :add_inventory_item
@@ -46,7 +43,6 @@ class MedBatch < ActiveRecord::Base
         inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
                                         due_date: DateTime.now, paid: true, performed: true,
                                         purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price)
-        #TODO: clone med_batch image then create or overwrite the image to inventory item
         inventory.update!(amount: inventory.amount + self.total_units,
                           avg_purchase_price: inventory.purchases.average(:total_price),
                           avg_purchase_amount: inventory.purchases.average(:amount))

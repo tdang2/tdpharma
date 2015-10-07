@@ -13,7 +13,6 @@ RSpec.describe MedBatch, type: :model do
   it {should belong_to :medicine}
   it {should belong_to :user}
   it {should belong_to :category}
-  it {should have_one :image}
 
   describe 'create inventory item callback' do
     include_context 'user params'
@@ -38,9 +37,6 @@ RSpec.describe MedBatch, type: :model do
       expect(b2.inventory_item.amount).to eq 400
       expect(b2.inventory_item.avg_purchase_price).to eq 250
       expect(b2.inventory_item.avg_purchase_amount).to eq 200
-    end
-    it 'update inventory item image' do
-
     end
   end
 

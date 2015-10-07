@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
   get 'home/index'
-  root 'home#index'
+
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
-      mount_devise_token_auth_for 'User', at: 'auth'
       resources :users, only: [:show, :update, :destroy, :index]
       resources :categories, only: [:index, :show, :update, :destroy, :create]
       resources :medicines, only: [:index, :show, :update, :destroy, :create]
@@ -17,14 +16,14 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
-  # devise_scope :user do
-  #   authenticated :user do
-  #     root 'home#index', as: :authenticated_root
-  #   end
-  #   unauthenticated do
-  #     root :to => 'devise/sessions#new'
-  #   end
-  # end
+  devise_scope :user do
+    authenticated :user do
+      root 'home#index', as: :authenticated_root
+    end
+    unauthenticated do
+      root :to => 'devise/sessions#new'
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

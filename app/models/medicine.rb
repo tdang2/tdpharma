@@ -8,7 +8,7 @@ class Medicine < ActiveRecord::Base
   ### Associations #################################################################################
   has_many :inventory_items, as: :itemable, dependent: :destroy
   has_many :med_batches, dependent: :destroy
-  has_one :image, as: :imageable
+  has_one :image, as: :imageable, dependent: :destroy
 
   accepts_nested_attributes_for :med_batches
   accepts_nested_attributes_for :image

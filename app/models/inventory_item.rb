@@ -14,6 +14,7 @@ class InventoryItem < ActiveRecord::Base
   has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price
   has_many :sales, class_name: Transaction, foreign_key: :seller_item_id, dependent: :destroy
   has_many :purchases, class_name: Transaction, foreign_key: :buyer_item_id, dependent: :destroy
+  has_one :image, as: :imageable, dependent: :destroy
 
   accepts_nested_attributes_for :med_batches
   accepts_nested_attributes_for :sales
@@ -33,6 +34,9 @@ class InventoryItem < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
+  def photo_thumb
+    self.image.photo.url(:thumb) if self.image
+  end
 
   private
 end

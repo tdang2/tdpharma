@@ -33,15 +33,30 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
   end
 
   describe 'GET show' do
-
+    it 'return requested medicine' do
+      sign_in u1
+      get :show, token: u1.authentication_token, id: med1.id, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['id']).to eq med1.id
+    end
   end
 
   describe 'PATCH update' do
+    it 'update medicine attributes' do
 
+    end
+    it 'create an inventory item' do
+
+    end
+    it 'update existing inventory item' do
+
+    end
   end
 
   describe 'DELETE destroy' do
+    it 'destroy the intended medicine' do
 
+    end
   end
 
 end

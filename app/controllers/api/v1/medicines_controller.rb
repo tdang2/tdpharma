@@ -36,7 +36,7 @@ class Api::V1::MedicinesController < ApplicationController
       med = Medicine.find(params[:id])
       med.update!(medicine_params_update)
       item = @store.inventory_items.find_by(itemable: med)
-      render json: prepare_json(item.as_json(include: item.itemable, methods: :photo_thumb)), status: 200
+      render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

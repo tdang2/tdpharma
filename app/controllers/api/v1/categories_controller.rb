@@ -68,7 +68,7 @@ class Api::V1::CategoriesController < ApplicationController
 
   private
   def get_store
-    @store = current_user.store if current_user
+    @store = @current_user.store if @current_user
   end
 
   def category_params

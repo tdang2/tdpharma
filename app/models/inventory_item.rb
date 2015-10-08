@@ -21,6 +21,7 @@ class InventoryItem < ActiveRecord::Base
   accepts_nested_attributes_for :purchases
 
   ### Callbacks ####################################################################################
+  after_create :set_default_image
 
   ### Validations ##################################################################################
 
@@ -39,4 +40,10 @@ class InventoryItem < ActiveRecord::Base
   end
 
   private
+  def set_default_image
+    if self.image.nil? and !self.itemable.nil? and !self.itemable.image.nil?
+      self.create_image(photo: self.itemable.image.photo)
+    end
+  end
+
 end

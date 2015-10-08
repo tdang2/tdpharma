@@ -14,6 +14,7 @@ class Medicine < ActiveRecord::Base
   accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
+  after_create :set_default_image
 
   ### Validations ##################################################################################
   validates :name, :med_form, presence: true
@@ -28,10 +29,13 @@ class Medicine < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def photo_thumb
-    self.image.photo.url(:thumb) if self.image
+    self.image.photo.url(:thumb)
   end
 
   private
+  def set_default_image
+    self.create_image!(photo: nil) if self.image.nil?
+  end
 
 
 end

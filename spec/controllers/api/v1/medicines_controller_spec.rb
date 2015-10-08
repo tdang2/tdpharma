@@ -17,7 +17,7 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       med1
       med2
       sign_in u1
-      get :index, token: u1.authentication_token, format: :json
+      get :index, email: u1.email, token: u1.authentication_token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data'].count).to be >= 2
     end
@@ -26,16 +26,16 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
   describe 'POST create' do
     it 'create medicine and store inventory item' do
       sign_in u1
-      post :create, token: u1.authentication_token, medicine: med_params, format: :json
+      post :create, email: u1.email, token: u1.authentication_token, medicine: med_params, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['itemable']['name']).to eq 'Claritin'
+      expect(JSON.parse(response.body)['data']['name']).to eq 'Claritin'
     end
   end
 
   describe 'GET show' do
     it 'return requested medicine' do
       sign_in u1
-      get :show, token: u1.authentication_token, id: med1.id, format: :json
+      get :show, email: u1.email, token: u1.authentication_token, id: med1.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq med1.id
     end
@@ -43,7 +43,9 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
 
   describe 'PATCH update' do
     it 'update medicine attributes' do
-
+      sign_in u1
+      patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
+      expect(response.status).to eq 200
     end
     it 'create an inventory item' do
 

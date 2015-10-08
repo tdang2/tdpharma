@@ -1,10 +1,11 @@
 RSpec.shared_context 'user params', :a => :b do
   let(:s)  { create(:store)}
+  let(:s2) { create(:store)}
   let(:u1) { create(:employee, store_id: s.id)}
   let(:u2) { create(:employee, store_id: s.id)}
   let(:u3) { create(:manager, store_id: s.id)}
   let(:role1) { Role.find_by_name('guest').nil? ? create(:role) : Role.find_by_name('guest')}
-
+  let(:u1s2) { create(:employee, store_id: s2.id)}
   let(:user_sign_in_params) do
     {
         email: u1.email,

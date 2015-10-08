@@ -11,7 +11,7 @@ class Store < ActiveRecord::Base
   has_one :location, as: :locationable, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
   has_many :documents, as: :documentable, dependent: :destroy
-  has_many :inventory_items, dependent: :destroy, counter_cache: true
+  has_many :inventory_items, dependent: :destroy, counter_cache: true, foreign_key: :store_id
   has_many :med_batches, dependent: :destroy
   has_and_belongs_to_many :categories
   has_many :purchases, class_name: Transaction, foreign_key: :buyer_id

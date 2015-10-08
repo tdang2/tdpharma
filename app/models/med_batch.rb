@@ -11,12 +11,9 @@ class MedBatch < ActiveRecord::Base
   belongs_to :user
   belongs_to :inventory_item
   belongs_to :category
-  has_one :image, as: :imageable, dependent: :destroy
-
-  accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
-  after_create :add_inventory_item
+  before_save :add_inventory_item
 
   ### Validations ##################################################################################
   validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, presence: true
@@ -42,11 +39,10 @@ class MedBatch < ActiveRecord::Base
     if store_id and user_id
       inventory = Store.find(store_id).inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       if inventory
-        self.update!(inventory_item_id: inventory.id)
+        self.inventory_item_id =  inventory.id
         inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
-                                        due_date: DateTime.now, paid: true, performed: true,
-                                        purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price)
-        #TODO: clone med_batch image then create or overwrite the image to inventory item
+                                    due_date: DateTime.now, paid: true, performed: true,
+                                    purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price)
         inventory.update!(amount: inventory.amount + self.total_units,
                           avg_purchase_price: inventory.purchases.average(:total_price),
                           avg_purchase_amount: inventory.purchases.average(:amount))

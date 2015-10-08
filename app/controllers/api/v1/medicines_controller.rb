@@ -14,9 +14,10 @@ class Api::V1::MedicinesController < ApplicationController
 
   def create
     begin
-      med = Medicine.find_or_create_by!(medicine_params)
-      item = @store.inventory_items.find_by(itemable: med)
-      render json: prepare_json(item.as_json(include: [itemable: {methods: :photo_thumb}])), status: 200
+      med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
+                                        concentration_unit: params[:medicine][:concentration_unit], med_form: params[:medicine][:med_form])
+      med.update!(medicine_params)
+      render json: prepare_json(med.as_json(methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end
@@ -33,9 +34,9 @@ class Api::V1::MedicinesController < ApplicationController
   def update
     begin
       med = Medicine.find(params[:id])
-      med.update!(medicine_params)
+      med.update!(medicine_params_update)
       item = @store.inventory_items.find_by(itemable: med)
-      render json: prepare_json(item.as_json(include: [itemable: {methods: :photo_thumb}])), status: 200
+      render json: prepare_json(item.as_json(include: item.itemable, methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end
@@ -51,14 +52,19 @@ class Api::V1::MedicinesController < ApplicationController
   end
 
   private
-  def medicine_params
+  def medicine_params_update
     params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form,
                                      image_attributes: [:id, :photo],
                                      med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :mfg_location, :store_id,
                                                               :amount_per_pkg, :amount_unit, :total_units, :total_price, :user_id, :category_id])
   end
 
+  def medicine_params
+    params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form,
+                                     image_attributes: [:id, :photo])
+  end
+
   def get_store
-    @store = current_user.store if current_user
+    @store = @current_user.store if @current_user
   end
 end

@@ -218,15 +218,14 @@ ActiveRecord::Schema.define(version: 20151001033900) do
     t.integer  "amount_per_pkg"
     t.string   "amount_unit"
     t.integer  "medicine_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.integer  "inventory_item_id"
     t.integer  "store_id"
     t.integer  "total_units"
     t.integer  "user_id"
     t.float    "total_price"
     t.integer  "category_id"
-    t.boolean  "processed",         default: false
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree

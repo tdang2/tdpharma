@@ -78,7 +78,7 @@ Category.create(name: "Mushrooms", parent_id: c6.id)
 
 s = Store.create(name: 'Store')
 s.categories << Category.all
-User.create(first_name: 'Robin', last_name: 'Dang', email: 'dang.robin@gmail.com', password: 'password', store_id: s.id)
+User.create(first_name: 'Robin', last_name: 'Dang', email: 'test@test.com', password: 'password', store_id: s.id)
 User.create(first_name: 'Tri', last_name: 'Dang', email: 'tri@gmail.com', password: 'password', store_id: s.id)
 
 

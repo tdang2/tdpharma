@@ -1,6 +1,6 @@
 class Api::V1::MedicinesController < ApplicationController
   before_filter :authenticate_user_from_token!  # This is for mobile app api
-  # before_filter :authenticate_user!             # standard devise web app
+  before_filter :authenticate_user!             # standard devise web app
   before_action :get_store
 
   def index
@@ -34,7 +34,7 @@ class Api::V1::MedicinesController < ApplicationController
   def update
     begin
       med = Medicine.find(params[:id])
-      med.update!(medicine_params_update)
+      med.update!(medicine_params)
       item = @store.inventory_items.find_by(itemable: med)
       render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200
     rescue StandardError => e
@@ -52,17 +52,13 @@ class Api::V1::MedicinesController < ApplicationController
   end
 
   private
-  def medicine_params_update
+  def medicine_params
     params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form,
                                      image_attributes: [:id, :photo],
                                      med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :mfg_location, :store_id,
                                                               :amount_per_pkg, :amount_unit, :total_units, :total_price, :user_id, :category_id])
   end
 
-  def medicine_params
-    params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form,
-                                     image_attributes: [:id, :photo])
-  end
 
   def get_store
     @store = @current_user.store if @current_user

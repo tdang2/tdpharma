@@ -46,12 +46,16 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       sign_in u1
       patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
       expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['itemable']['name']).to eq 'Claritin'
     end
     it 'create an inventory item' do
-
+      patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
+      expect(@s.inventory_items.where(itemable_type: 'Medicine', itemable_id: med1.id).count).to eq 1
     end
     it 'update existing inventory item' do
-
+      create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med1, total_price: 200, total_units: 100)
+      patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
+      expect(@s.inventory_items.where(itemable: med1).first.med_batches.count).to eq 3
     end
   end
 

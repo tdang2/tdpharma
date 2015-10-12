@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
         else
           # update access token after 24 hour from last log in
           @current_user.ensure_authentication_token(true) if @current_user.updated_at + 24.hours < DateTime.now
+          sign_in @current_user
         end
       else
         render json: {errors: 'No user found'}.to_json, status: 401

@@ -1,6 +1,6 @@
 class Api::V1::CategoriesController < ApplicationController
   before_filter :authenticate_user_from_token!  # This is for mobile app api
-  # before_filter :authenticate_user!             # standard devise web app
+  before_filter :authenticate_user!             # standard devise web app
   before_action :get_store
 
   def index

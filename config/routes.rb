@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :users, only: [:show, :update, :destroy, :index]
       resources :categories, only: [:index, :show, :update, :destroy, :create]
       resources :medicines, only: [:index, :show, :update, :destroy, :create]
+      resources :inventory_items, only: [:index, :show, :update, :destroy, :create]
     end
   end
 

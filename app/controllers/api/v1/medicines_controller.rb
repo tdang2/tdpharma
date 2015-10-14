@@ -16,6 +16,7 @@ class Api::V1::MedicinesController < ApplicationController
     begin
       med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
                                         concentration_unit: params[:medicine][:concentration_unit], med_form: params[:medicine][:med_form])
+      params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
       med.update!(medicine_params)
       render json: prepare_json(med.as_json(methods: :photo_thumb)), status: 200
     rescue StandardError => e
@@ -34,6 +35,7 @@ class Api::V1::MedicinesController < ApplicationController
   def update
     begin
       med = Medicine.find(params[:id])
+      params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
       med.update!(medicine_params)
       item = @store.inventory_items.find_by(itemable: med)
       render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200

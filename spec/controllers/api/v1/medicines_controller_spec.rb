@@ -61,7 +61,10 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
 
   describe 'DELETE destroy' do
     it 'destroy the intended medicine' do
-
+      create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med1, total_price: 200, total_units: 100)
+      delete :destroy, email: u1.email, token: u1.authentication_token, id: med1.id, format: :json
+      expect(response.status).to eq 200
+      expect{Medicine.find(med1.id)}.to raise_error ActiveRecord::RecordNotFound
     end
   end
 

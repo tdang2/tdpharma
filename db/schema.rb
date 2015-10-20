@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151001033900) do
+ActiveRecord::Schema.define(version: 20151020001143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,14 +218,15 @@ ActiveRecord::Schema.define(version: 20151001033900) do
     t.integer  "amount_per_pkg"
     t.string   "amount_unit"
     t.integer  "medicine_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "inventory_item_id"
     t.integer  "store_id"
     t.integer  "total_units"
     t.integer  "user_id"
     t.float    "total_price"
     t.integer  "category_id"
+    t.boolean  "processed",         default: false
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree
@@ -290,6 +291,10 @@ ActiveRecord::Schema.define(version: 20151001033900) do
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
     t.float    "total_price"
+    t.integer  "transaction_type"
+    t.integer  "adjust_item_id"
+    t.integer  "adjust_user_id"
+    t.integer  "adjust_store_id"
   end
 
   add_index "transactions", ["sale_user_id"], name: "index_transactions_on_sale_user_id", using: :btree

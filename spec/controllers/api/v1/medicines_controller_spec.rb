@@ -1,7 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
-require 'helpers/category_helper'
-require 'helpers/medicine_helper_spec'
 
 RSpec.describe Api::V1::MedicinesController, type: :controller do
   include_context 'user params'

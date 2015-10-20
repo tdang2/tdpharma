@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   belongs_to :store
   has_many :sales, class_name: Transaction, foreign_key: :sale_user_id
   has_many :purchases, class_name: Transaction, foreign_key: :purchase_user_id
+  has_many :adjustments, class_name: Transaction, foreign_key: :adjust_user_id
 
   ### Callbacks ####################################################################################
   before_save :ensure_authentication_token

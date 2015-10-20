@@ -16,6 +16,7 @@ class Store < ActiveRecord::Base
   has_and_belongs_to_many :categories
   has_many :purchases, class_name: Transaction, foreign_key: :buyer_id
   has_many :sales, class_name: Transaction, foreign_key: :seller_id
+  has_many :adjustments, class_name:  Transaction, foreign_key: :adjust_store_id
 
   ### Callbacks ####################################################################################
 

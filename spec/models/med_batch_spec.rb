@@ -1,7 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
-require 'helpers/category_helper'
-require 'helpers/medicine_helper_spec'
 
 RSpec.describe MedBatch, type: :model do
   it {should validate_presence_of :mfg_date}

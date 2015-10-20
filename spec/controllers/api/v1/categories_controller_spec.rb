@@ -1,6 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
-require 'helpers/category_helper'
 
 RSpec.describe Api::V1::CategoriesController, type: :controller do
   include_context 'user params'

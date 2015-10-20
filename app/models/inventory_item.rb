@@ -14,11 +14,13 @@ class InventoryItem < ActiveRecord::Base
   has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price
   has_many :sales, class_name: Transaction, foreign_key: :seller_item_id, dependent: :destroy
   has_many :purchases, class_name: Transaction, foreign_key: :buyer_item_id, dependent: :destroy
+  has_many :adjustments, class_name: Transaction, foreign_key: :adjust_item_id, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
 
   accepts_nested_attributes_for :med_batches
   accepts_nested_attributes_for :sales
   accepts_nested_attributes_for :purchases
+  accepts_nested_attributes_for :sale_price
 
   ### Callbacks ####################################################################################
   after_create :set_default_image
@@ -27,6 +29,8 @@ class InventoryItem < ActiveRecord::Base
 
 
   ### Scopes #######################################################################################
+  scope :active, -> { where(status: 0) }
+  scope :inactive, -> { where(status: 1) }
 
   ### Other ########################################################################################
 

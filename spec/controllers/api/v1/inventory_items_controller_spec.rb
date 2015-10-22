@@ -21,7 +21,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data'].count).to be >= 3
       expect(JSON.parse(response.body)['data'].collect{|u| u['id']}).not_to include item3.id
-      expect(JSON.parse(response.body)['data'].collect{|u| u['sale_price']}).not_to include nil
+      expect(JSON.parse(response.body)['data'].collect{|u| u['itemable']}).not_to include nil
     end
     it 'should return inactive inventory items' do
       get :index, email: u1.email, token: u1.authentication_token, inactive: true, format: :json

@@ -2,6 +2,7 @@ RSpec.shared_context 'medicine params', :m_a => :m_b do
   let(:med1) {create(:medicine)}
   let(:med2) {create(:medicine)}
   let(:med3) {create(:medicine)}
+  let(:med4) {create(:medicine)}
   let(:med_params) do
     {
         name: 'Claritin',

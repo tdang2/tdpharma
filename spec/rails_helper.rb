@@ -14,6 +14,7 @@ require 'paperclip/matchers'
 require 'helpers/user_helper'
 require 'helpers/category_helper'
 require 'helpers/medicine_helper'
+require 'helpers/inventory_item_helper'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -95,4 +96,14 @@ RSpec.configure do |config|
   # Set up paperclip
   config.include Paperclip::Shoulda::Matchers
 
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    # Choose a test framework:
+    with.test_framework :rspec
+
+    # Choose a library:
+    with.library :rails
+  end
 end

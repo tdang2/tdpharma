@@ -23,7 +23,7 @@ class Transaction < ActiveRecord::Base
 
   ### Validations ##################################################################################
   # A store can sell to patients which does not have a buyer_id and buyer_item_id
-  validates :amount, :total_price, :due_date, presence: true
+  validates :amount, :total_price, :due_date, :delivery_time, presence: true
   validate :author_existence, :item_existence
 
 

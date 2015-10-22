@@ -2,12 +2,21 @@ class Api::V1::UsersController < ApplicationController
   before_filter :authenticate_user_from_token!  # This is for mobile app api
   before_filter :authenticate_user!             # standard devise web app
   before_action :set_user, only: [:update, :show, :destroy]
-  load_and_authorize_resource
+  load_and_authorize_resource params_method: :user_params
 
   def index
     begin
       @users = @current_user.store.employees
       render json: @users.as_json(only: [:email, :first_name, :last_name]), status: 200
+    rescue StandardError => e
+      render json: prepare_json({errors: e.message}), status: 400
+    end
+  end
+
+  def create
+    begin
+      user = User.create(user_params)
+      render json: prepare_json(user.as_json), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end
@@ -52,7 +61,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :password, :email, :phone)
+    params.require(:user).permit(:first_name, :last_name, :password, :email, :phone, :store_id, :manager_id, :authentication_token)
   end
 
 end

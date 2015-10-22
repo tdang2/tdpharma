@@ -25,6 +25,21 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
   end
 
+  describe 'POST create' do
+    include_context 'user params'
+    it 'can not create new store user as employee' do
+      sign_in u1
+      expect{post :create, email: u1.email, token: u1.authentication_token, user: users_full_params, format: :json} .to raise_error CanCan::AccessDenied
+    end
+    it 'can create new store user as manager' do
+      sign_in u3
+      post :create, email: u3.email, token: u3.authentication_token, user: users_full_params, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['first_name']).to eq 'tri'
+      expect(JSON.parse(response.body)['data']['store_id']).to eq s.id
+    end
+  end
+
   describe 'PATCH update' do
     include_context 'user params'
     it 'update user info' do

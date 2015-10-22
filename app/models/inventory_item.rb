@@ -31,6 +31,7 @@ class InventoryItem < ActiveRecord::Base
   ### Scopes #######################################################################################
   scope :active, -> { where(status: 0) }
   scope :inactive, -> { where(status: 1) }
+  scope :by_category, -> (cat_id) { where(category_id: cat_id)}
 
   ### Other ########################################################################################
 

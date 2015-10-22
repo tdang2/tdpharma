@@ -5,8 +5,10 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   def index
     begin
+      render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
       items = @store.inventory_items.inactive if params[:inactive] == true
       items ||= @store.inventory_items.active
+      items = items.by_category(params[:category_id]) if params[:category_id]
       render json: prepare_json(items.as_json(include: [:itemable, :sale_price], methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
@@ -15,6 +17,7 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   def show
     begin
+      render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
       item = @store.inventory_items.find(params[:id])
       render json: prepare_json(item.as_json(include: [:itemable, :sale_price], methods: :photo_thumb)), status: 200
     rescue StandardError => e
@@ -24,6 +27,7 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   def update
     begin
+      render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
       item = @store.inventory_items.find(params[:id])
       item.update!(inventory_item_params)
       render json: prepare_json(item.as_json(include: [:itemable, :sale_price], methods: :photo_thumb)), status: 200
@@ -35,6 +39,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   private
   def inventory_item_params
     # To record purchase, use medicine update path since med batch call back after_create will cover purchase creation
+    # To record sales, use prescription controller create to create multiple sale records
     params.require(:inventory_item).permit(:amount, :status,
                                            med_batch_attributes: [:id, :mfg_date, :expire_date, :package, :mfg_location,
                                                                   :store_id, :amount_per_pkg, :amount_unit, :total_units,

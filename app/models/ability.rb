@@ -26,6 +26,7 @@ class Ability
   # Role that has least responsibilities should be on top in case it overwrites the higher roles logic (due to has many roles)
   def employee
     can :manage, User, id: @user.id
+    cannot :create, User
     cannot :destroy, User
     can :read, :all
   end

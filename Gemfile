@@ -9,7 +9,7 @@ gem 'delayed_job_active_record'
 gem 'email_validator'
 gem 'flutie'
 gem 'high_voltage'
-gem 'cancan'
+gem 'cancancan'
 gem 'ice_cube'
 gem 'protected_attributes'
 gem 'kaminari'
@@ -67,7 +67,7 @@ group :test do
   gem "database_cleaner"
   gem "formulaic"
   gem "launchy"
-  gem "shoulda-matchers", require: false
+  gem "shoulda-matchers", '~> 3.0'
   gem "timecop"
   gem "webmock"
 end

@@ -12,12 +12,13 @@ RSpec.shared_context 'user params', :a => :b do
         password: u1.password,
     }
   end
-  let(:user_full_params) do
+  let(:users_full_params) do
     {
         email: 'tri1@babson.edu',
         password: 'password',
         first_name: 'tri',
-        last_name: 'dang'
+        last_name: 'dang',
+        store_id: s.id
     }
   end
   let(:users_patch_params) do

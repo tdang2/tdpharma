@@ -21,6 +21,8 @@ class Category < ActiveRecord::Base
   validates :name, presence: true
 
   ### Scopes #######################################################################################
+  scope :base_level, -> { where(parent_id: nil) }
+  scope :last_level, -> { where('parent_id IS NOT ? and children_count = ?', nil, 0)}
 
   ### Other ########################################################################################
 

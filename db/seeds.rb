@@ -6,80 +6,116 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Role.create(name: 'owner')
-Role.create(name: 'manager')
-Role.create(name: 'employee')
+Role.find_or_create_by(name: 'owner')
+Role.find_or_create_by(name: 'manager')
+Role.find_or_create_by(name: 'employee')
 
 # First level category
-c1 = Category.create(name: "Baby & Kids")
-c2 = Category.create(name: "Beauty & Skincare")
-c3 = Category.create(name: "Personal Care")
-c4 = Category.create(name: "Diet & Fitness")
-c5 = Category.create(name: "Medicine & Health")
-c6 = Category.create(name: "Vitamin & Supplement")
+c1 = Category.find_or_create_by(name: "Baby & Kids")
+c2 = Category.find_or_create_by(name: "Beauty & Skincare")
+c3 = Category.find_or_create_by(name: "Personal Care")
+c4 = Category.find_or_create_by(name: "Diet & Fitness")
+c5 = Category.find_or_create_by(name: "Medicine & Health")
+c6 = Category.find_or_create_by(name: "Vitamin & Supplement")
 
 # Second level category under Baby & Kids
-Category.create(name: "Diapering & Potty", parent_id: c1.id)
-Category.create(name: "Bath & Skincare", parent_id: c1.id)
-Category.create(name: "Formula & Baby Food", parent_id: c1.id)
-Category.create(name: "Feeding & Mealtime", parent_id: c1.id)
-Category.create(name: "Baby Gear", parent_id: c1.id)
-Category.create(name: "Children's Medicine & Health", parent_id: c1.id)
+Category.find_or_create_by(name: "Diapering & Potty", parent_id: c1.id)
+Category.find_or_create_by(name: "Bath & Skincare", parent_id: c1.id)
+Category.find_or_create_by(name: "Formula & Baby Food", parent_id: c1.id)
+Category.find_or_create_by(name: "Feeding & Mealtime", parent_id: c1.id)
+Category.find_or_create_by(name: "Baby Gear", parent_id: c1.id)
+Category.find_or_create_by(name: "Children's Medicine & Health", parent_id: c1.id)
 
 # Second level category under Beauty Skincare
-Category.create(name: "Bath & Body", parent_id: c2.id)
-Category.create(name: "Eye Cosmetics", parent_id: c2.id)
-Category.create(name: "Foundation, Blush & Bronzer", parent_id: c2.id)
-Category.create(name: "Lipsticks & Lip Balm", parent_id: c2.id)
-Category.create(name: "Sun Care", parent_id: c2.id)
-Category.create(name: "Skincare Oils & Supplements", parent_id: c2.id)
-Category.create(name: "Facial Skincare", parent_id: c2.id)
+Category.find_or_create_by(name: "Bath & Body", parent_id: c2.id)
+Category.find_or_create_by(name: "Eye Cosmetics", parent_id: c2.id)
+Category.find_or_create_by(name: "Foundation, Blush & Bronzer", parent_id: c2.id)
+Category.find_or_create_by(name: "Lipsticks & Lip Balm", parent_id: c2.id)
+Category.find_or_create_by(name: "Sun Care", parent_id: c2.id)
+Category.find_or_create_by(name: "Skincare Oils & Supplements", parent_id: c2.id)
+Category.find_or_create_by(name: "Facial Skincare", parent_id: c2.id)
 
 # Second level category under Personal Care
-Category.create(name: "Hair Care", parent_id: c3.id)
-Category.create(name: "Oral Care", parent_id: c3.id)
-Category.create(name: 'Eye Care', parent_id: c3.id)
-Category.create(name: "Feminine Care", parent_id: c3.id)
-Category.create(name: "Antiperspirant & Deodorant", parent_id: c3.id)
-Category.create(name: "Bladder Protection & Incontinence", parent_id: c3.id)
-Category.create(name: "Cotton Balls & Swabs", parent_id: c3.id)
-Category.create(name: "Wipes & Hand Sanitizers", parent_id: c3.id)
-Category.create(name: "Family Planning", parent_id: c3.id)
+Category.find_or_create_by(name: "Hair Care", parent_id: c3.id)
+Category.find_or_create_by(name: "Oral Care", parent_id: c3.id)
+Category.find_or_create_by(name: 'Eye Care', parent_id: c3.id)
+Category.find_or_create_by(name: "Feminine Care", parent_id: c3.id)
+Category.find_or_create_by(name: "Antiperspirant & Deodorant", parent_id: c3.id)
+Category.find_or_create_by(name: "Bladder Protection & Incontinence", parent_id: c3.id)
+Category.find_or_create_by(name: "Cotton Balls & Swabs", parent_id: c3.id)
+Category.find_or_create_by(name: "Wipes & Hand Sanitizers", parent_id: c3.id)
+Category.find_or_create_by(name: "Family Planning", parent_id: c3.id)
 
 # Second level category under Diet & Fitness
-Category.create(name: "Nutrition", parent_id: c4.id)
-Category.create(name: "Weight Management", parent_id: c4.id)
-Category.create(name: "Sports Supplements", parent_id: c4.id)
-Category.create(name: "Supplements", parent_id: c4.id)
+Category.find_or_create_by(name: "Nutrition", parent_id: c4.id)
+Category.find_or_create_by(name: "Weight Management", parent_id: c4.id)
+Category.find_or_create_by(name: "Sports Supplements", parent_id: c4.id)
+Category.find_or_create_by(name: "Supplements", parent_id: c4.id)
 
 
 # Second level category under Medicine & Health
-Category.create(name: "Digestion", parent_id: c5.id)
-Category.create(name: "Pain & Fever", parent_id: c5.id)
-Category.create(name: "Homeopathic Remedies", parent_id: c5.id)
-Category.create(name: "First Aid", parent_id: c5.id)
-Category.create(name: "Cough, Cold & Flu", parent_id: c5.id)
-Category.create(name: "Allergy & Sinus", parent_id: c5.id)
-Category.create(name: "Hemorrhoid & Piles Treatment", parent_id: c5.id)
-Category.create(name: "Diabetes", parent_id: c5.id)
-Category.create(name: "Sleeping", parent_id: c5.id)
-Category.create(name: "Women's Health", parent_id: c5.id)
+Category.find_or_create_by(name: "Digestion", parent_id: c5.id)
+Category.find_or_create_by(name: "Pain & Fever", parent_id: c5.id)
+Category.find_or_create_by(name: "Homeopathic Remedies", parent_id: c5.id)
+Category.find_or_create_by(name: "First Aid", parent_id: c5.id)
+Category.find_or_create_by(name: "Cough, Cold & Flu", parent_id: c5.id)
+Category.find_or_create_by(name: "Allergy & Sinus", parent_id: c5.id)
+Category.find_or_create_by(name: "Hemorrhoid & Piles Treatment", parent_id: c5.id)
+Category.find_or_create_by(name: "Diabetes", parent_id: c5.id)
+Category.find_or_create_by(name: "Sleeping", parent_id: c5.id)
+Category.find_or_create_by(name: "Women's Health", parent_id: c5.id)
 
 # Second level category under Vitamin & Supplements
-Category.create(name: "Multivitamins", parent_id: c6.id)
-Category.create(name: "Calcium & Minerals", parent_id: c6.id)
-Category.create(name: "Fish Oils & Omegas", parent_id: c6.id)
-Category.create(name: "Enzymes", parent_id: c6.id)
-Category.create(name: "Bee Supplements", parent_id: c6.id)
-Category.create(name: "Vitamin", parent_id: c6.id)
-Category.create(name: "Greens & Antioxidants", parent_id: c6.id)
-Category.create(name: "Mushrooms", parent_id: c6.id)
+Category.find_or_create_by(name: "Multivitamins", parent_id: c6.id)
+Category.find_or_create_by(name: "Calcium & Minerals", parent_id: c6.id)
+Category.find_or_create_by(name: "Fish Oils & Omegas", parent_id: c6.id)
+Category.find_or_create_by(name: "Enzymes", parent_id: c6.id)
+Category.find_or_create_by(name: "Bee Supplements", parent_id: c6.id)
+Category.find_or_create_by(name: "Vitamin", parent_id: c6.id)
+Category.find_or_create_by(name: "Greens & Antioxidants", parent_id: c6.id)
+Category.find_or_create_by(name: "Mushrooms", parent_id: c6.id)
 
-
-s = Store.create(name: 'Store')
+# Build up first store and employees
+s = Store.find_or_create_by(name: 'Store')
 s.categories << Category.all
-User.create(first_name: 'Robin', last_name: 'Dang', email: 'test@test.com', password: 'password', store_id: s.id)
-User.create(first_name: 'Tri', last_name: 'Dang', email: 'tri@gmail.com', password: 'password', store_id: s.id)
+u1 = User.create(first_name: 'Robin', last_name: 'Dang', email: 'test@test.com', password: 'password', store_id: s.id)
+u2 = User.create(first_name: 'Tri', last_name: 'Dang', email: 'tri@gmail.com', password: 'password', store_id: s.id)
+u_list = [u1, u2]
+
+# Build up medicine seeds
+c_a_list = [100, 150, 200, 250, 400, 450]
+c_u_list = %w('mg', 'ml', 'cc')
+m_f_list   = %w('tablet', 'tube', 'pill', 'capsule')
+mfg_d_list = [3, 4, 5, 6]
+exp_d_list = [6, 7, 8, 12]
+pkg_list = %w('Bottle', 'Bag', 'Box')
+mfg_l_list = %w('USA', 'France', 'Germany', 'Korea', 'Japan', 'Vietnam')
+Category.last_level.each do |c|
+  # For each second category, build 100 medicine
+  100.times do |t|
+    form = m_f_list[rand(0..3)]
+    m = Medicine.find_or_create_by(name: (c.name+t.to_s), concentration: c_a_list[rand(0..5)],
+                                   concentration_unit: c_u_list[rand(0..2)], med_form: form)
+    m.update!(med_batches_attributes: [
+                  {
+                      mfg_date: (Date.today - mfg_d_list[rand(0..3)].months),
+                      expire_date: (Date.today + exp_d_list[rand(0..3)].months),
+                      package: pkg_list[rand(0..2)],
+                      mfg_location: mfg_l_list[rand(0..5)],
+                      store_id: s.id,            # Same store as logged in user
+                      amount_per_pkg: rand(20..120),
+                      amount_unit: form,          # Most minimum unit inside the package
+                      total_units: rand(20..500), # Total number of units (number of package * amount_per_pkg)
+                      total_price: rand(10..3000),# Total price for the whole transaction
+                      user_id: u_list[rand(0..1)].id,
+                      category_id: c.id
+                  }
+              ])
+  end
+end
+
+
+
 
 
 

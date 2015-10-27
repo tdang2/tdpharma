@@ -8,7 +8,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
 
   before do
     prepare_data
-    u1.update!(store_id: @s.id)
+    u1.update!(store_id: s.id)
     item1.create_sale_price(amount: 100, discount: 0)
     item2.create_sale_price(amount: 150, discount: 0)
     item4
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data'].collect{|u| u['sale_price']}).to include nil
     end
     it 'should return active item belong to c2' do
-      get :index, email: u1.email, token: u1.authentication_token, category_id: @c2.id, format: :json
+      get :index, email: u1.email, token: u1.authentication_token, category_id: c2.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data'].collect{|u| u['id']}).to match [item2.id, item4.id]
     end

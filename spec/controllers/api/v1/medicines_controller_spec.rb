@@ -6,7 +6,7 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
   include_context 'medicine params'
   before do
     prepare_data
-    u1.update!(store_id: @s.id)
+    u1.update!(store_id: s.id)
   end
 
   describe 'GET index' do
@@ -47,18 +47,18 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
     end
     it 'create an inventory item' do
       patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
-      expect(@s.inventory_items.where(itemable_type: 'Medicine', itemable_id: med1.id).count).to eq 1
+      expect(s.inventory_items.where(itemable_type: 'Medicine', itemable_id: med1.id).count).to eq 1
     end
     it 'update existing inventory item' do
-      create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med1, total_price: 200, total_units: 100)
+      create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med1, total_price: 200, total_units: 100)
       patch :update, email: u1.email, token: u1.authentication_token, id: med1.id, medicine: med_params, format: :json
-      expect(@s.inventory_items.where(itemable: med1).first.med_batches.count).to eq 3
+      expect(s.inventory_items.where(itemable: med1).first.med_batches.count).to eq 3
     end
   end
 
   describe 'DELETE destroy' do
     it 'destroy the intended medicine' do
-      create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med1, total_price: 200, total_units: 100)
+      create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med1, total_price: 200, total_units: 100)
       delete :destroy, email: u1.email, token: u1.authentication_token, id: med1.id, format: :json
       expect(response.status).to eq 200
       expect{Medicine.find(med1.id)}.to raise_error ActiveRecord::RecordNotFound

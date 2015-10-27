@@ -1,18 +1,18 @@
 RSpec.shared_context 'inventory item params', :ii_a => :ii_b do
   let(:item1) do
-    b = create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med1)
+    b = create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med1)
     b.inventory_item
   end
   let(:item2) do
-    b = create(:med_batch, category_id: @c2.id, user: u1, store: @s, medicine: med2)
+    b = create(:med_batch, category_id: c2.id, user: u1, store: s, medicine: med2)
     b.inventory_item
   end
   let(:item3) do
-    b = create(:med_batch, category_id: @c3.id, user: u1, store: @s, medicine: med3)
+    b = create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med3)
     b.inventory_item
   end
   let(:item4) do
-    b = create(:med_batch, category_id: @c2.id, user: u1, store: @s, medicine: med4)
+    b = create(:med_batch, category_id: c2.id, user: u1, store: s, medicine: med4)
     b.inventory_item
   end
   let(:inventory_item_new_price_params) do

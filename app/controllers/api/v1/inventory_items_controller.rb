@@ -38,15 +38,11 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   private
   def inventory_item_params
-    # To record purchase, use medicine update path since med batch call back after_create will cover purchase creation
-    # To record sales, use prescription controller create to create multiple sale records
     params.require(:inventory_item).permit(:amount, :status,
                                            med_batch_attributes: [:id, :mfg_date, :expire_date, :package, :mfg_location,
                                                                   :store_id, :amount_per_pkg, :amount_unit, :total_units,
                                                                   :total_price, :user_id, :category_id],
-                                           sale_price_attributes: [:id, :amount, :discount],
-                                           sales_attributes: [:amount, :delivery_time, :due_date, :paid, :performed,
-                                                              :sale_user_id, :seller_id, :buyer_id, :seller_id, :seller_item_id, :total_price])
+                                           sale_price_attributes: [:id, :amount, :discount])
   end
 
   def get_store

@@ -34,7 +34,7 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     begin
-      render json: @user.as_json(include: :roles), status: 200
+      render json: @user.as_json(include: [:roles, :store]), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

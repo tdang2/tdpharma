@@ -10,5 +10,6 @@ RSpec.describe Transaction, type: :model do
   it {should belong_to :seller_item}
   it {should belong_to :buyer_item}
   it {should belong_to :adjust_item}
+  it {should belong_to :receipt}
 
 end

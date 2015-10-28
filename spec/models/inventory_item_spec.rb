@@ -10,5 +10,6 @@ RSpec.describe InventoryItem, type: :model do
   it {should have_many :adjustments}
   it {should have_one :sale_price}
   it {should have_one :image}
+  it {should have_many :receipts}
 
 end

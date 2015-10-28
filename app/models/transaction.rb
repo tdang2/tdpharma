@@ -16,6 +16,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :sale_user, class_name: User, foreign_key: :sale_user_id
   belongs_to :purchase_user, class_name: User, foreign_key: :purchase_user_id
   belongs_to :adjust_user, class_name: User, foreign_key: :adjust_user_id
+  belongs_to :receipt
 
 
   ### Callbacks ####################################################################################

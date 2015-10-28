@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020001143) do
+ActiveRecord::Schema.define(version: 20151028022559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -250,6 +250,18 @@ ActiveRecord::Schema.define(version: 20151020001143) do
 
   add_index "prices", ["priceable_id"], name: "index_prices_on_priceable_id", using: :btree
 
+  create_table "receipts", force: :cascade do |t|
+    t.float    "total"
+    t.integer  "receipt_type"
+    t.integer  "store_id"
+    t.integer  "inventory_item_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "receipts", ["inventory_item_id"], name: "index_receipts_on_inventory_item_id", using: :btree
+  add_index "receipts", ["store_id"], name: "index_receipts_on_store_id", using: :btree
+
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -294,8 +306,10 @@ ActiveRecord::Schema.define(version: 20151020001143) do
     t.integer  "adjust_item_id"
     t.integer  "adjust_user_id"
     t.integer  "adjust_store_id"
+    t.integer  "receipt_id"
   end
 
+  add_index "transactions", ["receipt_id"], name: "index_transactions_on_receipt_id", using: :btree
   add_index "transactions", ["sale_user_id"], name: "index_transactions_on_sale_user_id", using: :btree
   add_index "transactions", ["seller_id"], name: "index_transactions_on_seller_id", using: :btree
   add_index "transactions", ["seller_item_id"], name: "index_transactions_on_seller_item_id", using: :btree

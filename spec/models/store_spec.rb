@@ -13,5 +13,6 @@ RSpec.describe Store, type: :model do
   it {should have_many :purchases}
   it {should have_many :sales}
   it {should have_many :adjustments}
+  it {should have_many :receipts}
 
 end

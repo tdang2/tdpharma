@@ -40,9 +40,10 @@ class MedBatch < ActiveRecord::Base
       inventory = Store.find(store_id).inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       if inventory
         self.inventory_item_id =  inventory.id
-        inventory.purchases.create!(amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
-                                    due_date: DateTime.now, paid: true, performed: true, transaction_type: 'activity',
-                                    purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price)
+        inventory.receipts.create!(receipt_type: 'purchase', store_id: store_id, total: self.total_price,
+                                   transactions_attributes: [{amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id,
+                                                              due_date: DateTime.now, paid: true, performed: true, transaction_type: 'activity',
+                                                              purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price}])
       end
     end
   end

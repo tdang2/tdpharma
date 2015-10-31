@@ -6,13 +6,14 @@ class Api::V1::InventoryItemsController < ApplicationController
   def index
     begin
       render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
-      items = @store.inventory_items.inactive if params[:inactive] == true
+      items = @store.inventory_items.inactive if /true/.match(params[:inactive])
       items ||= @store.inventory_items.active
       items = items.by_category(params[:category_id]) if params[:category_id]
+      total_count = items.count
       items = items.page(params[:page]) if params[:page]
       res = {
           items: items.page(params[:page]).as_json(include: [:itemable, :sale_price], methods: :photo_thumb),
-          total_count: items.count
+          total_count: total_count
       }
       render json: prepare_json(res), status: 200
     rescue StandardError => e

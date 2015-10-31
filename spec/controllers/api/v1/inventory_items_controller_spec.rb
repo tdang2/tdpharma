@@ -19,20 +19,20 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     it 'should return active inventory items' do
       get :index, email: u1.email, token: u1.authentication_token, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].count).to be >= 3
-      expect(JSON.parse(response.body)['data'].collect{|u| u['id']}).not_to include item3.id
-      expect(JSON.parse(response.body)['data'].collect{|u| u['itemable']}).not_to include nil
+      expect(JSON.parse(response.body)['data']['items'].count).to be >= 3
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).not_to include item3.id
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['itemable']}).not_to include nil
     end
     it 'should return inactive inventory items' do
       get :index, email: u1.email, token: u1.authentication_token, inactive: true, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].collect{|u| u['id']}).to include item3.id
-      expect(JSON.parse(response.body)['data'].collect{|u| u['sale_price']}).to include nil
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item3.id
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['sale_price']}).to include nil
     end
     it 'should return active item belong to c2' do
       get :index, email: u1.email, token: u1.authentication_token, category_id: c2.id, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].collect{|u| u['id']}).to match [item2.id, item4.id]
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to match [item2.id, item4.id]
     end
   end
 

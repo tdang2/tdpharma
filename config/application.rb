@@ -42,13 +42,20 @@ module Pharma
     config.action_mailer.asset_host = ENV["ASSET_HOST"]
     config.action_mailer.default_url_options = { host: ENV["ASSET_HOST"] }
 
-    config.middleware.use Rack::Cors do
+    config.middleware.insert_before 0, "Rack::Cors", :debug => true, :logger => (-> { Rails.logger }) do
       allow do
         origins '*'
+
+        resource '/cors',
+                 :headers => :any,
+                 :methods => [:post],
+                 :credentials => true,
+                 :max_age => 0
+
         resource '*',
                  :headers => :any,
-                 :expose  => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-                 :methods => [:get, :post, :options, :delete, :put, :patch]
+                 :methods => [:get, :post, :delete, :put, :patch, :options, :head],
+                 :max_age => 0
       end
     end
 

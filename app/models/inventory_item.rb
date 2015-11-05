@@ -19,6 +19,7 @@ class InventoryItem < ActiveRecord::Base
 
   accepts_nested_attributes_for :med_batches
   accepts_nested_attributes_for :sale_price
+  accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
   after_create :set_default_image

@@ -84,12 +84,12 @@ u_list = [u1, u2]
 
 # Build up medicine seeds
 c_a_list = [100, 150, 200, 250, 400, 450]
-c_u_list = %w('mg', 'ml', 'cc')
-m_f_list   = %w('tablet', 'tube', 'pill', 'capsule')
+c_u_list = %w(mg ml cc)
+m_f_list   = %w(tablet tube pill capsule)
 mfg_d_list = [3, 4, 5, 6]
 exp_d_list = [6, 7, 8, 12]
-pkg_list = %w('Bottle', 'Bag', 'Box')
-mfg_l_list = %w('USA', 'France', 'Germany', 'Korea', 'Japan', 'Vietnam')
+pkg_list = %w(Bottle Bag Box)
+mfg_l_list = %w(USA France Germany Korea Japan Vietnam)
 Category.last_level.each do |c|
   # For each second category, build 100 medicine
   100.times do |t|

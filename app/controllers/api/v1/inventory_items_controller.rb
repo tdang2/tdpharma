@@ -44,6 +44,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   private
   def inventory_item_params
     params.require(:inventory_item).permit(:amount, :status,
+                                           image_attributes: [:id, :photo],
                                            med_batch_attributes: [:id, :mfg_date, :expire_date, :package, :mfg_location,
                                                                   :store_id, :amount_per_pkg, :amount_unit, :total_units,
                                                                   :total_price, :user_id, :category_id],

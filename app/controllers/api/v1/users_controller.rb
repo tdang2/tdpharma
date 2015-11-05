@@ -52,7 +52,7 @@ class Api::V1::UsersController < ApplicationController
 
   private
   def set_user
-    @user = params[:id].nil? ? @current_user : User.find(params[:id])
+    @user = params[:id].nil? || /me/.match(params[:id]) ? @current_user : User.find(params[:id])
   end
 
   def assign_roles

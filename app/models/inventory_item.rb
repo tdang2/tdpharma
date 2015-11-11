@@ -25,7 +25,8 @@ class InventoryItem < ActiveRecord::Base
   after_create :set_default_image
 
   ### Validations ##################################################################################
-
+  # We are deliberately not validate amount to be greater than or equal to zero to make sure any sale is recorded
+  # We will use business logic to address negative amount in inventory
 
   ### Scopes #######################################################################################
   scope :active, -> { where(status: 0) }

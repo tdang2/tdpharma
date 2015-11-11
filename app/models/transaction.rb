@@ -55,10 +55,10 @@ class Transaction < ActiveRecord::Base
   end
 
   def item_existence
-    errors.add(:transaction, 'must have an item') if seller_item_id.nil? and buyer_item_id.nil?
+    errors.add(:transaction, 'must have an item') if seller_item_id.nil? and buyer_item_id.nil? and adjust_item_id.nil?
   end
 
   def author_existence
-    errors.add(:transaction, 'needs an user to sign off') if sale_user_id.nil? and purchase_user_id.nil?
+    errors.add('need an user to sign off') if sale_user_id.nil? and purchase_user_id.nil? and adjust_user_id.nil?
   end
 end

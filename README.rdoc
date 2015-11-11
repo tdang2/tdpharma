@@ -8,14 +8,47 @@ Things you may want to cover:
 * Ruby version
 
 * System dependencies
+1. Setting up development system for webapp
+ - Make sure your Mac finished install Xcode, Xcode C++ library, and Xcode command line
+ - Make sure to finish set up your Mac with the this link: https://github.com/thoughtbot/laptop
+ - Switch your Mac terminal shell to zsh if you have not already done that. Use this zshrc set up as an example
+   https://gist.github.com/tdang2/6254daff16e833d475cb
+ - To manage ruby version, we will use rbenv. If you finished thoughtbot laptop script, rbenv is already installed for
+   you. You can start using rbenv to install the ruby version needed
+ - By going through thoughtbot laptop script, homebrew is set up for you to install dependencies. Use homebrew to
+   install the following tools
+   + git-flow   for control of code versions
+   + mongodb    for mongodb database (needed for angular-fullstack generator)
+   + nvm        * highly recommended to install nvm to do version controll for npm libraries. This will take care of dependecies everything you upgrade node.js
+ - Through nvm, install the following node dependencies
+   + node.js
+   + After that any npm install will be managed through nvm
+ - Optional: Use homebrew to install brew-cask. Brew-cask has binary version of some of the useful tools that you can install such as atom
+
+2. Setting up development system for mobile using ionic
+- Follow ionic setup website for the latest information
 
 * Configuration
+ - You will need to set up a database.yml file which should be put under the project folder/config. An example of database.yml
+   can be seen here: https://gist.github.com/tdang2/6254daff16e833d475cb
+ - Beside the database.yml, we also need .env file to set environment variable for our app. The link above also contains
+   an example of a .env file. Put the .env file right under the project folder
+ - Once you set up the database, we need to set up ruby gem. Open terminal to the project folder, run
+   + gem install bundler
+   + bundle install
 
 * Database creation
+ - Rails use rake task to manage database. We are using postgresql for rails app
+ - For development, use:
+   + rake db:create RAILS_ENV=development to create
+   + rake db:migrate RAILS_ENV=development to build the tables for database. This command also update the database to the latest version
+   + rake db:drop to remove the database
+   + rake db:seed to create some seed data defined in seed.rb
 
 * Database initialization
 
 * How to run the test suite
+- We use rspec to run rails test. By setting up bundle install correctly you can start using rspec folder to test
 
 * Services (job queues, cache servers, search engines, etc.)
 

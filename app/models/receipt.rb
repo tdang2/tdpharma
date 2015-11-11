@@ -1,6 +1,7 @@
 class Receipt < ActiveRecord::Base
   ### Attributes ###################################################################################
   enum receipt_type: ['purchase', 'sale', 'adjustment']
+  # Column total store the total money amount for the receipt
 
   ### Constants ####################################################################################
 
@@ -13,7 +14,8 @@ class Receipt < ActiveRecord::Base
   accepts_nested_attributes_for :transactions
 
   ### Callbacks ####################################################################################
-
+  #TODO: Need callbacks to handle negative amount in inventory
+  #TODO: Need callbacks to handle total price != sum of sale price
 
   ### Validations ##################################################################################
 

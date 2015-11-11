@@ -5,12 +5,12 @@ class Api::V1::ReceiptsController < ApplicationController
 
   def index
     begin
-      receipts = @store.receipts.purchase_receipts if params[:purchase]
-      receipts = @store.receipts.sale_receipts if params[:sale]
-      receipts = @store.receipts.adjustment_receipts if params[:adjustment]
-      receipts ||= @store.receipts
-      receipts = receipts.created_after(params[:before])
-      receipts = receipts.created_before(params[:end])
+      receipts = @store.receipts.purchase_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:purchase]
+      receipts = @store.receipts.sale_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:sale]
+      receipts = @store.receipts.adjustment_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:adjustment]
+      receipts ||= @store.receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}])
+      receipts = receipts.created_after(params[:before]) if params[:before]
+      receipts = receipts.created_before(params[:end]) if params[:end]
       render json: prepare_json(receipts.as_json(include: {:transactions => {include: [{seller_item: {include: :itemable}},
                                                                                        buyer_item: {include: :itemable},
                                                                                        adjust_item: {include: :itemable}]}}
@@ -23,7 +23,7 @@ class Api::V1::ReceiptsController < ApplicationController
   def create
     begin
       prepare_association_params
-      receipt = @store.receipts.create(receipt_params)
+      receipt = @store.receipts.create!(receipt_params)
       render json: prepare_json(receipt.as_json(include: {:transactions => {include: [{seller_item: {include: :itemable}},
                                                                                       buyer_item: {include: :itemable},
                                                                                       adjust_item: {include: :itemable}]}}

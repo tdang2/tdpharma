@@ -47,7 +47,9 @@ class User < ActiveRecord::Base
 
   private
   def assign_employee_role
-    self.roles << Role.find_by(name: 'employee')
+    if role = Role.find_by(name: 'employee')
+      self.roles << role
+    end
   end
 
   def generate_authentication_token

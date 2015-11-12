@@ -18,7 +18,10 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user
     @user = user || User.new      # guest user (not logged in)
-    @user.roles.each { |role| send(role.name.downcase) }
+    # Check them in order of least responsibility to more responsibilities
+    employee if @user.roles.any? {|r| r.name == 'employee'}
+    manager  if @user.roles.any? {|r| r.name == 'manager'}
+    owner    if @user.roles.any? {|r| r.name == 'owner'}
 
     can :read, :all if @user.roles.count == 0   # Guest can only read
   end

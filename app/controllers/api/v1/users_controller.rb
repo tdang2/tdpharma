@@ -24,6 +24,10 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     begin
+      if params[:old_password] and params[:user][:password]
+        # Check if user attempts to change password
+        raise 'Incorrect Password' unless @user.valid_password?(params[:old_password])
+      end
       @user.update!(user_params) if params[:user] and @current_user == @user
       assign_roles if params[:role_ids] and (@current_user.has_role?(:manager) or @current_user.has_role?(:owner))
       render json: @user.as_json(include: :roles), status: 200

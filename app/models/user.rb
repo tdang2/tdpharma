@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
 
   ### Callbacks ####################################################################################
   before_save :ensure_authentication_token
+  after_save :assign_employee_role
 
   ### Validations ##################################################################################
   validates :first_name, :last_name, presence: true
@@ -45,6 +46,10 @@ class User < ActiveRecord::Base
   end
 
   private
+  def assign_employee_role
+    self.roles << Role.find_by(name: 'employee')
+  end
+
   def generate_authentication_token
     loop do
       token = Devise.friendly_token

@@ -94,14 +94,13 @@ Category.last_level.each do |c|
   # For each second category, build 100 medicine
   100.times do |t|
     form = m_f_list[rand(0..3)]
-    m = Medicine.find_or_create_by(name: (c.name+t.to_s), concentration: c_a_list[rand(0..5)],
+    m = Medicine.find_or_create_by(name: (c.name+t.to_s), concentration: c_a_list[rand(0..5)], mfg_location: mfg_l_list[rand(0..5)],
                                    concentration_unit: c_u_list[rand(0..2)], med_form: form)
     m.update!(med_batches_attributes: [
                   {
                       mfg_date: (Date.today - mfg_d_list[rand(0..3)].months),
                       expire_date: (Date.today + exp_d_list[rand(0..3)].months),
                       package: pkg_list[rand(0..2)],
-                      mfg_location: mfg_l_list[rand(0..5)],
                       store_id: s.id,            # Same store as logged in user
                       amount_per_pkg: rand(20..120),
                       amount_unit: form,          # Most minimum unit inside the package

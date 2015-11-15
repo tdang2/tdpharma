@@ -3,7 +3,7 @@ ActiveAdmin.register User do
   controller do
     def permitted_params
       params.permit :utf8, :_method, :_method, :authenticity_token, :commit, :id,
-          user: [:id, :email, :first_name, :password, :phone, :last_name, role_ids: [] ]
+          user: [:id, :email, :first_name, :password, :phone, :last_name, :preferred_language, role_ids: [] ]
     end
 
     def update
@@ -26,6 +26,7 @@ ActiveAdmin.register User do
       f.input :first_name
       f.input :last_name
       f.input :phone
+      f.input :preferred_language, as: :select, collection: User.preferred_languages.keys
       f.input :roles, collection: Role.all
       f.input :employees, :collection => f.object.new_record? ? User.pluck(:email) : User.where.not(id: f.object.id).pluck(:email)
     end
@@ -50,6 +51,7 @@ ActiveAdmin.register User do
       row :first_name
       row :last_name
       row :phone
+      row :preferred_language
       row :sign_in_count
       row :created_at
       row :updated_at

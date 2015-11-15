@@ -5,7 +5,6 @@ FactoryGirl.define do
     package 'Box'
     amount_per_pkg 20
     amount_unit 'tablets'
-    mfg_location 'Vietnam'
     total_units 100
     total_price 200.5
     association :user, factory: :user

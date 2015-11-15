@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:concentration) {|n| n*100}
     concentration_unit 'mg'
     med_form 'tablet'
+    mfg_location 'USA'
     association :image, factory: :image
   end
 

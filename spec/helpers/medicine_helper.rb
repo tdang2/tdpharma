@@ -9,12 +9,12 @@ RSpec.shared_context 'medicine params', :m_a => :m_b do
         concentration: 10,
         concentration_unit: 'mg',
         med_form: 'tablets',
+        mfg_location: 'USA',
         med_batches_attributes: [
             {
               mfg_date: (Date.today - 3.months),
               expire_date: (Date.today + 3.months),
               package: 'Bottle',
-              mfg_location: 'USA',
               store_id: s.id,            # Same store as logged in user
               amount_per_pkg: 100,
               amount_unit: 'tablet',      # Most minimum unit inside the package

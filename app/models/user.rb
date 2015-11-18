@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  enum preferred_language: [:english, :vietnamese]
+  # This enum has to match with the client dictionary files such as config_angular_translate_en.js
+  enum preferred_language: [:en, :vn]
 
 
   ### Constants ####################################################################################
@@ -22,7 +23,7 @@ class User < ActiveRecord::Base
 
   ### Callbacks ####################################################################################
   before_save :ensure_authentication_token
-  after_save :assign_employee_role
+  after_create :assign_employee_role
 
   ### Validations ##################################################################################
   validates :first_name, :last_name, presence: true
@@ -38,7 +39,7 @@ class User < ActiveRecord::Base
   def ensure_authentication_token(force=false)
     if authentication_token.blank? or force == true
       self.authentication_token = generate_authentication_token
-      self.save!
+      self.save! if force
     end
   end
 
@@ -48,7 +49,8 @@ class User < ActiveRecord::Base
 
   private
   def assign_employee_role
-    if role = Role.find_by(name: 'employee')
+    role = Role.find_by(name: 'employee')
+    if role and self.roles.count == 0 and !self.roles.include?(role)
       self.roles << role
     end
   end

@@ -19,6 +19,11 @@ class Api::V1::MedicinesController < ApplicationController
                                         concentration_unit: params[:medicine][:concentration_unit])
       params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
       med.update!(medicine_params)
+      # Identify the store inventory that represents this medicine
+      inven = med.inventory_items.find_by(store_id: @store.id)
+      if params[:image]
+        inven.update(image_attributes: {photo: params[:image]})
+      end
       render json: prepare_json(med.as_json(methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400

@@ -60,7 +60,6 @@ Category.find_or_create_by(name: "Homeopathic Remedies", parent_id: c5.id)
 Category.find_or_create_by(name: "First Aid", parent_id: c5.id)
 Category.find_or_create_by(name: "Cough, Cold & Flu", parent_id: c5.id)
 Category.find_or_create_by(name: "Allergy & Sinus", parent_id: c5.id)
-Category.find_or_create_by(name: "Hemorrhoid & Piles Treatment", parent_id: c5.id)
 Category.find_or_create_by(name: "Diabetes", parent_id: c5.id)
 Category.find_or_create_by(name: "Sleeping", parent_id: c5.id)
 Category.find_or_create_by(name: "Women's Health", parent_id: c5.id)
@@ -78,8 +77,8 @@ Category.find_or_create_by(name: "Mushrooms", parent_id: c6.id)
 # Build up first store and employees
 s = Store.find_or_create_by(name: 'Store')
 s.categories << Category.all
-u1 = User.create(first_name: 'Robin', last_name: 'Dang', email: 'test@test.com', password: 'password', store_id: s.id)
-u2 = User.create(first_name: 'Tri', last_name: 'Dang', email: 'tri@gmail.com', password: 'password', store_id: s.id)
+u1 = User.create(first_name: 'Robin', last_name: 'Dang', email: 'test@test.com', password: 'password', store_id: s.id, preferred_language: 'vn')
+u2 = User.create(first_name: 'Tri', last_name: 'Dang', email: 'tri@gmail.com', password: 'password', store_id: s.id, preferred_language: 'en')
 u_list = [u1, u2]
 
 # Build up medicine seeds

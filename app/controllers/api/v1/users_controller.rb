@@ -7,7 +7,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     begin
       @users = @current_user.store.employees
-      render json: @users.as_json(only: [:email, :first_name, :last_name]), status: 200
+      render json: @users.as_json(only: [:id, :email, :first_name, :last_name]), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

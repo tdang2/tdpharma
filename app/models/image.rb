@@ -26,9 +26,9 @@ class Image < ActiveRecord::Base
   def self.transfer_and_cleanup(id)
     i = Image.find(id)
     if i.direct_upload_url
-      i.photo = URI.parse(URI.escape(i.direct_upload_url))  # Download and re-processed the photo
-      # S3_BUCKET.object(i.photo_file_name).copy_from({copy_source: i.direct_upload_url})   # Use this to just copy the photo over
-      if i.save!
+      s3_obj = S3_PUBLIC_CLIENT.get_object(bucket: ENV['S3_PUBLIC_BUCKET'], key: i.photo_file_name)  # Download and re-processed the photo
+      base64_str = 'data:' + s3_obj.content_type + ';base64,' + Base64.encode64(s3_obj.body.read)
+      if i.update!(photo: base64_str)
         i.update!(processed: true, direct_upload_url: nil)
       end
     end
@@ -36,14 +36,13 @@ class Image < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def set_upload_attributes
-    if (self.direct_upload_url)
+    if self.direct_upload_url
       tries ||= 2
       photo_name = self.direct_upload_url.gsub(DIRECT_UPLOAD_URL_FORMAT, '')
       s3_photo = S3_PUBLIC_BUCKET.object(photo_name)
       self.processed = false
       self.photo_file_name = photo_name
       self.photo_file_size = s3_photo.content_length
-      # TODO: Perform a check for content type before save so user can't just upload anything
       self.photo_content_type = s3_photo.content_type
     end
   rescue Aws::S3::Errors::NoSuchKey => e

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :inventory_items, only: [:index, :show, :update]
       resources :transactions, only: [:index, :show, :update, :destroy, :create]
       resources :receipts, only: [:index, :create]
+      resources :configurations, only: [:show]
     end
   end
 

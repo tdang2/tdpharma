@@ -30,7 +30,7 @@ class Company < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def photo_thumb
-    self.image.photo.url(:thumb) if self.image
+    {id: self.image.id, photo: self.image.photo.url(:thumb), processed: self.image.processed} if self.image
   end
 
   private

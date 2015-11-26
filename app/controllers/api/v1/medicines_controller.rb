@@ -20,11 +20,13 @@ class Api::V1::MedicinesController < ApplicationController
       params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
       med.update!(medicine_params)
       # Identify the store inventory that represents this medicine
-      inven = med.inventory_items.find_by(store_id: @store.id)
+      inven = @store.inventory_items.find_by(itemable: med)
       if params[:image]
         inven.update(image_attributes: {photo: params[:image]})
+      elsif params[:direct_upload_url]
+        inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
       end
-      render json: prepare_json(med.as_json(methods: :photo_thumb)), status: 200
+      render json: prepare_json(inven.as_json(include: :itemable, methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

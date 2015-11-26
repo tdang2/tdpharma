@@ -12,6 +12,7 @@ class Store < ActiveRecord::Base
   has_one :image, as: :imageable, dependent: :destroy
   has_many :documents, as: :documentable, dependent: :destroy
   has_many :inventory_items, dependent: :destroy, counter_cache: true, foreign_key: :store_id
+  has_many :medicines, through: :inventory_items, source: :itemable, source_type: 'Medicine'
   has_many :med_batches, dependent: :destroy
   has_and_belongs_to_many :categories
   has_many :receipts, dependent: :destroy
@@ -36,7 +37,7 @@ class Store < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def photo_thumb
-    self.image.photo.url(:thumb) if self.image
+    {id: self.image.id, photo: self.image.photo.url(:thumb), processed: self.image.processed} if self.image
   end
 
   private

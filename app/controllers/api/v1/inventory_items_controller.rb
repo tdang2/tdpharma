@@ -9,10 +9,11 @@ class Api::V1::InventoryItemsController < ApplicationController
       items = @store.inventory_items.inactive if params[:inactive] == true
       items ||= @store.inventory_items.active
       items = items.by_category(params[:category_id]) if params[:category_id]
+      total = (items.count / 25.0).ceil
       items = items.page(params[:page]) if params[:page]
       res = {
-          items: items.page(params[:page]).as_json(include: [:itemable, :sale_price], methods: :photo_thumb),
-          total_count: items.count
+          items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category], methods: :photo_thumb),
+          total_count: total
       }
       render json: prepare_json(res), status: 200
     rescue StandardError => e

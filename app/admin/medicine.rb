@@ -13,6 +13,8 @@ ActiveAdmin.register Medicine do
   filter :concentration
   filter :concentration_unit
   filter :med_form
+  filter :mfg_location
+  filter :manufacturer
 
   form multipart: true do |f|
     f.inputs 'Medicine' do
@@ -21,6 +23,8 @@ ActiveAdmin.register Medicine do
       f.input :concentration
       f.input :concentration_unit
       f.input :med_form
+      f.input :manufacturer
+      f.input :mfg_location
       f.has_many :image, for: [:image, f.object.image || Image.new], new_record: false do |t|
         t.input :photo, as: :file
       end
@@ -34,6 +38,8 @@ ActiveAdmin.register Medicine do
     column :concentration
     column :concentration_unit
     column :med_form
+    column :manufacturer
+    column :mfg_location
     column 'Item Count' do |f|
       f.inventory_items.count
     end
@@ -50,6 +56,8 @@ ActiveAdmin.register Medicine do
       row :concentration
       row :concentration_unit
       row :med_form
+      row :mfg_location
+      row :manufacturer
       row :image do
         image_tag(medicine.image.photo.url(:thumb)) if medicine.image and medicine.image.photo.url
       end

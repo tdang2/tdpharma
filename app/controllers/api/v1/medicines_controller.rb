@@ -16,7 +16,7 @@ class Api::V1::MedicinesController < ApplicationController
     begin
       med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
                                         mfg_location: params[:medicine][:mfg_location], med_form: params[:medicine][:med_form],
-                                        concentration_unit: params[:medicine][:concentration_unit])
+                                        concentration_unit: params[:medicine][:concentration_unit], manufacturer: params[:medicine][:manufacturer])
       params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
       med.update!(medicine_params)
       # Identify the store inventory that represents this medicine
@@ -63,7 +63,7 @@ class Api::V1::MedicinesController < ApplicationController
 
   private
   def medicine_params
-    params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form, :mfg_location,
+    params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form, :mfg_location, :manufacturer,
                                      image_attributes: [:id, :photo],
                                      med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,
                                                               :amount_per_pkg, :amount_unit, :total_units, :total_price,

@@ -89,12 +89,14 @@ mfg_d_list = [3, 4, 5, 6]
 exp_d_list = [6, 7, 8, 12]
 pkg_list = %w(Bottle Bag Box)
 mfg_l_list = %w(USA France Germany Korea Japan Vietnam)
+manufacturer = %w(Pifzer Vertex GlascoSmithlite NatureLite)
 Category.last_level.each do |c|
   # For each second category, build 100 medicine
   100.times do |t|
     form = m_f_list[rand(0..3)]
+    mfg = manufacturer[rand(0..3)]
     m = Medicine.find_or_create_by(name: (c.name+t.to_s), concentration: c_a_list[rand(0..5)], mfg_location: mfg_l_list[rand(0..5)],
-                                   concentration_unit: c_u_list[rand(0..2)], med_form: form)
+                                   concentration_unit: c_u_list[rand(0..2)], med_form: form, manufacturer: mfg)
     m.update!(med_batches_attributes: [
                   {
                       mfg_date: (Date.today - mfg_d_list[rand(0..3)].months),

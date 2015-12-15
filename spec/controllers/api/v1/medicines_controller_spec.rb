@@ -19,6 +19,15 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data'].count).to be >= 2
     end
+
+    it 'checks search params' do
+      sign_in u1
+      u1.store.medicines << [med1, med2]
+      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      get :index, search: 'med', format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data'].count).to be >= 2
+    end
   end
 
   describe 'POST create' do

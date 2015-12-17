@@ -1,0 +1,14 @@
+{
+  "name": "tdpos",
+  "version": "1.0.0",
+  "dependencies": {
+    "bower": "~1.7"
+  },
+  "engine": {
+    "node": "0.12.x",
+    "npm": "2.11.x"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  }
+}

@@ -10,3 +10,7 @@ development: &default
 test:
   <<: *default
   database: tdpos_test
+
+production:
+  <<: *default
+  database: tdpos_production

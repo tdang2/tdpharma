@@ -58,7 +58,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = ENV.fetch("ASSET_HOST")
+  config.action_controller.asset_host = ENV['ASSET_HOST']
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -92,6 +92,7 @@ Rails.application.configure do
 
   config.paperclip_defaults = {
       :storage => :s3,
+      :s3_region => ENV['S3_REGION'],
       :s3_credentials => {
           :bucket => ENV['S3_BUCKET_NAME'],
           :access_key_id => ENV['AWS_ACCESS_KEY_ID'],

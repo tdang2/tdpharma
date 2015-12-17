@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require angular
+//= require angular/angular
 //= require angular-bootstrap/ui-bootstrap.min
 //= require angular-cookies
 //= require angular-list-group/dist/angular-list-group.min

@@ -1,2 +1,40 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<%= render 'devise/shared/navbar' %>
+
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1><%= I18n.t 'Greeting' %></h1>
+    <p class="lead"><%= I18n.t 'Leading Greeting' %></p>
+    <%= image_tag('tdlogo4_50.svg', class: 'logo') %>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="page-header"><%= I18n.t 'Feature' %></h1>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Inventory Management' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Effective Point of Sale' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Real time Price Control' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Data Analytic' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Real Time Alert' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'No Installation' %></a></li>
+      </ul>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-4">
+        <li><a><%= I18n.t 'Simple to Use' %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<%= render 'shared/footer' %>

@@ -37,11 +37,16 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'puma'
+gem 'less-rails'
+gem 'therubyracer' # Ruby - dependency for less rails
+gem 'therubyrhino' # JRuby - dependency for less rails
+gem 'routing-filter'
 
 
 # Frontend asset
-gem "messengerjs-rails", "~> 1.4.1"
 gem 'jquery-datatables-rails', '~> 3.1.1'
+gem 'yui-compressor', '~> 0.12.0'
+gem 'jade'
 
 group :development, :test do
   gem 'byebug'

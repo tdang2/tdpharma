@@ -21,3 +21,18 @@
 
 en:
   hello: "Hello world"
+  Login: 'Log In'
+  Sign Up: 'Sign Up'
+  Greeting: 'Allo, Allo!'
+  Forgot Your Password: 'Forgot your Password?'
+  Leading Greeting: 'Kick-start your pharmacy with tdPharma'
+  Feature: 'Feature'
+  Inventory Management: 'Inventory Management'
+  Effective Point of Sale: 'Effective Point of Sale'
+  Real time Price Control: 'Real time Price Control'
+  No Installation: 'No Installation'
+  Data Analytic: 'Data Analytic'
+  Real Time Alert: 'Real Time Alert'
+  Simple to Use: 'Simple to Use'
+
+

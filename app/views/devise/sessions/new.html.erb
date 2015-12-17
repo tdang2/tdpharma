@@ -1,0 +1,46 @@
+<%= render 'devise/shared/navbar' %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Login</h1>
+    </div>
+
+    <div class="col-sm-12">
+      <%= render 'shared/flash' %>
+    </div>
+
+    <div class="col-sm-12">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name, :locale => I18n.locale), html: {class: 'form'}) do |f| %>
+          <div class="form-group">
+            <%= f.label :email %>
+            <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password %>
+            <%= f.password_field :password, autocomplete: 'off', class: 'form-control' %>
+          </div>
+
+          <% if devise_mapping.rememberable? -%>
+              <div class="form-group">
+                <%= f.check_box :remember_me %>
+                <%= f.label :remember_me %>
+              </div>
+          <% end -%>
+
+          <div class="text-center">
+            <%= f.submit (I18n.t 'Login'), class: 'btn btn-primary btn-lg' %>
+            <%= link_to (I18n.t 'Sign Up'), new_registration_path(resource_name), class: 'btn btn-default btn-lg btn-register' %><br/><br/>
+            <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+                <%= link_to (I18n.t 'Forgot Your Password'), new_password_path(resource_name) %><br />
+            <% end -%>
+          </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<%= render 'shared/footer' %>

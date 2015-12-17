@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
-  get 'home/index'
+  filter :locale,    :exclude => /^\/admin/
+
+  # config/routes.rb
+  scope '(:locale)', locale: /en|vn/ do
+    get 'home/index'
+    get 'home/show'
+    devise_for :users, controllers: {
+        registrations: 'users/registrations',
+        sessions: 'users/sessions'
+    }
+  end
 
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
@@ -13,19 +23,17 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, controllers: {
-     registrations: 'users/registrations',
-     sessions: 'users/sessions'
-  }
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
   devise_scope :user do
     authenticated :user do
-      root 'home#index', as: :authenticated_root
+      get '/:locale' => 'home#show'
+      root 'home#show', as: :authenticated_root
     end
     unauthenticated do
-      root :to => 'devise/sessions#new'
+      get '/:locale' => 'home#index'
+      root 'home#index', as: :unauthenticated
     end
   end
 

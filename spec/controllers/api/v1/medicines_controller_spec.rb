@@ -11,8 +11,7 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
 
   describe 'GET index' do
     it 'should return success' do
-      med1
-      med2
+      u1.store.medicines << [med1, med2]
       sign_in u1
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :index, format: :json

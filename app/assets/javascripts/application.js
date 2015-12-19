@@ -13,7 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
 //= require angular/angular
 //= require angular-bootstrap/ui-bootstrap.min
 //= require angular-cookies/angular-cookies
@@ -35,3 +34,5 @@
 //= require ng-file-upload/ng-file-upload
 //= require toastr/toastr
 //= require underscore/underscore
+
+//= require_tree .

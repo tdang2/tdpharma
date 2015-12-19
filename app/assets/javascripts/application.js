@@ -27,6 +27,7 @@
 //= require async/dist/async
 //= require aws-sdk/dist/aws-sdk.min
 //= require bootstrap/dist/js/bootstrap
+//= require angular-ui
 //= require es5-shim/es5-shim
 //= require json3/lib/json3.min
 //= require lodash/lodash

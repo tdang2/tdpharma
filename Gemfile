@@ -47,6 +47,9 @@ gem 'routing-filter'
 gem 'jquery-datatables-rails', '~> 3.1.1'
 gem 'yui-compressor', '~> 0.12.0'
 gem 'jade'
+source 'https://rails-assets.org' do
+  gem 'rails-assets-angular-ui'
+end
 
 group :development, :test do
   gem 'byebug'

@@ -23,7 +23,7 @@
 //= require angular-socket-io/socket.min
 //= require angular-translate/angular-translate
 //= require angular-ui-router/release/angular-ui-router.min
-//= require angular-ui/build/angular-ui.min.js
+//= require angular-ui/build/angular-ui.min
 //= require async/dist/async
 //= require aws-sdk/dist/aws-sdk.min
 //= require bootstrap/dist/js/bootstrap

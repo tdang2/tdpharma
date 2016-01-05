@@ -1,0 +1,32 @@
+<nav class="navbar navbar-default navbar-static-top" ng-controller="NavbarCtrl">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"> tdpharma</a>
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <p class="navbar-text">Hello {{user.first_name}}</p>
+        </li>
+        <li ng-class="{'active': isActive('/settings')}">
+          <a href="/settings">
+            <span class="glyphicon glyphicon-cog"></span>
+          </a>
+        </li>
+        <li>
+          <a href="/users/sign_out" data-method="delete"><%= (I18n.t 'Logout') %></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

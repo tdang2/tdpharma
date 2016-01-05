@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby "2.2.3"
 
-gem 'airbrake'
+gem 'airbrake', '~> 4.3'
 gem 'awesome_nested_set'
 gem 'clockwork'
 gem 'delayed_job_active_record'
@@ -41,14 +41,37 @@ gem 'less-rails'
 gem 'therubyracer' # Ruby - dependency for less rails
 gem 'therubyrhino' # JRuby - dependency for less rails
 gem 'routing-filter'
+gem 'sprockets', '2.12.3' # require for rails angular template
 
 
 # Frontend asset
 gem 'jquery-datatables-rails', '~> 3.1.1'
 gem 'yui-compressor', '~> 0.12.0'
 gem 'jade'
+gem 'angular-rails-templates'
 source 'https://rails-assets.org' do
+  gem 'rails-assets-angular'
+  gem 'rails-assets-angular-bootstrap'
+  gem 'rails-assets-angular-cookies'
+  gem 'rails-assets-angular-resource'
+  gem 'rails-assets-angular-sanitize'
+  gem 'rails-assets-angular-smart-table'
+  gem 'rails-assets-angular-socket-io'
+  gem 'rails-assets-angular-translate'
+  gem 'rails-assets-angular-ui-router'
+  gem 'rails-assets-async'
+  gem 'rails-assets-aws-sdk'
+  gem 'rails-assets-bootstrap'
+  gem 'rails-assets-es5-shim'
+  gem 'rails-assets-fontawesome'
+  gem 'rails-assets-json3'
+  gem 'rails-assets-lodash'
+  gem 'rails-assets-moment'
+  gem 'rails-assets-ng-file-upload'
+  gem 'rails-assets-toastr'
+  gem 'rails-assets-underscore'
   gem 'rails-assets-angular-ui'
+  gem 'rails-assets-angular-ui-select'
 end
 
 group :development, :test do

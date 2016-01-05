@@ -1,1 +1,10 @@
-<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+<div ng-app="tdpharmaClientApp">
+  <div ng-include='"shared/nav-template.html"'></div>
+  <div ui-view=""></div>
+  <div ng-include="'shared/footer-template.html'"></div>
+</div>
+
+
+<script type="javascript">
+
+</script>

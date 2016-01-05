@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/activeadmin/activeadmin.git
-  revision: 3aae773f978ad176cb8b5ebde3f2e2fc7652ed89
+  revision: 5f190fba809a20f3cae83cc547d1a9003e91193f
   specs:
     activeadmin (1.0.0.pre2)
       arbre (~> 1.0, >= 1.0.2)
@@ -27,7 +27,7 @@ GIT
 
 GIT
   remote: https://github.com/phatworx/devise_security_extension.git
-  revision: 1f1b0663f8768b2d4b0a9916198fc493f75382bf
+  revision: 6fbf95fb262135584c1dae7a7756867c95a69752
   specs:
     devise_security_extension (0.10.0)
       devise (>= 3.0.0, < 4.0)
@@ -37,60 +37,64 @@ GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
   specs:
-    actionmailer (4.2.4)
-      actionpack (= 4.2.4)
-      actionview (= 4.2.4)
-      activejob (= 4.2.4)
+    actionmailer (4.2.5)
+      actionpack (= 4.2.5)
+      actionview (= 4.2.5)
+      activejob (= 4.2.5)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 1.0, >= 1.0.5)
-    actionpack (4.2.4)
-      actionview (= 4.2.4)
-      activesupport (= 4.2.4)
+    actionpack (4.2.5)
+      actionview (= 4.2.5)
+      activesupport (= 4.2.5)
       rack (~> 1.6)
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (4.2.4)
-      activesupport (= 4.2.4)
+    actionview (4.2.5)
+      activesupport (= 4.2.5)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    activejob (4.2.4)
-      activesupport (= 4.2.4)
+    activejob (4.2.5)
+      activesupport (= 4.2.5)
       globalid (>= 0.3.0)
-    activemodel (4.2.4)
-      activesupport (= 4.2.4)
+    activemodel (4.2.5)
+      activesupport (= 4.2.5)
       builder (~> 3.1)
-    activerecord (4.2.4)
-      activemodel (= 4.2.4)
-      activesupport (= 4.2.4)
+    activerecord (4.2.5)
+      activemodel (= 4.2.5)
+      activesupport (= 4.2.5)
       arel (~> 6.0)
-    activesupport (4.2.4)
+    activesupport (4.2.5)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.3.8)
+    addressable (2.4.0)
     airbrake (4.3.3)
       builder
       multi_json
+    angular-rails-templates (0.2.0)
+      railties (>= 3.1)
+      sprockets (~> 2)
+      tilt
     arbre (1.0.3)
       activesupport (>= 3.0.0)
     arel (6.0.3)
-    autoprefixer-rails (6.0.3)
+    autoprefixer-rails (6.2.3)
       execjs
       json
     awesome_nested_set (3.0.2)
       activerecord (>= 4.0.0, < 5)
     awesome_print (1.6.1)
-    aws-sdk (2.1.30)
-      aws-sdk-resources (= 2.1.30)
-    aws-sdk-core (2.1.30)
+    aws-sdk (2.2.8)
+      aws-sdk-resources (= 2.2.8)
+    aws-sdk-core (2.2.8)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.1.30)
-      aws-sdk-core (= 2.1.30)
+    aws-sdk-resources (2.2.8)
+      aws-sdk-core (= 2.2.8)
     aws-sdk-v1 (1.66.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -101,7 +105,7 @@ GEM
       sass (~> 3.4)
       thor (~> 0.19)
     builder (3.2.2)
-    byebug (6.0.2)
+    byebug (8.2.1)
     cancancan (1.13.1)
     capybara (2.5.0)
       mime-types (>= 1.16)
@@ -109,32 +113,32 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-angular (0.2.2)
+    capybara-angular (0.2.3)
       capybara (>= 2.5.0)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    childprocess (0.5.6)
+    childprocess (0.5.8)
       ffi (~> 1.0, >= 1.0.11)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     clockwork (1.2.0)
       activesupport
       tzinfo
-    cocaine (0.5.7)
+    cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
-    coffee-rails (4.1.0)
+    coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
-      railties (>= 4.0.0, < 5.0)
+      railties (>= 4.0.0, < 5.1.x)
     coffee-script (2.4.1)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.1.1)
+    coffee-script-source (1.10.0)
     commonjs (0.2.7)
-    crack (0.4.2)
+    crack (0.4.3)
       safe_yaml (~> 1.0.0)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
@@ -143,7 +147,7 @@ GEM
     delayed_job_active_record (4.1.0)
       activerecord (>= 3.0, < 5)
       delayed_job (>= 3.0, < 5)
-    devise (3.5.2)
+    devise (3.5.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -175,17 +179,18 @@ GEM
       activesupport
       capybara
       i18n
-    geocoder (1.2.11)
+    geocoder (1.2.14)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
     hash-deep-merge (0.1.1)
-    hashdiff (0.2.2)
+    hashdiff (0.2.3)
     high_voltage (2.4.0)
+    hike (1.2.3)
     i18n (0.7.0)
-    ice_cube (0.13.0)
+    ice_cube (0.13.2)
     inherited_resources (1.6.0)
       actionpack (>= 3.2, < 5)
       has_scope (~> 0.6.0.rc)
@@ -231,23 +236,23 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
-    mime-types (2.6.2)
+    mime-types (2.99)
     mimemagic (0.3.0)
-    mini_portile (0.6.2)
-    minitest (5.8.1)
+    mini_portile2 (2.0.0)
+    minitest (5.8.3)
     multi_json (1.11.2)
-    newrelic_rpm (3.14.0.305)
-    nokogiri (1.6.6.2)
-      mini_portile (~> 0.6.0)
+    newrelic_rpm (3.14.1.311)
+    nokogiri (1.6.7.1)
+      mini_portile2 (~> 2.0.0.rc2)
     orm_adapter (0.5.0)
-    paperclip (4.3.1)
+    paperclip (4.3.2)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
-    pg (0.18.3)
-    polyamorous (1.2.0)
+    pg (0.18.4)
+    polyamorous (1.3.0)
       activerecord (>= 3.0)
     protected_attributes (1.1.3)
       activemodel (>= 4.0.1, < 5.0)
@@ -257,7 +262,7 @@ GEM
       slop (~> 3.4)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (2.14.0)
+    puma (2.15.3)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
@@ -265,18 +270,52 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     rack-timeout (0.3.2)
-    rails (4.2.4)
-      actionmailer (= 4.2.4)
-      actionpack (= 4.2.4)
-      actionview (= 4.2.4)
-      activejob (= 4.2.4)
-      activemodel (= 4.2.4)
-      activerecord (= 4.2.4)
-      activesupport (= 4.2.4)
+    rails (4.2.5)
+      actionmailer (= 4.2.5)
+      actionpack (= 4.2.5)
+      actionview (= 4.2.5)
+      activejob (= 4.2.5)
+      activemodel (= 4.2.5)
+      activerecord (= 4.2.5)
+      activesupport (= 4.2.5)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.2.4)
+      railties (= 4.2.5)
       sprockets-rails
+    rails-assets-angular (1.4.8)
+    rails-assets-angular-bootstrap (0.14.3)
+      rails-assets-angular (>= 1.3.0)
+    rails-assets-angular-cookies (1.4.8)
+      rails-assets-angular (= 1.4.8)
+    rails-assets-angular-resource (1.4.8)
+      rails-assets-angular (= 1.4.8)
+    rails-assets-angular-sanitize (1.4.8)
+      rails-assets-angular (= 1.4.8)
+    rails-assets-angular-smart-table (2.1.6)
+      rails-assets-angular (>= 1.0.0, < 2)
+    rails-assets-angular-socket-io (0.7.0)
+      rails-assets-angular (>= 1.2.6, < 2)
+    rails-assets-angular-translate (2.8.1)
+      rails-assets-angular (>= 1.2.26, <= 1.5)
     rails-assets-angular-ui (0.4.0)
+    rails-assets-angular-ui-router (0.2.15)
+      rails-assets-angular (>= 1.0.8)
+    rails-assets-angular-ui-select (0.13.2)
+      rails-assets-angular (>= 1.2.18)
+    rails-assets-async (1.5.0)
+    rails-assets-aws-sdk (2.2.26)
+    rails-assets-bootstrap (3.3.6)
+      rails-assets-jquery (>= 1.9.1, < 3)
+    rails-assets-es5-shim (4.4.1)
+    rails-assets-fontawesome (4.5.0)
+    rails-assets-jquery (2.1.4)
+    rails-assets-json3 (3.3.2)
+    rails-assets-lodash (3.10.1)
+    rails-assets-moment (2.10.6)
+    rails-assets-ng-file-upload (11.0.0)
+      rails-assets-angular (> 1.2.0)
+    rails-assets-toastr (2.1.2)
+      rails-assets-jquery (>= 1.6.3)
+    rails-assets-underscore (1.8.3)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -290,9 +329,9 @@ GEM
       rails_stdout_logging
     rails_serve_static_assets (0.0.4)
     rails_stdout_logging (0.0.4)
-    railties (4.2.4)
-      actionpack (= 4.2.4)
-      activesupport (= 4.2.4)
+    railties (4.2.5)
+      actionpack (= 4.2.5)
+      activesupport (= 4.2.5)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
@@ -302,35 +341,36 @@ GEM
       activesupport (>= 3.0)
       i18n
       polyamorous (~> 1.2)
-    rdoc (4.2.0)
+    rdoc (4.2.1)
+      json (~> 1.4)
     recipient_interceptor (0.1.2)
       mail
     ref (2.0.0)
-    responders (2.1.0)
-      railties (>= 4.2.0, < 5)
+    responders (2.1.1)
+      railties (>= 4.2.0, < 5.1)
     routing-filter (0.5.1)
       actionpack (~> 4.2)
       activesupport (~> 4.2)
-    rspec-core (3.3.2)
-      rspec-support (~> 3.3.0)
-    rspec-expectations (3.3.1)
+    rspec-core (3.4.1)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-mocks (3.3.2)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-rails (3.3.3)
+      rspec-support (~> 3.4.0)
+    rspec-rails (3.4.0)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
-      rspec-core (~> 3.3.0)
-      rspec-expectations (~> 3.3.0)
-      rspec-mocks (~> 3.3.0)
-      rspec-support (~> 3.3.0)
-    rspec-support (3.3.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     rubyzip (1.1.7)
     safe_yaml (1.0.4)
-    sass (3.4.19)
+    sass (3.4.20)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -345,12 +385,15 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    shoulda-matchers (3.0.0)
+    shoulda-matchers (3.0.1)
       activesupport (>= 4.0.0)
     slop (3.6.0)
-    spring (1.4.0)
-    sprockets (3.4.0)
-      rack (> 1, < 3)
+    spring (1.6.1)
+    sprockets (2.12.3)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
     sprockets-rails (2.3.3)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
@@ -363,7 +406,7 @@ GEM
     therubyrhino_jar (1.7.6)
     thor (0.19.1)
     thread_safe (0.3.5)
-    tilt (2.0.1)
+    tilt (1.4.1)
     timecop (0.8.0)
     title (0.0.5)
       i18n
@@ -375,14 +418,14 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    warden (1.2.3)
+    warden (1.2.4)
       rack (>= 1.0)
     web-console (2.2.1)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
-    webmock (1.22.1)
+    webmock (1.22.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -397,7 +440,8 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
-  airbrake
+  airbrake (~> 4.3)
+  angular-rails-templates
   autoprefixer-rails
   awesome_nested_set
   awesome_print
@@ -440,7 +484,28 @@ DEPENDENCIES
   rack-cors
   rack-timeout
   rails (~> 4.2.1)
+  rails-assets-angular!
+  rails-assets-angular-bootstrap!
+  rails-assets-angular-cookies!
+  rails-assets-angular-resource!
+  rails-assets-angular-sanitize!
+  rails-assets-angular-smart-table!
+  rails-assets-angular-socket-io!
+  rails-assets-angular-translate!
   rails-assets-angular-ui!
+  rails-assets-angular-ui-router!
+  rails-assets-angular-ui-select!
+  rails-assets-async!
+  rails-assets-aws-sdk!
+  rails-assets-bootstrap!
+  rails-assets-es5-shim!
+  rails-assets-fontawesome!
+  rails-assets-json3!
+  rails-assets-lodash!
+  rails-assets-moment!
+  rails-assets-ng-file-upload!
+  rails-assets-toastr!
+  rails-assets-underscore!
   rails_12factor
   recipient_interceptor
   routing-filter
@@ -450,6 +515,7 @@ DEPENDENCIES
   selenium-webdriver
   shoulda-matchers (~> 3.0)
   spring
+  sprockets (= 2.12.3)
   therubyracer
   therubyrhino
   timecop

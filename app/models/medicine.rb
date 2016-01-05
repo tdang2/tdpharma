@@ -28,8 +28,19 @@ class Medicine < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
+  def as_json(options = {})
+    json = super(options)
+    json['store_thumb'] = store_thumb(options[:store_id]) if options[:store_id]
+    json
+  end
+
   def photo_thumb
     {id: self.image.id, photo: self.image.photo.url(:thumb), processed: self.image.processed} if self.image
+  end
+
+  def store_thumb(store_id)
+    item = Store.find(store_id).inventory_items.find_by(itemable_type: 'Medicine', itemable_id: self.id)
+    item.photo_thumb if item
   end
 
   private

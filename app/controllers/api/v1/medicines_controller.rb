@@ -8,7 +8,7 @@ class Api::V1::MedicinesController < ApplicationController
       # preventing SQL injection with search string
       med = @store.medicines.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
       med ||= @store.medicines.all.limit(100)
-      render json: prepare_json(med.as_json(methods: [:photo_thumb])), status: 200
+      render json: prepare_json(med.as_json(store_id: current_user.store.id, methods: [:photo_thumb])), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

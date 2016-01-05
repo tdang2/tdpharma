@@ -21,26 +21,24 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user_from_token!
-    unless current_user
-      if request.headers['Authorization'].nil?
-        render json: {errors: 'No user information'}.to_json, status: 401
-        return
-      end
-      token = request.headers['Authorization'].gsub(/Bearer\s/, '');
-      @current_user = User.find_by_authentication_token(token)
-      if @current_user
-        # We use Devise.secure_compare to compare the token in the database with the token given in the params, mitigating timing attacks.
-        if !Devise.secure_compare(@current_user.authentication_token, token)
-          sign_out @current_user
-          render json: {errors: 'Invalid User Token'}.to_json, status: 401
-        else
-          # update access token after 24 hour from last log in
-          @current_user.ensure_authentication_token(true) if @current_user.updated_at + 24.hours < DateTime.now
-          sign_in @current_user
-        end
+    if request.headers['Authorization'].nil?
+      render json: {errors: 'No user information'}.to_json, status: 401
+      return
+    end
+    token = request.headers['Authorization'].gsub(/Bearer\s/, '');
+    @current_user = User.find_by_authentication_token(token)
+    if @current_user
+      # We use Devise.secure_compare to compare the token in the database with the token given in the params, mitigating timing attacks.
+      if !Devise.secure_compare(@current_user.authentication_token, token)
+        sign_out @current_user
+        render json: {errors: 'Invalid User Token'}.to_json, status: 401
       else
-        render json: {errors: 'No user found'}.to_json, status: 401
+        # update access token after 24 hour from last log in
+        @current_user.ensure_authentication_token(true) if @current_user.updated_at + 24.hours < DateTime.now
+        sign_in @current_user
       end
+    else
+      render json: {errors: 'No user found'}.to_json, status: 401
     end
   end
 

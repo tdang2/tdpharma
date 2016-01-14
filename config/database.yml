@@ -14,3 +14,5 @@ test:
 production:
   <<: *default
   database: tdpos_production
+  encoding: utf8
+  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>

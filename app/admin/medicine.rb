@@ -67,8 +67,8 @@ ActiveAdmin.register Medicine do
         table_for g=medicine.inventory_items do |d|
           if g.present?
             column('ID', :sortable => :id) {|id| link_to "#{id.id}", admin_inventory_item_path(id)}
-            column 'Store' do
-              d.store.name
+            column 'Store' do |id|
+              id.store.name
             end
             column :created_at
           end
@@ -80,8 +80,8 @@ ActiveAdmin.register Medicine do
         table_for g=medicine.med_batches do |d|
           if g.present?
             column('ID', :sortable => :id) {|id| link_to "#{id.id}", admin_med_batch_path(id)}
-            column 'Store' do
-              d.store.name
+            column 'Store' do |id|
+              id.store.name
             end
             column :mfg_date
             column :expire_date

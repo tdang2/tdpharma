@@ -2,20 +2,21 @@ class Api::V1::MedicinesController < ApplicationController
   before_filter :authenticate_user_from_token!  # This is for mobile app api
   before_filter :authenticate_user!             # standard devise web app
   before_action :get_store
+  # rescue_from StandardError, :render_error
+
+  def render_error
+    NewRelic::Agent.notice_error(e) if Rails.env.production?
+    render json: prepare_json({errors: e.message}), status: 400
+  end
 
   def index
-    begin
       # preventing SQL injection with search string
       med = @store.medicines.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
       med ||= @store.medicines.all.limit(100)
       render json: prepare_json(med.as_json(store_id: current_user.store.id, methods: [:photo_thumb])), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
   end
 
   def create
-    begin
       med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
                                         mfg_location: params[:medicine][:mfg_location], med_form: params[:medicine][:med_form],
                                         concentration_unit: params[:medicine][:concentration_unit], manufacturer: params[:medicine][:manufacturer])
@@ -29,38 +30,23 @@ class Api::V1::MedicinesController < ApplicationController
         inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
       end
       render json: prepare_json(inven.as_json(include: :itemable, methods: :photo_thumb)), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
   end
 
   def show
-    begin
-      render json: prepare_json(Medicine.find(params[:id]).as_json(methods: :photo_thumb)), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    render json: prepare_json(Medicine.find(params[:id]).as_json(methods: :photo_thumb)), status: 200
   end
 
   def update
-    begin
-      med = Medicine.find(params[:id])
-      params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
-      med.update!(medicine_params)
-      item = @store.inventory_items.find_by(itemable: med)
-      render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    med = Medicine.find(params[:id])
+    params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
+    med.update!(medicine_params)
+    item = @store.inventory_items.find_by(itemable: med)
+    render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200
   end
 
   def destroy
-    begin
-      Medicine.find(params[:id]).destroy!
-      render json: prepare_json({message: 'Medicine successfully deleted'}), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    Medicine.find(params[:id]).destroy!
+    render json: prepare_json({message: 'Medicine successfully deleted'}), status: 200
   end
 
   private

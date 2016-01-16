@@ -54,7 +54,8 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* Current supported api calls. Refer to trello tdpos for more detailed for each end point
+* Current supported api calls. Refer to trello tdpos for more detailed for each end point. To get the latest routes,
+* under the project folder terminal, type command rake:routes
 
                       api_v1_users GET        /api/v1/users(.:format)                       api/v1/users#index {:format=>:json}
                                    POST       /api/v1/users(.:format)                       api/v1/users#create {:format=>:json}

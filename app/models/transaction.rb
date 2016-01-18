@@ -17,6 +17,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :purchase_user, class_name: User, foreign_key: :purchase_user_id
   belongs_to :adjust_user, class_name: User, foreign_key: :adjust_user_id
   belongs_to :receipt
+  belongs_to :med_batch
 
 
   ### Callbacks ####################################################################################
@@ -41,15 +42,22 @@ class Transaction < ActiveRecord::Base
 
   private
   def update_inventories
-    # After a transaction, update respective inventories
-    if transaction_type == 'activity' and buyer_item_id
+    # After a transaction, update respective inventories and med_batches
+    if self.receipt and self.receipt.receipt_type == 'purchase' and buyer_item_id
+      self.transaction_type = 'activity'
       self.buyer_item.update!(amount: self.buyer_item.amount + self.amount,
                         avg_purchase_price: self.buyer_item.purchases.average(:total_price),
                         avg_purchase_amount: self.buyer_item.purchases.average(:amount))
-    elsif transaction_type == 'activity' and seller_item_id
+    elsif self.receipt and self.receipt.receipt_type == 'sale' and seller_item_id
+      self.transaction_type = 'activity'
       self.seller_item.update!(amount: self.seller_item.amount - self.amount, avg_sale_price: self.seller_item.sales.average(:total_price),
                                avg_sale_amount: self.seller_item.sales.average(:amount))
-    elsif transaction_type == 'adjustment' and adjust_item_id
+      # Also update med_batch to reflect remaining quantity
+      self.med_batch.update!(total_units: self.med_batch.total_units - self.amount) if self.med_batch
+    elsif self.receipt and self.receipt.receipt_type == 'adjustment' and adjust_item_id
+      # When checking inventory, it is difficult to figure out which batch is missing
+      # TODO: rethink how to update inventory count while keeping track of which batch is missing
+      self.transaction_type = 'adjustment'
       self.adjust_item.update!(amount: self.adjust_item.amount + self.amount)
     end
   end

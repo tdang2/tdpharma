@@ -10,7 +10,9 @@ class Receipt < ActiveRecord::Base
   ### Associations #################################################################################
   belongs_to :store
   has_many :transactions
+  has_many :med_batches
 
+  accepts_nested_attributes_for :med_batches
   accepts_nested_attributes_for :transactions
 
   ### Callbacks ####################################################################################

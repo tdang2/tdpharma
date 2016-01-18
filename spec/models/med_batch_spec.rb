@@ -10,6 +10,8 @@ RSpec.describe MedBatch, type: :model do
   it {should belong_to :medicine}
   it {should belong_to :user}
   it {should belong_to :category}
+  it {should belong_to :receipt}
+  it {should have_many :transactions}
 
   describe 'create inventory item callback' do
     include_context 'user params'
@@ -24,9 +26,11 @@ RSpec.describe MedBatch, type: :model do
     end
     it 'update existing inventory item' do
       create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1)
-      b2 = create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1)
+      b2 = create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, paid: false)
       expect(b2.inventory_item.med_batches.count).to eq 2
+      expect(b2.inventory_item.med_batches.last.paid).to eq false
       expect(b2.inventory_item.purchases.count).to eq 2
+      expect(b2.inventory_item.purchases.last.paid).to eq false
     end
     it 'update inventory item avg purchase values' do
       create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 200, total_units: 100)

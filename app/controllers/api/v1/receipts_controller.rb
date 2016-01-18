@@ -22,7 +22,6 @@ class Api::V1::ReceiptsController < ApplicationController
 
   def create
     begin
-      prepare_association_params
       receipt = @store.receipts.create!(receipt_params)
       render json: prepare_json(receipt.as_json(include: {:transactions => {include: [{seller_item: {include: :itemable}},
                                                                                       buyer_item: {include: :itemable},
@@ -36,31 +35,12 @@ class Api::V1::ReceiptsController < ApplicationController
   private
   def receipt_params
     params.require(:receipt).permit(:receipt_type, :total, :store_id,
-                                     transactions_attributes: [:amount, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
-                                                               :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id,
-                                                               :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price])
-  end
-
-  def prepare_association_params
-    params[:receipt][:store_id] ||= @store.id
-    if params[:receipt][:transactions_attributes]
-      if params[:receipt][:receipt_type] == 'sale'
-        params[:receipt][:transactions_attributes].each do |p|
-          p[:seller_id] = @store.id
-          p[:transaction_type] = 'activity'
-        end
-      elsif params[:receipt][:receipt_type] == 'purchase'
-        params[:receipt][:transactions_attributes].each do |p|
-          p[:buyer_id] = @store.id
-          p[:transaction_type] = 'activity'
-        end
-      elsif params[:receipt][:receipt_type] == 'adjustment'
-        params[:receipt][:transactions_attributes].each do |p|
-          p[:adjust_store_id] = @store.id
-          p[:transaction_type] = 'adjustment'
-        end
-      end
-    end
+                                    med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,
+                                                             :amount_per_pkg, :amount_unit, :total_units, :total_price,
+                                                             :user_id, :category_id, :paid, :medicine_id, :inventory_item_id],
+                                    transactions_attributes: [:amount, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
+                                                              :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id,
+                                                              :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price])
   end
 
   def get_store

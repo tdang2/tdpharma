@@ -56,7 +56,6 @@ Category.find_or_create_by(name: "Supplements", parent_id: c4.id)
 # Second level category under Medicine & Health
 Category.find_or_create_by(name: "Digestion", parent_id: c5.id)
 Category.find_or_create_by(name: "Pain & Fever", parent_id: c5.id)
-Category.find_or_create_by(name: "Homeopathic Remedies", parent_id: c5.id)
 Category.find_or_create_by(name: "First Aid", parent_id: c5.id)
 Category.find_or_create_by(name: "Cough, Cold & Flu", parent_id: c5.id)
 Category.find_or_create_by(name: "Allergy & Sinus", parent_id: c5.id)

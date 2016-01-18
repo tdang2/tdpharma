@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151202050345) do
+ActiveRecord::Schema.define(version: 20160118104512) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,17 +217,20 @@ ActiveRecord::Schema.define(version: 20151202050345) do
     t.integer  "amount_per_pkg"
     t.string   "amount_unit"
     t.integer  "medicine_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "inventory_item_id"
     t.integer  "store_id"
     t.integer  "total_units"
     t.integer  "user_id"
     t.float    "total_price"
     t.integer  "category_id"
+    t.integer  "receipt_id"
+    t.boolean  "paid",              default: true
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree
+  add_index "med_batches", ["receipt_id"], name: "index_med_batches_on_receipt_id", using: :btree
 
   create_table "medicines", force: :cascade do |t|
     t.string   "name"
@@ -306,8 +309,10 @@ ActiveRecord::Schema.define(version: 20151202050345) do
     t.integer  "adjust_user_id"
     t.integer  "adjust_store_id"
     t.integer  "receipt_id"
+    t.integer  "med_batch_id"
   end
 
+  add_index "transactions", ["med_batch_id"], name: "index_transactions_on_med_batch_id", using: :btree
   add_index "transactions", ["receipt_id"], name: "index_transactions_on_receipt_id", using: :btree
   add_index "transactions", ["sale_user_id"], name: "index_transactions_on_sale_user_id", using: :btree
   add_index "transactions", ["seller_id"], name: "index_transactions_on_seller_id", using: :btree

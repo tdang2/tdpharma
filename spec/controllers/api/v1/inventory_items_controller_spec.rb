@@ -18,14 +18,14 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
 
   describe 'GET index' do
     it 'should return active inventory items' do
-      get :index, format: :json
+      get :index, active: true, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].count).to be >= 3
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).not_to include item3.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['itemable']}).not_to include nil
     end
     it 'should return inactive inventory items' do
-      get :index, inactive: true, format: :json
+      get :index, active: false, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item3.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['sale_price']}).to include nil

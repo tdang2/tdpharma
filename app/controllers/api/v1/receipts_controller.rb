@@ -16,13 +16,12 @@ class Api::V1::ReceiptsController < ApplicationController
     receipts ||= @store.receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}])
     receipts = receipts.created_max(params[:max_date]) if params[:max_date]
     receipts = receipts.created_min(params[:min_date]) if params[:min_date]
-    total = (receipts.count / 25.0).ceil
     res = {
         receipts: receipts.page(params[:page]).as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
                                                                               buyer_item: {include: :itemable},
                                                                               adjust_item: {include: :itemable}]}},
                                                                  :med_batches]),
-        total_pages: total
+        total_count: receipts.count
     }
     render json: prepare_json(res), status: 200
   end

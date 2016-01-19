@@ -26,22 +26,28 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
     it 'list all receipts' do
       get :index, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].count).to be >= 3
+      expect(JSON.parse(response.body)['data']['receipts'].count).to be >= 3
     end
     it 'list all sales' do
       get :index, sale: true, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].all?{|r| r['receipt_type'] == 'sale' and r['transactions'].all?{|t| !t['seller_item_id'].nil?}}).to eq true
+      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'sale'}
+      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['seller_item_id'].nil? } }
+      expect(type & id).to eq true
     end
     it 'list all purchases' do
       get :index, purchase: true, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].all?{|r| r['receipt_type'] == 'purchase' and r['transactions'].all?{|t| !t['buyer_item_id'].nil?}}).to eq true
+      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'purchase'}
+      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['buyer_item_id'].nil? } }
+      expect(type & id).to eq true
     end
     it 'list all adjustment' do
       get :index, adjustment: true, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data'].all?{|r| r['receipt_type'] == 'adjustment' and r['transactions'].all?{|t| !t['adjust_item_id'].nil?}}).to eq true
+      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'adjustment'}
+      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['adjust_item_id'].nil? } }
+      expect(type & id).to eq true
     end
   end
 

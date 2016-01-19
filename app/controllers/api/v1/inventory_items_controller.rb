@@ -8,9 +8,13 @@ class Api::V1::InventoryItemsController < ApplicationController
       unless @store
         render json: prepare_json({message: 'Current user has no associated store'}), status: 400
       else
-        items = @store.inventory_items.inactive if params[:inactive] == true
-        items ||= @store.inventory_items.active
-        items = items.by_category(params[:category_id]) if params[:category_id]
+        if params[:search]
+          items = @store.inventory_items.by_type(Medicine).where('medicines.name LIKE ?', "%#{params[:search]}%")
+        else
+          items = @store.inventory_items.inactive if params[:inactive] == true
+          items ||= @store.inventory_items.active
+          items = items.by_category(params[:category_id]) if params[:category_id]
+        end
         total = (items.count / 25.0).ceil
         res = {
             items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category], methods: :photo_thumb),

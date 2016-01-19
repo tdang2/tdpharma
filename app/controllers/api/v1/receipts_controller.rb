@@ -14,15 +14,15 @@ class Api::V1::ReceiptsController < ApplicationController
     receipts = @store.receipts.sale_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:sale]
     receipts = @store.receipts.adjustment_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:adjustment]
     receipts ||= @store.receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}])
-    receipts = receipts.created_after(params[:before]) if params[:before]
-    receipts = receipts.created_before(params[:end]) if params[:end]
+    receipts = receipts.created_max(params[:max_date]) if params[:max_date]
+    receipts = receipts.created_min(params[:min_date]) if params[:min_date]
     total = (receipts.count / 25.0).ceil
     res = {
         receipts: receipts.page(params[:page]).as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
                                                                               buyer_item: {include: :itemable},
                                                                               adjust_item: {include: :itemable}]}},
                                                                  :med_batches]),
-        total_count: total
+        total_pages: total
     }
     render json: prepare_json(res), status: 200
   end

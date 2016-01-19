@@ -3,8 +3,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
   let(:purchase_receipt_params) do
     {
         receipt_type: 'purchase',
-        store_id: s.id,
-        total: 620,
+        store_id: s.id,              # For client with user sign in, there is no need for store_id
+        total: 620,                  # total represent how much the receipt cost total. Sum of total_price (200+300+120)
         med_batches_attributes: [{
                                      mfg_date: (Date.today - 3.months),
                                      expire_date: (Date.today + 3.months),
@@ -16,8 +16,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                      total_price: 200,           # Total price for the whole transaction
                                      user_id: u1.id,
                                      category_id: item1.category.id,
-                                     medicine_id: item1.itemable.id,
-                                     inventory_item_id: item1.id,
+                                     medicine_id: item1.itemable.id,    # must include medicine_id
+                                     inventory_item_id: item1.id,       # must include inventory_item_id
                                      paid: true
                                  }, {
                                      mfg_date: (Date.today - 3.months),

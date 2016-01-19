@@ -13,11 +13,11 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     item2.create_sale_price(amount: 150, discount: 0)
     item4
     item3.update!(status: 'inactive')
+    request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
   end
 
   describe 'GET index' do
     it 'should return active inventory items' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :index, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].count).to be >= 3
@@ -25,17 +25,22 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['itemable']}).not_to include nil
     end
     it 'should return inactive inventory items' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :index, inactive: true, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item3.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['sale_price']}).to include nil
     end
     it 'should return active item belong to c2' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :index, category_id: c2.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to match [item2.id, item4.id]
+    end
+    it 'should return item search by name' do
+      item1.itemable.update(name: 'Calcium')
+      item2.itemable.update(name: 'Calculus')
+      get :index, search: 'Calc', format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['items'].all?{|i| i['itemable']['name'].include?('Calc')}).to eq true
     end
   end
 

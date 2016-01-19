@@ -83,4 +83,39 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       expect(JSON.parse(response.body)['data']['transactions'].all?{|t| !t['adjust_item_id'].nil?}).to eq true
     end
   end
+
+  describe 'SHOW get' do
+    before do
+      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+    end
+    it 'show receipt purchase' do
+      Receipt.create!(purchase_receipt_params)
+      receipt_id = item1.purchases.last.receipt.id
+      get :show, id: receipt_id, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'purchase'
+      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 3
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['buyer_item_id'] == item1.id}).to eq true
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['buyer_item_id'] == item2.id}).to eq true
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['buyer_item_id'] == item3.id}).to eq true
+    end
+    it 'show sale receipt' do
+      Receipt.create!(sale_receipt_params)
+      get :show, id:  item1.sales.last.receipt.id, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'sale'
+      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 2
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['seller_item_id'] == item1.id}).to eq true
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['seller_item_id'] == item4.id}).to eq true
+    end
+    it 'show adjustment receipt' do
+      Receipt.create!(adjust_receipt_params)
+      get :show, id: item2.adjustments.last.receipt.id, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'adjustment'
+      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 2
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['adjust_item_id'] == item2.id}).to eq true
+      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['adjust_item_id'] == item3.id}).to eq true
+    end
+  end
 end

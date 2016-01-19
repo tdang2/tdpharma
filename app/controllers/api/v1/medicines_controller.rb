@@ -2,9 +2,9 @@ class Api::V1::MedicinesController < ApplicationController
   before_filter :authenticate_user_from_token!  # This is for mobile app api
   before_filter :authenticate_user!             # standard devise web app
   before_action :get_store
-  # rescue_from StandardError, :render_error
+  rescue_from StandardError, with: :render_error
 
-  def render_error
+  def render_error(e)
     NewRelic::Agent.notice_error(e) if Rails.env.production?
     render json: prepare_json({errors: e.message}), status: 400
   end

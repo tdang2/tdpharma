@@ -95,7 +95,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       adjust_user_id: u1.id,
                                       adjust_item_id: item2.id,
                                       total_price: -20 * 150,  # Expect clients to calculate the total adjust units * unit sale price
-                                      adjust_store_id: s.id
+                                      adjust_store_id: s.id,
+                                      notes: 'Inventory Count Missing'
                                   }, {
                                       amount: 10,
                                       delivery_time: DateTime.now,
@@ -106,6 +107,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       adjust_item_id: item3.id,
                                       total_price: 10 * 30,  # Expect clients to calculate the total adjust units * unit sale price
                                       adjust_store_id: s.id,
+                                      notes: 'Found extra items on shelves'
                                   }
         ]
     }

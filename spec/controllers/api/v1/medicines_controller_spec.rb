@@ -34,8 +34,10 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       sign_in u1
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       post :create, medicine: med_params, format: :json
+      mid = JSON.parse(response.body)['data']['id']
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['itemable']['name']).to eq 'Claritin'
+      expect(InventoryItem.find(mid).amount).to eq 1200
     end
   end
 

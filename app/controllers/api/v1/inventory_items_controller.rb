@@ -28,7 +28,7 @@ class Api::V1::InventoryItemsController < ApplicationController
     begin
       render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
       item = @store.inventory_items.includes(:itemable, :sale_price, :med_batches).find(params[:id])
-      render json: prepare_json(item.as_json(include: [:itemable, :sale_price, :med_batches], methods: :photo_thumb)), status: 200
+      render json: prepare_json(item.as_json(include: [:itemable, :sale_price, :available_batches], methods: :photo_thumb)), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

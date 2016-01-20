@@ -24,6 +24,11 @@ class MedBatch < ActiveRecord::Base
   validate :must_have_medicine
 
   ### Scopes #######################################################################################
+  scope :available_batches, -> { where('total_units > ?', 0) }
+  scope :empty_batches, -> {where('total_units = 0')}
+  scope :non_expired_batches, -> {where('expire_date > ?', Date.today)}
+  scope :expired_batches, -> {where('expire_date <= ?', Date.today)}
+  scope :near_expire_batches, -> {where('expire_date <= ?', Date.today+30.days)}
 
   ### Other ########################################################################################
 

@@ -3,13 +3,12 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
   let(:purchase_receipt_params) do
     {
         receipt_type: 'purchase',
-        store_id: s.id,              # For client with user sign in, there is no need for store_id
-        total: 620,                  # total represent how much the receipt cost total. Sum of total_price (200+300+120)
+        store_id: s.id,              # For client with user sign in, there is no need to provide for store_id
         med_batches_attributes: [{
                                      mfg_date: (Date.today - 3.months),
                                      expire_date: (Date.today + 3.months),
                                      package: 'Bottle',
-                                     store_id: s.id,             # Same store as logged in user
+                                     store_id: s.id,             # Same store as logged in user. No need to provide for client with logged in
                                      amount_per_pkg: 100,
                                      amount_unit: 'tablet',      # Most minimum unit inside the package
                                      total_units: 100,           # Total number of units (package * amount_per_pkg)
@@ -23,7 +22,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                      mfg_date: (Date.today - 3.months),
                                      expire_date: (Date.today + 3.months),
                                      package: 'Box',
-                                     store_id: s.id,            # Same store as logged in user
+                                     store_id: s.id,            # Same store as logged in user. No need to provide for client with logged in
                                      amount_per_pkg: 27,
                                      amount_unit: 'tablet',     # Most minimum unit inside the package
                                      total_units: 54,           # Total number of units (package * amount_per_pkg)
@@ -53,19 +52,18 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
   let(:sale_receipt_params) do
     {
         receipt_type: 'sale',
-        store_id: s.id,
-        total: 154,
+        store_id: s.id,               # No need for client side with logged in
         transactions_attributes: [{
-                                      amount: 1,
+                                      amount: 1,                  # quantity sold
                                       delivery_time: DateTime.now,
                                       due_date: DateTime.now,
                                       paid: true,
                                       performed: true,
-                                      sale_user_id: u1.id,
-                                      seller_item_id: item1.id,
-                                      total_price: 100,
-                                      seller_id: s.id,
-                                      med_batch_id: item1.med_batches.first.id
+                                      sale_user_id: u1.id,        # User id who make the sale
+                                      seller_item_id: item1.id,   # Item id
+                                      total_price: 100,           # total for the sale of this inventory item. Amount * sale price
+                                      seller_id: s.id,            # No need for client side with logged in
+                                      med_batch_id: item1.med_batches.first.id  # Batch id of the item
                                   }, {
                                       amount: 1,
                                       delivery_time: DateTime.now,
@@ -74,8 +72,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       performed: true,
                                       sale_user_id: u1.id,
                                       seller_item_id: item4.id,
-                                      total_price: 54,
-                                      seller_id: s.id,
+                                      total_price: 54,            # total for the sale of this inventory item. Amount * sale price
+                                      seller_id: s.id,            # No need for client side with logged in
                                       med_batch_id: item4.med_batches.first.id
                                   }
         ]
@@ -85,27 +83,25 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
     {
         receipt_type: 'adjustment',
         store_id: s.id,
-        total: -2700,
+        # total: -2700,
         transactions_attributes: [{
-                                      amount: -20,
+                                      new_total: 80,                  # New total value of the item after adjustment
                                       delivery_time: DateTime.now,
                                       due_date: DateTime.now,
-                                      paid: false,
-                                      performed: true,
-                                      adjust_user_id: u1.id,
-                                      adjust_item_id: item2.id,
-                                      total_price: -20 * 150,  # Expect clients to calculate the total adjust units * unit sale price
-                                      adjust_store_id: s.id,
-                                      notes: 'Inventory Count Missing'
+                                      paid: false,                    # no payment involved
+                                      performed: true,                # action is performed set to true
+                                      adjust_user_id: u1.id,          # id of the user who makes the adjustment
+                                      adjust_item_id: item2.id,       # id of the item which adjustment is made
+                                      adjust_store_id: s.id,          # No need for client side with logged in user
+                                      notes: 'Inventory Count Missing' # Note left by the user
                                   }, {
-                                      amount: 10,
+                                      new_total: 110,
                                       delivery_time: DateTime.now,
                                       due_date: DateTime.now,
                                       paid: true,
                                       performed: true,
                                       adjust_user_id: u1.id,
                                       adjust_item_id: item3.id,
-                                      total_price: 10 * 30,  # Expect clients to calculate the total adjust units * unit sale price
                                       adjust_store_id: s.id,
                                       notes: 'Found extra items on shelves'
                                   }

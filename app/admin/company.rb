@@ -92,7 +92,7 @@ ActiveAdmin.register Company do
             column 'First Name', :first_name
             column 'Last Name', :last_name
             column 'Email', :email
-            column 'Sign In Count', :sign_in_count
+            column 'Last Check In', :last_checked_in
           end
         end
       end

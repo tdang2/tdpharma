@@ -16,8 +16,8 @@ class Receipt < ActiveRecord::Base
   accepts_nested_attributes_for :transactions
 
   ### Callbacks ####################################################################################
-  #TODO: Need callbacks to handle negative amount in inventory
-  #TODO: Need callbacks to handle total price != sum of sale price
+  after_save :calculate_total
+
 
   ### Validations ##################################################################################
 
@@ -37,7 +37,9 @@ class Receipt < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
-
+  def calculate_total
+    self.total = self.transactions.sum(:total_price) if receipt_type != 'adjustment'
+  end
 
   private
 end

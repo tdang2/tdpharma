@@ -25,8 +25,8 @@ class Transaction < ActiveRecord::Base
 
   ### Validations ##################################################################################
   # A store can sell to patients which does not have a buyer_id and buyer_item_id
-  validates :amount, :total_price, :due_date, :delivery_time, presence: true
-  validate :author_existence, :item_existence
+  validates :due_date, :delivery_time, presence: true
+  validate :author_existence, :item_existence, :value_existence
 
 
   ### Scopes #######################################################################################
@@ -57,8 +57,14 @@ class Transaction < ActiveRecord::Base
     elsif self.receipt and self.receipt.receipt_type == 'adjustment' and adjust_item_id
       # When checking inventory, it is difficult to figure out which batch is missing
       # TODO: rethink how to update inventory count while keeping track of which batch is missing
+      diff = self.new_total - self.adjust_item.amount
+      price = diff * self.adjust_item.sale_price.amount if self.adjust_item and self.adjust_item.sale_price
       self.transaction_type = 'adjustment'
-      self.adjust_item.update!(amount: self.adjust_item.amount + self.amount)
+      self.amount = diff
+      self.total_price = price
+      receipt_value = receipt.total.nil? ? 0 : receipt.total
+      self.receipt.update!(total: receipt_value + price)
+      self.adjust_item.update!(amount: self.new_total)
     end
   end
 
@@ -69,4 +75,9 @@ class Transaction < ActiveRecord::Base
   def author_existence
     errors.add('need an user to sign off') if sale_user_id.nil? and purchase_user_id.nil? and adjust_user_id.nil?
   end
+
+  def value_existence
+    errors.add('need an amount or new total value') if amount.nil? and new_total.nil?
+  end
+
 end

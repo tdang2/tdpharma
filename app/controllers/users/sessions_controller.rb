@@ -12,6 +12,7 @@ class Users::SessionsController < Devise::SessionsController
     self.resource = warden.authenticate!(auth_options)
     set_flash_message(:notice, :signed_in) if is_flashing_format?
     sign_in(resource_name, resource)
+    resource.update!(last_checked_in: DateTime.now) if resource.class == User
     yield resource if block_given?
     if request.format == 'application/json'
       render json: resource.as_json, status: 201

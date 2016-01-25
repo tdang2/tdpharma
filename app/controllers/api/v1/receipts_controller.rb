@@ -32,6 +32,13 @@ class Api::V1::ReceiptsController < ApplicationController
   end
 
   def create
+    if params[:receipt][:transactions_attributes]
+      params[:receipt][:transactions_attributes].each do |p|
+        p[:adjust_store_id] ||= @store.id if params[:receipt][:receipt_type] == 'adjustment'
+        p[:seller_id] ||= @store.id if params[:receipt][:receipt_type] == 'sale'
+      end
+    end
+    params[:receipt][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:receipt][:med_batches_attributes]
     receipt = @store.receipts.create!(receipt_params)
     render_receipt(receipt)
   end
@@ -42,7 +49,7 @@ class Api::V1::ReceiptsController < ApplicationController
                                     med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,
                                                              :amount_per_pkg, :amount_unit, :total_units, :total_price,
                                                              :user_id, :category_id, :paid, :medicine_id, :inventory_item_id],
-                                    transactions_attributes: [:amount, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
+                                    transactions_attributes: [:amount, :new_total, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
                                                               :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id,
                                                               :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price])
   end

@@ -1,5 +1,6 @@
 class MedBatch < ActiveRecord::Base
   ### Attributes ###################################################################################
+  include RandomGenerable
 
   ### Constants ####################################################################################
 
@@ -49,6 +50,7 @@ class MedBatch < ActiveRecord::Base
       s = Store.find(store_id)
       inventory = s.inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       self.inventory_item_id = inventory.id if inventory
+      self.barcode = MedBatch.barcode_generate
     end
   end
 

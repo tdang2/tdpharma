@@ -23,6 +23,7 @@ RSpec.describe MedBatch, type: :model do
     it 'create an inventory item' do
       batch1 = create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1)
       expect(batch1.inventory_item).not_to eq nil
+      expect(batch1.barcode).not_to eq nil
     end
     it 'update existing inventory item' do
       create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1)

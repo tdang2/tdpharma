@@ -40,7 +40,7 @@ ActiveAdmin.register User do
     column :first_name
     column :last_name
     column :phone
-    column :sign_in_count
+    column :last_checked_in
     actions
   end
 
@@ -53,6 +53,7 @@ ActiveAdmin.register User do
       row :phone
       row :preferred_language
       row :sign_in_count
+      row :last_checked_in
       row :created_at
       row :updated_at
       row :manager

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120111916) do
+ActiveRecord::Schema.define(version: 20160125163753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(version: 20160120111916) do
     t.integer  "category_id"
     t.integer  "receipt_id"
     t.boolean  "paid",              default: true
+    t.string   "barcode"
   end
 
   add_index "med_batches", ["medicine_id"], name: "index_med_batches_on_medicine_id", using: :btree
@@ -311,6 +312,7 @@ ActiveRecord::Schema.define(version: 20160120111916) do
     t.integer  "receipt_id"
     t.integer  "med_batch_id"
     t.string   "notes"
+    t.integer  "new_total"
   end
 
   add_index "transactions", ["med_batch_id"], name: "index_transactions_on_med_batch_id", using: :btree
@@ -339,6 +341,7 @@ ActiveRecord::Schema.define(version: 20160120111916) do
     t.integer  "manager_id"
     t.integer  "store_id"
     t.integer  "preferred_language"
+    t.datetime "last_checked_in"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -87,7 +87,9 @@ Things you may want to cover:
                                    DELETE     /api/v1/transactions/:id(.:format)            api/v1/transactions#destroy {:format=>:json}
                    api_v1_receipts GET        /api/v1/receipts(.:format)                    api/v1/receipts#index {:format=>:json}
                                    POST       /api/v1/receipts(.:format)                    api/v1/receipts#create {:format=>:json}
+                    api_v1_receipt GET        /api/v1/receipts/:id(.:format)                api/v1/receipts#show {:format=>:json}
               api_v1_configuration GET        /api/v1/configurations/:id(.:format)          api/v1/configurations#show {:format=>:json}
+                api_v1_med_batches GET        /api/v1/med_batches(.:format)                 api/v1/med_batches#index {:format=>:json}
 
 
 Please feel free to use a different markup language if you do not plan to run

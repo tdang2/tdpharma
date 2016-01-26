@@ -14,7 +14,7 @@ class Api::V1::InventoryItemsController < ApplicationController
         items = items.inactive if params[:active] == false
         items = items.by_category(params[:category_id]) if params[:category_id]
         res = {
-            items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category], methods: :photo_thumb),
+            items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category, :available_batches], methods: :photo_thumb),
             total_count: items.count
         }
         render json: prepare_json(res), status: 200

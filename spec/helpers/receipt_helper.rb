@@ -60,7 +60,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       paid: true,
                                       performed: true,
                                       sale_user_id: u1.id,        # User id who make the sale
-                                      seller_item_id: item1.id,   # Item id
+                                      seller_item_id: item1.id,   # Item id no need to provide for api request. only need batch id
                                       total_price: 100,           # total for the sale of this inventory item. Amount * sale price
                                       seller_id: s.id,            # No need for client side with logged in
                                       med_batch_id: item1.med_batches.first.id  # Batch id of the item
@@ -71,7 +71,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       paid: true,
                                       performed: true,
                                       sale_user_id: u1.id,
-                                      seller_item_id: item4.id,
+                                      seller_item_id: item4.id,   # Item id no need to provide for api request. only need batch id
                                       total_price: 54,            # total for the sale of this inventory item. Amount * sale price
                                       seller_id: s.id,            # No need for client side with logged in
                                       med_batch_id: item4.med_batches.first.id

@@ -36,7 +36,7 @@ class Api::V1::ReceiptsController < ApplicationController
       params[:receipt][:transactions_attributes].each do |p|
         p[:adjust_store_id] ||= @store.id if params[:receipt][:receipt_type] == 'adjustment'
         p[:seller_id] ||= @store.id if params[:receipt][:receipt_type] == 'sale'
-        p[:seller_item_id] ||= @store.med_batches.find(params[:med_batch_id]).inventory_item_id if params[:receipt][:receipt_type] == 'sale'
+        p[:seller_item_id] ||= @store.med_batches.find(p[:med_batch_id]).inventory_item_id if params[:receipt][:receipt_type] == 'sale'
       end
     end
     params[:receipt][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:receipt][:med_batches_attributes]

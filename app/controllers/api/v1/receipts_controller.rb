@@ -17,7 +17,7 @@ class Api::V1::ReceiptsController < ApplicationController
     receipts = receipts.created_max(params[:max_date]) if params[:max_date]
     receipts = receipts.created_min(params[:min_date]) if params[:min_date]
     res = {
-        receipts: receipts.page(params[:page]).as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
+        receipts: receipts.reverse_order.page(params[:page]).as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
                                                                               buyer_item: {include: :itemable},
                                                                               adjust_item: {include: :itemable}]}},
                                                                  :med_batches]),

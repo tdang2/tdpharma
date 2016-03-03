@@ -38,7 +38,7 @@ class Receipt < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def calculate_total
-    self.total = self.transactions.sum(:total_price) if receipt_type != 'adjustment'
+    self.update!(total: self.transactions.sum(:total_price)) if receipt_type != 'adjustment' and total.blank?
   end
 
   private

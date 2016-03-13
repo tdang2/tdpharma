@@ -46,12 +46,12 @@ class MedBatch < ActiveRecord::Base
   end
 
   def add_inventory_item
-    if store_id and user_id
+    if store_id and user_id and inventory_item_id.blank?
       s = Store.find(store_id)
       inventory = s.inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       self.inventory_item_id = inventory.id if inventory
-      self.barcode = MedBatch.barcode_generate
     end
+    self.barcode = MedBatch.barcode_generate if barcode.blank?
   end
 
   def update_receipt_transactions

@@ -6,10 +6,71 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
   include_context 'medicine params'
   include_context 'inventory item params'
   include_context 'receipt params'
+  include_context 'transaction params'
 
   before do
     prepare_data
     u1.update!(store_id: s.id)
+  end
+
+  describe 'patch UPDATE' do
+    before do
+      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+    end
+    it 'fail editing purchase without explanation notes' do
+      r = Receipt.create!(purchase_receipt_params)
+      t = r.transactions.where(buyer_item_id: item1.id).last
+      purchase_transaction_edit_params.delete(:notes)
+      patch :update, id: t.id, transaction: purchase_transaction_edit_params, format: :json
+      expect(response.status).to eq 400
+      expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have explanation when being edited'
+    end
+
+    it 'fail editting sale without explanation notes' do
+      r = Receipt.create!(sale_receipt_params)
+      t = r.transactions.where(seller_item_id: item1.id).last
+      sale_transaction_edit_params.delete(:notes)
+      patch :update, id: t.id, transaction: sale_transaction_edit_params, format: :json
+      expect(response.status).to eq 400
+      expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have explanation when being edited'
+    end
+
+    it 'edit purchase info' do
+      r = Receipt.create!(purchase_receipt_params)
+      t = r.transactions.where(buyer_item_id: item1.id).last
+      t_cnt = t.amount
+      barcode = InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.barcode
+      i1_cnt = InventoryItem.find(item1.id).amount
+      i1_avg_cnt = InventoryItem.find(item1.id).avg_purchase_amount
+      patch :update, id: t.id, transaction: purchase_transaction_edit_params, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['receipt']['id']).to eq r.id
+      expect(JSON.parse(response.body)['data']['amount']).to eq 50
+      expect(JSON.parse(response.body)['data']['buyer_item_id']).to eq item1.id
+      expect(InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.total_units).to eq 50
+      expect(InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.barcode).to eq barcode
+      expect(InventoryItem.find(item1.id).amount).to eq i1_cnt - t_cnt + 50
+      expect(InventoryItem.find(item1.id).avg_purchase_amount).not_to eq i1_avg_cnt
+    end
+
+    it 'edit sale info' do
+      r = Receipt.create!(sale_receipt_params)
+      t = r.transactions.where(seller_item_id: item1.id).last
+      t_cnt = t.amount
+      barcode = t.med_batch.barcode
+      batch_cnt = t.med_batch.total_units
+      i1_cnt = InventoryItem.find(item1.id).amount
+      i1_avg_cnt = InventoryItem.find(item1.id).avg_sale_amount
+      patch :update, id: t.id, transaction: sale_transaction_edit_params, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['receipt']['id']).to eq r.id
+      expect(JSON.parse(response.body)['data']['amount']).to eq 2
+      expect(JSON.parse(response.body)['data']['seller_item_id']).to eq item1.id
+      expect(MedBatch.find(t.med_batch.id).total_units).to eq batch_cnt + t_cnt - 2
+      expect(MedBatch.find(t.med_batch.id).barcode).to eq barcode
+      expect(InventoryItem.find(item1.id).amount).to eq i1_cnt + t_cnt - 2
+      expect(InventoryItem.find(item1.id).avg_sale_amount).not_to eq i1_avg_cnt
+    end
   end
 
   describe 'show GET' do

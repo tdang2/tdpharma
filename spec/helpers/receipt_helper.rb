@@ -83,7 +83,6 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
     {
         receipt_type: 'adjustment',
         store_id: s.id,
-        # total: -2700,
         transactions_attributes: [{
                                       new_total: 80,                  # New total value of the item after adjustment
                                       delivery_time: DateTime.now,

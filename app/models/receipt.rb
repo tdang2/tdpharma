@@ -6,6 +6,7 @@ class Receipt < ActiveRecord::Base
   ### Constants ####################################################################################
 
   ### Includes and Extensions ######################################################################
+  include RandomGenerable
 
   ### Associations #################################################################################
   belongs_to :store
@@ -17,6 +18,7 @@ class Receipt < ActiveRecord::Base
 
   ### Callbacks ####################################################################################
   after_save :calculate_total
+  before_create :generate_barcode
 
 
   ### Validations ##################################################################################
@@ -37,9 +39,14 @@ class Receipt < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
+
+  private
   def calculate_total
     self.update!(total: self.transactions.sum(:total_price)) if receipt_type != 'adjustment' and total.blank?
   end
 
-  private
+  def generate_barcode
+    self.barcode = Receipt.barcode_generate
+  end
+
 end

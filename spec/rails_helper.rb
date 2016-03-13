@@ -16,6 +16,7 @@ require 'helpers/category_helper'
 require 'helpers/medicine_helper'
 require 'helpers/inventory_item_helper'
 require 'helpers/receipt_helper'
+require 'helpers/transaction_helper'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

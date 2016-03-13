@@ -40,7 +40,14 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   def update
-
+    t = Transaction.find(params[:id])
+    if t.buyer_id == @store.id || t.seller_id == @store.id || t.adjust_store_id == @store.id
+      t.update!(transaction_update_params)
+      render json: prepare_json(t.as_json(include: [:receipt, :seller_item, :buyer_item, :adjust_item, :sale_user,
+                                                    :purchase_user, :adjust_user, {med_batch: {include: [:medicine]}}])), status: 200
+    else
+      render json: prepare_json({message: 'Not authorized to edit this transaction'}), status: 400
+    end
   end
 
   def destroy
@@ -48,6 +55,11 @@ class Api::V1::TransactionsController < ApplicationController
   end
 
   private
+  def transaction_update_params
+    params.require(:transaction).permit(:amount, :new_total, :total_price, :delivery_time, :due_date, :paid, :performed,
+                                        :purchase_user_id, :sale_user_id, :adjust_user_id, :notes)
+  end
+
   def transaction_params
     params.require(:transaction).permit(:amount, :new_total, :total_price, :delivery_time, :due_date, :paid, :performed, :transaction_type,
                                         :purchase_user_id, :buyer_item_id, :seller_item_id, :sale_user_id, :seller_id,

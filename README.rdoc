@@ -47,39 +47,38 @@ Things you may want to cover:
 
 * Database initialization
 
-* Upgrade postgresql to a new major version
-- Assuming you install postgresql through homebrew
-- Turning postgresql off just in case: 
-  > launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
-- Upgrade postgresql through homebrew if you have not done so already
-  > brew update && brew upgrade postgresql
-- Create a new pristine database with a new version. In this case, postgres9.5
-  > initdb /usr/local/var/postgres9.5 -E utf8
-- Upgrade the old database to the new one. In this case, I have 9.4.5 as the old data structure to be replaced with the database we just created. Similarly, applied the same for the actual data
-  > pg_upgrade \
-  -d /usr/local/var/postgres \
-  -D /usr/local/var/postgres9.5 \
-  -b /usr/local/Cellar/postgresql/9.4.5/bin/ \
-  -B /usr/local/Cellar/postgresql/9.5.1/bin/ \
-  -v
-- Move 9.5 data directory back to where PostgreSQL expects it to be
-  > mv /usr/local/var/postgres /usr/local/var/postgres9.4
-  > mv /usr/local/var/postgres9.5 /usr/local/var/postgres
-- Start PostgreSQL back up
-  > launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
-- Recompile pg gem
-  > gem uninstall pg
-  > gem install pg
+3. Upgrade postgresql to a new major version
+ - Assuming you install postgresql through homebrew
+ - Turning postgresql off just in case: 
+   $ launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+ - Upgrade postgresql through homebrew if you have not done so already
+   $ brew update && brew upgrade postgresql
+ - Create a new pristine database with a new version. In this case, postgres9.5
+   $ initdb /usr/local/var/postgres9.5 -E utf8
+ - Upgrade the old database to the new one. In this case, I have 9.4.5 as the old data structure to be replaced with the database we just created. Similarly, applied the same for the actual data
+   $ pg_upgrade \
+   -d /usr/local/var/postgres \
+   -D /usr/local/var/postgres9.5 \
+   -b /usr/local/Cellar/postgresql/9.4.5/bin/ \
+   -B /usr/local/Cellar/postgresql/9.5.1/bin/ \
+   -v
+ - Move 9.5 data directory back to where PostgreSQL expects it to be
+   $ mv /usr/local/var/postgres /usr/local/var/postgres9.4
+   $ mv /usr/local/var/postgres9.5 /usr/local/var/postgres
+ - Start PostgreSQL back up
+   $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+ - Recompile pg gem
+   $ gem uninstall pg
+   $ gem install pg
 
-* How to run the test suite
+4. How to run the test suite
 - We use rspec to run rails test. By setting up bundle install correctly you can start using rspec folder to test
 
-* Services (job queues, cache servers, search engines, etc.)
+5. Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+6. Deployment instructions
 
-* Current supported api calls. Refer to trello tdpos for more detailed for each end point. To get the latest routes,
-* under the project folder terminal, type command rake:routes
+7. Current supported api calls. Refer to trello tdpos for more detailed for each end point. To get the latest routes, under the project folder terminal, type command rake:routes
 
                       api_v1_users GET        /api/v1/users(.:format)                       api/v1/users#index {:format=>:json}
                                    POST       /api/v1/users(.:format)                       api/v1/users#create {:format=>:json}

@@ -9,7 +9,7 @@ Things you may want to cover:
 
 * System dependencies
 
-* Setting up development system for webapp
+1. Setting up development system for webapp
  - Make sure your Mac finished install Xcode, Xcode C++ library, and Xcode command line
  - Make sure to finish set up your Mac with the this link: https://github.com/thoughtbot/laptop
  - Switch your Mac terminal shell to zsh if you have not already done that. Use this zshrc set up as an example
@@ -26,7 +26,7 @@ Things you may want to cover:
    + After that any npm install will be managed through nvm
  - Optional: Use homebrew to install brew-cask. Brew-cask has binary version of some of the useful tools that you can install such as atom
 
-* Setting up development system for mobile using ionic
+2. Setting up development system for mobile using ionic
  - Follow ionic setup website for the latest information
 
  * Configuration
@@ -46,9 +46,9 @@ Things you may want to cover:
     + rake db:drop to remove the database
     + rake db:seed to create some seed data defined in seed.rb
 
- * Database initialization
+3. Database initialization
 
-* Upgrade postgresql to a new major version
+4. Upgrade postgresql to a new major version
  - Assuming you install postgresql through homebrew
  - Turning postgresql off just in case: 
    $ launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
@@ -72,14 +72,14 @@ Things you may want to cover:
    $ gem uninstall pg
    $ gem install pg
 
-* How to run the test suite
+5. How to run the test suite
  - We use rspec to run rails test. By setting up bundle install correctly you can start using rspec folder to test
 
-* Services (job queues, cache servers, search engines, etc.)
+6. Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+7. Deployment instructions
 
-* Current supported api calls. Refer to trello tdpos for more detailed for each end point. To get the latest routes, under the project folder terminal, type command rake:routes
+8. Current supported api calls. Refer to trello tdpos for more detailed for each end point. To get the latest routes, under the project folder terminal, type command rake:routes
 
                       api_v1_users GET        /api/v1/users(.:format)                       api/v1/users#index {:format=>:json}
                                    POST       /api/v1/users(.:format)                       api/v1/users#create {:format=>:json}

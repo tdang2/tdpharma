@@ -26,26 +26,26 @@ Things you may want to cover:
  - Optional: Use homebrew to install brew-cask. Brew-cask has binary version of some of the useful tools that you can install such as atom
 
 2. Setting up development system for mobile using ionic
-- Follow ionic setup website for the latest information
+ - Follow ionic setup website for the latest information
 
-* Configuration
- - You will need to set up a database.yml file which should be put under the project folder/config. An example of database.yml
-   can be seen here: https://gist.github.com/tdang2/6254daff16e833d475cb
- - Beside the database.yml, we also need .env file to set environment variable for our app. The link above also contains
-   an example of a .env file. Put the .env file right under the project folder
- - Once you set up the database, we need to set up ruby gem. Open terminal to the project folder, run
-   + gem install bundler
-   + bundle install
+ * Configuration
+  - You will need to set up a database.yml file which should be put under the project folder/config. An example of database.yml
+    can be seen here: https://gist.github.com/tdang2/6254daff16e833d475cb
+  - Beside the database.yml, we also need .env file to set environment variable for our app. The link above also contains
+    an example of a .env file. Put the .env file right under the project folder
+  - Once you set up the database, we need to set up ruby gem. Open terminal to the project folder, run
+    + gem install bundler
+    + bundle install
 
-* Database creation
- - Rails use rake task to manage database. We are using postgresql for rails app
- - For development, use:
-   + rake db:create RAILS_ENV=development to create
-   + rake db:migrate RAILS_ENV=development to build the tables for database. This command also update the database to the latest version
-   + rake db:drop to remove the database
-   + rake db:seed to create some seed data defined in seed.rb
+ * Database creation
+  - Rails use rake task to manage database. We are using postgresql for rails app
+  - For development, use:
+    + rake db:create RAILS_ENV=development to create
+    + rake db:migrate RAILS_ENV=development to build the tables for database. This command also update the database to the latest version
+    + rake db:drop to remove the database
+    + rake db:seed to create some seed data defined in seed.rb
 
-* Database initialization
+ * Database initialization
 
 3. Upgrade postgresql to a new major version
  - Assuming you install postgresql through homebrew
@@ -72,7 +72,7 @@ Things you may want to cover:
    $ gem install pg
 
 4. How to run the test suite
-- We use rspec to run rails test. By setting up bundle install correctly you can start using rspec folder to test
+ - We use rspec to run rails test. By setting up bundle install correctly you can start using rspec folder to test
 
 5. Services (job queues, cache servers, search engines, etc.)
 

@@ -56,7 +56,7 @@ class Api::V1::ReceiptsController < ApplicationController
   end
 
   def render_receipt(receipt)
-    render json: prepare_json(receipt.as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
+    render json: prepare_json(receipt.as_json(include: [{:transactions => {include: [:med_batch, {seller_item: {include: :itemable}},
                                                                                      buyer_item: {include: :itemable},
                                                                                      adjust_item: {include: :itemable}]}},
                                                         :med_batches]

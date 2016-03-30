@@ -50,6 +50,7 @@ class Transaction < ActiveRecord::Base
         self.buyer_item.update!(amount: buyer_item.amount - amount_was + amount, avg_purchase_amount: self.buyer_item.purchases.average(:amount))
         self.med_batch.update!(total_units: amount) if self.med_batch
       end
+      self.med_batch.update!(total_price: total_price) if total_price_changed? and med_batch
       self.buyer_item.update!(avg_purchase_price: self.buyer_item.purchases.average(:total_price)) if total_price_changed?
     elsif receipt and receipt.receipt_type == 'sale' and seller_item
       if amount_changed?
@@ -58,6 +59,7 @@ class Transaction < ActiveRecord::Base
       end
       self.seller_item.update!(avg_sale_price: self.seller_item.sales.average(:total_price)) if total_price_changed?
     end
+    self.receipt.update!(total: self.receipt.total - total_price_was + total_price) if total_price_changed? and receipt
   end
 
 

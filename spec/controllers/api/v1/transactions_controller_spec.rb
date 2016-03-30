@@ -38,6 +38,8 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     it 'edit purchase info' do
       r = Receipt.create!(purchase_receipt_params)
       t = r.transactions.where(buyer_item_id: item1.id).last
+      r_total = r.total
+      t_total = t.total_price
       t_cnt = t.amount
       barcode = InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.barcode
       i1_cnt = InventoryItem.find(item1.id).amount
@@ -47,6 +49,8 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
       expect(JSON.parse(response.body)['data']['receipt']['id']).to eq r.id
       expect(JSON.parse(response.body)['data']['amount']).to eq 50
       expect(JSON.parse(response.body)['data']['buyer_item_id']).to eq item1.id
+      expect(JSON.parse(response.body)['data']['receipt']['total']).to eq r_total - t_total + 250
+      expect(InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.total_price).to eq 250
       expect(InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.total_units).to eq 50
       expect(InventoryItem.find(item1.id).med_batches.where(receipt_id: r.id).last.barcode).to eq barcode
       expect(InventoryItem.find(item1.id).amount).to eq i1_cnt - t_cnt + 50
@@ -57,6 +61,8 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
       r = Receipt.create!(sale_receipt_params)
       t = r.transactions.where(seller_item_id: item1.id).last
       t_cnt = t.amount
+      r_total = r.total
+      t_total = t.total_price
       barcode = t.med_batch.barcode
       batch_cnt = t.med_batch.total_units
       i1_cnt = InventoryItem.find(item1.id).amount
@@ -66,6 +72,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
       expect(JSON.parse(response.body)['data']['receipt']['id']).to eq r.id
       expect(JSON.parse(response.body)['data']['amount']).to eq 2
       expect(JSON.parse(response.body)['data']['seller_item_id']).to eq item1.id
+      expect(JSON.parse(response.body)['data']['receipt']['total']).to eq r_total - t_total + 200
       expect(MedBatch.find(t.med_batch.id).total_units).to eq batch_cnt + t_cnt - 2
       expect(MedBatch.find(t.med_batch.id).barcode).to eq barcode
       expect(InventoryItem.find(item1.id).amount).to eq i1_cnt + t_cnt - 2

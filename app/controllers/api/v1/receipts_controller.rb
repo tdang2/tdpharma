@@ -10,14 +10,14 @@ class Api::V1::ReceiptsController < ApplicationController
   end
 
   def index
-    receipts = @store.receipts.purchase_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:purchase]
-    receipts = @store.receipts.sale_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:sale]
-    receipts = @store.receipts.adjustment_receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:adjustment]
+    receipts = @store.receipts.purchase_receipts.includes(transactions: [:sale_user, :purchase_user, :adjust_user, {seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:purchase]
+    receipts = @store.receipts.sale_receipts.includes(transactions: [:sale_user, :purchase_user, :adjust_user, {seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:sale]
+    receipts = @store.receipts.adjustment_receipts.includes(transactions: [:sale_user, :purchase_user, :adjust_user, {seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}]) if params[:adjustment]
     receipts ||= @store.receipts.includes(transactions: [{seller_item: :itemable}, {buyer_item: :itemable}, {adjust_item: :itemable}])
     receipts = receipts.created_max(params[:max_date]) if params[:max_date]
     receipts = receipts.created_min(params[:min_date]) if params[:min_date]
     res = {
-        receipts: receipts.reverse_order.page(params[:page]).as_json(include: [{:transactions => {include: [{seller_item: {include: :itemable}},
+        receipts: receipts.reverse_order.page(params[:page]).as_json(include: [{:transactions => {include: [:med_batch, :sale_user, :purchase_user, :adjust_user, {seller_item: {include: :itemable}},
                                                                               buyer_item: {include: :itemable},
                                                                               adjust_item: {include: :itemable}]}},
                                                                  :med_batches]),
@@ -56,7 +56,7 @@ class Api::V1::ReceiptsController < ApplicationController
   end
 
   def render_receipt(receipt)
-    render json: prepare_json(receipt.as_json(include: [{:transactions => {include: [:med_batch, {seller_item: {include: :itemable}},
+    render json: prepare_json(receipt.as_json(include: [{:transactions => {include: [:med_batch, :sale_user, :purchase_user, :adjust_user, {seller_item: {include: :itemable}},
                                                                                      buyer_item: {include: :itemable},
                                                                                      adjust_item: {include: :itemable}]}},
                                                         :med_batches]

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       resources :medicines, only: [:index, :show, :update, :destroy, :create]
       resources :inventory_items, only: [:index, :show, :update]
       resources :transactions, only: [:index, :show, :update, :destroy, :create]
-      resources :receipts, only: [:index, :create, :show]
+      resources :receipts, only: [:index, :create, :show, :update]
       resources :configurations, only: [:show]
       resources :med_batches, only: [:index]
     end

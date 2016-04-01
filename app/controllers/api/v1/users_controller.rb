@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-  before_filter :authenticate_user_from_token!  # This is for mobile app api
   before_filter :authenticate_user!             # standard devise web app
   before_action :set_user, only: [:update, :show, :destroy]
   load_and_authorize_resource params_method: :user_params

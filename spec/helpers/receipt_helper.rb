@@ -107,5 +107,67 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
         ]
     }
   end
-
+  let(:purchase_receipt_update_params) do
+    {
+        transactions_attributes: [
+            {
+                # id must be provided on the test level. Client must provide the id of the transaction that need to be updated
+                amount: 150,                # quantity bought
+                delivery_time: DateTime.now,
+                due_date: DateTime.now,
+                paid: false,
+                performed: true,
+                purchase_user_id: u2.id,    # User id who make the update
+                total_price: 100,           # total for the sale of this inventory item. Amount * sale price
+                buyer_item_id: item1.id,    # id of inventory item. only need to provide when change purchase inventory item
+                med_batch_id: item1.med_batches.last.id, # id of batch. batch must belong to matching inventory item
+                notes: 'Must have this for update transaction'
+            }
+        ],
+        med_batches_attributes: [
+            {
+                # Client must provide the id of the med_batch that needs to be updated. the id must match and belong to the transaction's inventory item
+                # total_units will be updated by server through transaction's amount. Server will then check if total_units and amount_per_pkg are consistent with each other
+                # user_id will be updated by server
+                # total_price will be updated by server through transaction's total_price
+                # paid will be updated by server through transaction's paid
+                mfg_date: (Date.today - 1.months),
+                expire_date: (Date.today + 6.months),
+                package: 'Box',
+                amount_per_pkg: 150,
+                amount_unit: 'pills'       # Most minimum unit inside the package
+            }
+        ]
+    }
+  end
+  let(:sale_receipt_update_params) do
+    {
+        transactions_attributes: [
+            {
+                amount: 10,               # quantity sold
+                delivery_time: DateTime.tomorrow.beginning_of_day + 8.hours,    # New delivery time
+                due_date: DateTime.tomorrow.beginning_of_day + 8.hours,         # New due date time
+                paid: false,
+                performed: false,
+                total_price: 1000,                                              # user should have final decision how much to charge customers
+                sale_user_id: u2.id,                                            # must provide who made the update
+                seller_item_id: item1.id,                                       # must provide the item id as well. Server will check for consistency between batch and item
+                med_batch_id: item1.med_batches.first.id,                       # must provide the batch id that get changed to
+                notes: 'Must have this for update transaction'                  # must provide to update
+            },
+            {
+                amount: 15,
+                delivery_time: DateTime.tomorrow.beginning_of_day + 8.hours,
+                due_date: DateTime.tomorrow.beginning_of_day + 8.hours,
+                paid: false,
+                performed: false,
+                total_price: 875,
+                sale_user_id: u2.id,
+                seller_item_id: item2.id,                                      # in this edit, switch up the item
+                med_batch_id: item2.med_batches.last.id,                        # in this edit, switch up the batch that belong to the new item
+                notes: 'Must have this for update transaction'                  # must provide to update
+            }
+        ]
+    }
+  end
 end

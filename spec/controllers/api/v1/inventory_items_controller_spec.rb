@@ -33,7 +33,8 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     it 'should return active item belong to c2' do
       get :index, category_id: c2.id, format: :json
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to match [item2.id, item4.id]
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item2.id
+      expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item4.id
     end
     it 'should return item search by name' do
       item1.itemable.update(name: 'Calcium')

@@ -6,6 +6,7 @@ class Location < ActiveRecord::Base
 
   ### Includes and Extensions ######################################################################
   geocoded_by :address
+  has_paper_trail
 
   ### Associations #################################################################################
   belongs_to :locationable, polymorphic: true

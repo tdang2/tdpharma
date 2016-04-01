@@ -5,6 +5,7 @@ class MedBatch < ActiveRecord::Base
   ### Constants ####################################################################################
 
   ### Includes and Extensions ######################################################################
+  has_paper_trail
 
   ### Associations #################################################################################
   belongs_to :medicine
@@ -18,11 +19,12 @@ class MedBatch < ActiveRecord::Base
 
   ### Callbacks ####################################################################################
   before_save :add_inventory_item
-  after_create :update_receipt_transactions
+  after_create :create_receipt_transactions
 
   ### Validations ##################################################################################
-  validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, presence: true
+  validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, :total_units, presence: true
   validate :must_have_medicine
+  validate :have_matching_quantities
 
   ### Scopes #######################################################################################
   scope :available_batches, -> { where('total_units > ?', 0) }
@@ -41,6 +43,10 @@ class MedBatch < ActiveRecord::Base
 
 
   private
+  def have_matching_quantities
+    errors.add(:med_batch, 'has inconsistent quantities') unless (total_units / amount_per_pkg) % 1 == 0
+  end
+
   def must_have_medicine
     errors.add(:medicine, 'does not exist') if medicine.nil?
   end
@@ -54,7 +60,7 @@ class MedBatch < ActiveRecord::Base
     self.barcode = MedBatch.barcode_generate if barcode.blank?
   end
 
-  def update_receipt_transactions
+  def create_receipt_transactions
     if store and user_id
       # Must query the database again to get the fresh copy of inventory in case item has just been created and not saved yet
       inventory = store.inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
@@ -67,7 +73,7 @@ class MedBatch < ActiveRecord::Base
                                                             purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price}])
           self.receipt_id = r.id
         else
-          # If there is already a receipt, simply update add transaction
+          # If there is already a receipt, simply add transaction
           Transaction.create!(receipt_id: receipt_id, amount: self.total_units, delivery_time: DateTime.now, med_batch_id: self.id,
                               due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'activity',
                               purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price, buyer_id: store_id)

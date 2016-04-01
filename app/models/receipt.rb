@@ -7,6 +7,7 @@ class Receipt < ActiveRecord::Base
 
   ### Includes and Extensions ######################################################################
   include RandomGenerable
+  has_paper_trail
 
   ### Associations #################################################################################
   belongs_to :store

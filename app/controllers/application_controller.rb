@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :default_url_options
   before_action :set_locale
+  before_filter :authenticate_user_from_token!, if: :check_api_authentication? # This is for mobile app api
+  before_filter :set_paper_trail_whodunnit
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale
@@ -15,6 +17,16 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  def check_api_authentication?
+    !(devise_controller? or is_a?(HomeController))
+  end
+
+  def set_paper_trail_whodunnit
+    author = @current_user.id if @current_user
+    author ||= current_admin_user.id if admin_user_signed_in?
+    author ||= 'Public User'
+    author
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password, :first_name, :last_name, :phone )}

@@ -4,6 +4,7 @@ class Medicine < ActiveRecord::Base
   ### Constants ####################################################################################
 
   ### Includes and Extensions ######################################################################
+  has_paper_trail
 
   ### Associations #################################################################################
   has_many :inventory_items, as: :itemable, dependent: :destroy

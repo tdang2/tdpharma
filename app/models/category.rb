@@ -6,6 +6,7 @@ class Category < ActiveRecord::Base
   ### Includes and Extensions ######################################################################
   acts_as_nested_set counter_cache: :children_count
   attr_protected :lft, :rgt
+  has_paper_trail
 
   ### Associations #################################################################################
   has_many :inventory_items

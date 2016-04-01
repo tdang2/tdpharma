@@ -42,6 +42,7 @@ gem 'therubyracer' # Ruby - dependency for less rails
 gem 'therubyrhino' # JRuby - dependency for less rails
 gem 'routing-filter'
 gem 'sprockets', '2.12.3' # require for rails angular template
+gem 'paper_trail'
 
 
 # Frontend asset

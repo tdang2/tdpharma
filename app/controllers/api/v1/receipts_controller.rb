@@ -1,5 +1,4 @@
 class Api::V1::ReceiptsController < ApplicationController
-  before_filter :authenticate_user_from_token!  # This is for mobile app api
   before_filter :authenticate_user!             # standard devise web app
   before_action :get_store
   rescue_from StandardError, with: :render_error
@@ -44,15 +43,22 @@ class Api::V1::ReceiptsController < ApplicationController
     render_receipt(receipt)
   end
 
+  def update
+    raise 'Author is required' if params[:receipt][:transactions_attributes].any?{|t| t[:purchase_user_id].blank? and t[:sale_user_id].blank? and t[:adjust_user_id].blank?}
+    receipt = @store.receipts.find(params[:id])
+    receipt.update!(receipt_params)
+    render_receipt(receipt)
+  end
+
   private
   def receipt_params
     params.require(:receipt).permit(:receipt_type, :total, :store_id,
                                     med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,
                                                              :amount_per_pkg, :amount_unit, :total_units, :total_price,
                                                              :user_id, :category_id, :paid, :medicine_id, :inventory_item_id],
-                                    transactions_attributes: [:amount, :new_total, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
+                                    transactions_attributes: [:id, :amount, :new_total, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
                                                               :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id, :med_batch_id,
-                                                              :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price])
+                                                              :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price, :notes])
   end
 
   def render_receipt(receipt)

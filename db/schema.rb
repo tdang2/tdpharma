@@ -356,7 +356,7 @@ ActiveRecord::Schema.define(version: 20160330144350) do
     t.string   "event",                       null: false
     t.string   "whodunnit"
     t.text     "object"
-    t.jsonb    "object_changes", default: {}
+    t.json     "object_changes", default: {}
     t.datetime "created_at"
   end
 

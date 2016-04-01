@@ -53,7 +53,7 @@ class Api::V1::TransactionsController < ApplicationController
 
   private
   def transaction_update_params
-    params.require(:transaction).permit(:amount, :new_total, :total_price, :delivery_time, :due_date, :paid, :performed, :med_batch_id,
+    params.require(:transaction).permit(:amount, :new_total, :total_price, :delivery_time, :due_date, :paid, :performed, :med_batch_id, :status,
                                         :purchase_user_id, :sale_user_id, :adjust_user_id, :notes, :buyer_item_id, :seller_item_id, :adjust_item_id)
   end
 

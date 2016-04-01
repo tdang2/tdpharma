@@ -23,10 +23,10 @@ RSpec.shared_context 'transaction params', :transaction_a => :transaction_b do
         paid: true,
         performed: true,
         sale_user_id: u1.id,     # User id who made the sale edit
-        seller_item_id: item1.id,  # Item id must be provided and match batch id
+        seller_item_id: item1.id,  # Item id must be provided and match batch id. No need to provide in real api request
         total_price: 200,        # total for the sale of this inventory item batch
         seller_id: s.id,         # No need for client side with logged in info
-        med_batch_id: item1.med_batches.last.id, # Batch id of the item.
+        med_batch_id: item1.med_batches.last.id, # Batch id of the item. No need to provide in real api request
         notes: 'Correct fat finger mistakes'
     }
   end

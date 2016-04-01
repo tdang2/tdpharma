@@ -57,7 +57,7 @@ class Api::V1::ReceiptsController < ApplicationController
                                                              :amount_per_pkg, :amount_unit, :total_units, :total_price,
                                                              :user_id, :category_id, :paid, :medicine_id, :inventory_item_id],
                                     transactions_attributes: [:id, :amount, :new_total, :delivery_time, :due_date, :paid, :performed, :seller_id, :buyer_id,
-                                                              :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id, :med_batch_id,
+                                                              :sale_user_id, :seller_item_id, :purchase_user_id, :buyer_item_id, :med_batch_id, :status,
                                                               :adjust_item_id, :adjust_user_id, :adjust_store_id, :transaction_type, :total_price, :notes])
   end
 

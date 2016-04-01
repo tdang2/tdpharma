@@ -19,6 +19,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     end
     describe 'For purchase transactions' do
       before do
+        @pre_item1_avg_pur_cnt = item1.avg_purchase_amount
         @r = Receipt.create!(purchase_receipt_params)
         @t = @r.transactions.where(buyer_item_id: item1.id).last
       end
@@ -34,6 +35,21 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         patch :update, id: @t.id, transaction: purchase_transaction_edit_params, format: :json
         expect(response.status).to eq 400
         expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have matching batch with inventory item'
+      end
+
+      it 'reverse a purchase transaction' do
+        r_total = @r.total
+        t_total = @t.total_price
+        t_cnt = @t.amount
+        i1_cnt = InventoryItem.find(item1.id).amount
+        @params = purchase_transaction_edit_params.merge({status: 'deprecated'})
+        patch :update, id: @t.id, transaction: @params, format: :json
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['data']['status']).to eq 'deprecated'
+        expect(JSON.parse(response.body)['data']['receipt']['total']).to eq r_total - t_total
+        expect(MedBatch.find(@t.med_batch.id).status).to eq 'deprecated'
+        expect(InventoryItem.find(item1.id).amount).to eq i1_cnt - t_cnt
+        expect(InventoryItem.find(item1.id).avg_purchase_amount).to eq @pre_item1_avg_pur_cnt
       end
 
       it 'edit purchase info' do
@@ -59,7 +75,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
 
     describe 'Sale transactions' do
       before do
-        @pre_item_avg_cnt = item1.avg_sale_amount
+        @pre_item1_avg_sale_cnt = item1.avg_sale_amount
         @r = Receipt.create!(sale_receipt_params)
         @t = @r.transactions.where(seller_item_id: item1.id).last
       end
@@ -76,6 +92,20 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         patch :update, id: @t.id, transaction: sale_transaction_edit_params, format: :json
         expect(response.status).to eq 400
         expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have matching batch with inventory item'
+      end
+
+      it 'reverse sale transaction' do
+        t_cnt = @t.amount
+        r_total = @r.total
+        t_total = @t.total_price
+        i1_cnt = InventoryItem.find(item1.id).amount
+        @params = sale_transaction_edit_params.merge({status: 'deprecated'})
+        patch :update, id: @t.id, transaction: @params, format: :json
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['data']['status']).to eq 'deprecated'
+        expect(JSON.parse(response.body)['data']['receipt']['total']).to eq r_total - t_total
+        expect(InventoryItem.find(item1.id).amount).to eq i1_cnt + t_cnt
+        expect(InventoryItem.find(item1.id).avg_sale_amount).to eq @pre_item1_avg_sale_cnt
       end
 
       it 'edit sale info' do
@@ -118,7 +148,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         expect(MedBatch.find(item2.med_batches.first.id).barcode).to eq barcode
         expect(MedBatch.find(@t.med_batch.id).total_units).to eq old_batch_cnt + t_cnt
         expect(InventoryItem.find(item1.id).amount).to eq old_item_cnt + t_cnt
-        expect(InventoryItem.find(item1.id).avg_sale_amount).to eq @pre_item_avg_cnt
+        expect(InventoryItem.find(item1.id).avg_sale_amount).to eq @pre_item1_avg_sale_cnt
         expect(InventoryItem.find(item2.id).amount).to eq new_item_cnt - 5
         expect(InventoryItem.find(item2.id).avg_sale_amount).not_to eq new_item_avg_cnt
       end

@@ -3,6 +3,7 @@ class MedBatch < ActiveRecord::Base
   include RandomGenerable
 
   ### Constants ####################################################################################
+  enum status: [:active, :deprecated]
 
   ### Includes and Extensions ######################################################################
   has_paper_trail
@@ -27,7 +28,7 @@ class MedBatch < ActiveRecord::Base
   validate :have_matching_quantities
 
   ### Scopes #######################################################################################
-  scope :available_batches, -> { where('total_units > ?', 0) }
+  scope :available_batches, -> { active.where('total_units > ?', 0) }
   scope :empty_batches, -> {where('total_units = 0')}
   scope :non_expired_batches, -> {where('expire_date > ?', Date.today)}
   scope :expired_batches, -> {where('expire_date <= ?', Date.today)}
@@ -69,13 +70,13 @@ class MedBatch < ActiveRecord::Base
           # If there is no associated, we need to create a receipt to update inventory item status and count
           r = store.receipts.create!(receipt_type: 'purchase', store_id: store_id, total: self.total_price,
                                  transactions_attributes: [{amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id, med_batch_id: self.id,
-                                                            due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'activity',
+                                                            due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'purchase',
                                                             purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price}])
           self.receipt_id = r.id
         else
           # If there is already a receipt, simply add transaction
           Transaction.create!(receipt_id: receipt_id, amount: self.total_units, delivery_time: DateTime.now, med_batch_id: self.id,
-                              due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'activity',
+                              due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'purchase',
                               purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price, buyer_id: store_id)
         end
       end

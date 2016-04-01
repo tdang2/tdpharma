@@ -1,8 +1,9 @@
 class Transaction < ActiveRecord::Base
   ### Attributes ###################################################################################
-  enum transaction_type: ['activity', 'adjustment']
+  enum transaction_type: ['purchase', 'sale', 'adjustment']
 
   ### Constants ####################################################################################
+  enum status: [:active, :deprecated]
 
   ### Includes and Extensions ######################################################################
   has_paper_trail
@@ -47,9 +48,9 @@ class Transaction < ActiveRecord::Base
   private
   def set_transaction_type
     if transaction_type.blank? and self.receipt and self.receipt.receipt_type == 'purchase' and buyer_item
-      self.transaction_type = 'activity'
+      self.transaction_type = 'purchase'
     elsif transaction_type.blank? and self.receipt and self.receipt.receipt_type == 'sale' and seller_item
-      self.transaction_type = 'activity'
+      self.transaction_type = 'sale'
     elsif transaction_type.blank? and self.receipt and self.receipt.receipt_type == 'adjustment' and adjust_item
       self.transaction_type = 'adjustment'
     end
@@ -64,52 +65,39 @@ class Transaction < ActiveRecord::Base
 
   def edit_inventories
     # Callback to correct users' mistakes. This is not the process to reconcile mismatch inventory count
+    receipt_price_diff = total_price
     if receipt and receipt.receipt_type == 'purchase' and buyer_item
-      if amount_changed?
-        self.buyer_item.update!(amount: buyer_item.amount - amount_was + amount, avg_purchase_amount: self.buyer_item.purchases.average(:amount))
-      end
-      if med_batch and amount_changed?
-        batch_params = {total_units: amount, user_id: purchase_user_id}
-        batch_params = batch_params.merge!(total_price: total_price) if total_price_changed?
-        batch_params = batch_params.merge!(paid: paid) if paid_changed?
-        self.med_batch.update!(batch_params)
-      end
-      self.buyer_item.update!(avg_purchase_price: self.buyer_item.purchases.average(:total_price)) if total_price_changed?
-    elsif receipt and receipt.receipt_type == 'sale' and seller_item
-      if med_batch_id_changed?
-        # Update with a different med_batch. Expect to receive both new batch_id and item_id.
-        # First correct the old med_batch and inventories
-        ob = MedBatch.find(med_batch_id_was)
-        if ob
-          ob.update!(total_units: ob.total_units + amount_was)
-          ob.inventory_item.update!(amount: ob.inventory_item.amount + amount_was,
-                                    avg_sale_amount: ob.inventory_item.sales.average(:amount),
-                                    avg_sale_price: ob.inventory_item.sales.average(:total_price)) if ob.inventory_item
-        end
-        process_sale
+      if status_changed? and status == 'deprecated'
+        reverse_purchase # Cancel the purchase transaction
+        receipt_price_diff = 0
       else
-        # Update with the same med_batch
-        seller_item_params = {}
-        med_batch.update!(total_units: med_batch.total_units + amount_was - amount) if med_batch and amount_changed?
-        seller_item_params = seller_item_params.merge({amount: seller_item.amount + amount_was - amount, avg_sale_amount: self.seller_item.sales.average(:amount)}) if amount_changed?
-        seller_item_params = seller_item_params.merge({avg_sale_price: self.seller_item.sales.average(:total_price)}) if total_price_changed?
-        seller_item.update!(seller_item_params) unless seller_item_params.blank?
+        edit_purchase    # Correct the purchase transaction
+      end
+    elsif receipt and receipt.receipt_type == 'sale' and seller_item
+      if status_changed? and status == 'deprecated'
+        reverse_sale    # Cancel / Customer return
+        receipt_price_diff = 0
+      else
+        if med_batch_id_changed?
+          # Update with a different med_batch. Expect to receive both new batch_id and item_id.
+          reverse_sale  # First correct the old med_batch and inventories
+          process_sale  # Then process the new batch and inventory item
+        else
+          edit_sale     # Update with the same med_batch
+        end
       end
     end
-    self.receipt.update!(total: self.receipt.total - total_price_was + total_price) if total_price_changed? and receipt
+    self.receipt.update!(total: self.receipt.total - total_price_was + receipt_price_diff) if total_price_changed? and receipt
   end
 
 
   def update_inventories
     # After a transaction, update respective inventories and med_batches
     if self.receipt and self.receipt.receipt_type == 'purchase' and buyer_item
-      self.buyer_item.update!(amount: self.buyer_item.amount + self.amount,
-                        avg_purchase_price: self.buyer_item.purchases.average(:total_price),
-                        avg_purchase_amount: self.buyer_item.purchases.average(:amount))
+      process_purchase
     elsif self.receipt and self.receipt.receipt_type == 'sale' and seller_item
       process_sale
     elsif self.receipt and self.receipt.receipt_type == 'adjustment' and adjust_item
-      # When checking inventory, it is difficult to figure out which batch is missing
       # TODO: rethink how to update inventory count while keeping track of which batch is missing
       if adjust_item.sale_price
         # must check for sale price existence because that is a condition to update a new total price
@@ -120,11 +108,53 @@ class Transaction < ActiveRecord::Base
     end
   end
 
+  def process_purchase
+    self.buyer_item.update!(amount: self.buyer_item.amount + self.amount,
+                            avg_purchase_price: self.buyer_item.purchases.active.average(:total_price),
+                            avg_purchase_amount: self.buyer_item.purchases.active.average(:amount))
+  end
+
+  def reverse_purchase
+    buyer_item.update!(amount: buyer_item.amount - amount_was, avg_purchase_amount: self.buyer_item.purchases.active.average(:amount))
+    med_batch.update!(user_id: purchase_user_id, status: 1) if med_batch # deprecate the new purchase med_batch
+  end
+
+  def edit_purchase
+    if amount_changed?
+      self.buyer_item.update!(amount: buyer_item.amount - amount_was + amount, avg_purchase_amount: self.buyer_item.purchases.active.average(:amount))
+    end
+    if med_batch and amount_changed?
+      batch_params = {total_units: amount, user_id: purchase_user_id}
+      batch_params = batch_params.merge!(total_price: total_price) if total_price_changed?
+      batch_params = batch_params.merge!(paid: paid) if paid_changed?
+      self.med_batch.update!(batch_params)
+    end
+    self.buyer_item.update!(avg_purchase_price: self.buyer_item.purchases.active.average(:total_price)) if total_price_changed?
+  end
+
   def process_sale
-    self.seller_item.update!(amount: self.seller_item.amount - self.amount, avg_sale_price: self.seller_item.sales.average(:total_price),
-                             avg_sale_amount: self.seller_item.sales.average(:amount))
+    self.seller_item.update!(amount: self.seller_item.amount - self.amount, avg_sale_price: self.seller_item.sales.active.average(:total_price),
+                             avg_sale_amount: self.seller_item.sales.active.average(:amount))
     # Also update med_batch to reflect remaining quantity
     self.med_batch.update!(total_units: self.med_batch.total_units - self.amount) if self.med_batch
+  end
+
+  def reverse_sale
+    ob = MedBatch.find(med_batch_id_was)
+    if ob
+      ob.update!(total_units: ob.total_units + amount_was)
+      ob.inventory_item.update!(amount: ob.inventory_item.amount + amount_was,
+                                avg_sale_amount: ob.inventory_item.sales.active.average(:amount),
+                                avg_sale_price: ob.inventory_item.sales.active.average(:total_price)) if ob.inventory_item
+    end
+  end
+
+  def edit_sale
+    seller_item_params = {}
+    med_batch.update!(total_units: med_batch.total_units + amount_was - amount) if med_batch and amount_changed?
+    seller_item_params = seller_item_params.merge({amount: seller_item.amount + amount_was - amount, avg_sale_amount: self.seller_item.sales.active.average(:amount)}) if amount_changed?
+    seller_item_params = seller_item_params.merge({avg_sale_price: self.seller_item.sales.active.average(:total_price)}) if total_price_changed?
+    seller_item.update!(seller_item_params) unless seller_item_params.blank?
   end
 
   def item_existence

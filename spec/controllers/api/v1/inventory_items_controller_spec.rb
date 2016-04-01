@@ -23,18 +23,28 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['items'].count).to be >= 3
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).not_to include item3.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['itemable']}).not_to include nil
+      expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
+    end
+    it 'not include deprecated med_batch' do
+      item4.med_batches.last.update!(status: 'deprecated')
+      get :index, active: true, format: :json
+      expect(response.status).to eq 200
+      result = JSON.parse(response.body)['data']['items'].find {|i| i['id'] == item4.id}
+      expect(result['available_batches'].all?{|b| b['status'] == 'deprecated'}).to be true
     end
     it 'should return inactive inventory items' do
       get :index, active: false, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item3.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['sale_price']}).to include nil
+      expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'should return active item belong to c2' do
       get :index, category_id: c2.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item2.id
       expect(JSON.parse(response.body)['data']['items'].collect{|u| u['id']}).to include item4.id
+      expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'should return item search by name' do
       item1.itemable.update(name: 'Calcium')
@@ -42,6 +52,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       get :index, search: 'Calc', format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['items'].all?{|i| i['itemable']['name'].include?('Calc')}).to eq true
+      expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
   end
 
@@ -53,9 +64,18 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
       expect(item1.med_batches.map(&:id)).to include JSON.parse(response.body)['data']['available_batches'][0]['id']
       expect(Float(JSON.parse(response.body)['data']['available_batches'][0]['total_units'])).to be > 0
+      expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'should return inventory with no empty batches' do
       b  = item1.med_batches.last.update!(total_units: 0)
+      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      get :show, id: item1.id, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['id']).to eq item1.id
+      expect(JSON.parse(response.body)['data']['available_batches']).to eq []
+    end
+    it 'should return inventory with no deprecated batches' do
+      item1.med_batches.last.update!(status: 'deprecated')
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :show, id: item1.id, format: :json
       expect(response.status).to eq 200
@@ -71,6 +91,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
       expect(JSON.parse(response.body)['data']['status']).to eq 'inactive'
+      expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'create sale price for inventory' do
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
@@ -78,6 +99,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item4.id
       expect(JSON.parse(response.body)['data']['sale_price']['amount']).to eq 200
+      expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'update sale price for inventory' do
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
@@ -85,6 +107,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
       expect(JSON.parse(response.body)['data']['sale_price']['amount']).to eq 200
+      expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
   end
 

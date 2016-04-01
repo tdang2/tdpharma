@@ -12,7 +12,7 @@ class InventoryItem < ActiveRecord::Base
   belongs_to :category
   belongs_to :itemable, polymorphic: true
   has_many :med_batches, dependent: :destroy  # Production batches for itemable
-  has_many :available_batches, -> {where('total_units > 0')}, class_name: MedBatch
+  has_many :available_batches, -> { active.where('total_units > 0')}, class_name: MedBatch
   has_many :good_batches, -> {where('expire_date > ?', Date.today)}, class_name: MedBatch
   has_many :empty_batches, -> {where('total_units <= 0')}, class_name: MedBatch
   has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price

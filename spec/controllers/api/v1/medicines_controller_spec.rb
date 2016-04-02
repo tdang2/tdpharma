@@ -38,6 +38,8 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['itemable']['name']).to eq 'Claritin'
       expect(InventoryItem.find(mid).amount).to eq 1200
+      expect(JSON.parse(response.body)['data']['available_batches'].map{|b| b['receipt_id']}).to include(InventoryItem.find(mid).med_batches.first.receipt_id)
+      expect(JSON.parse(response.body)['data']['available_batches'].map{|b| b['receipt_id']}).to include(InventoryItem.find(mid).med_batches.last.receipt_id)
     end
   end
 

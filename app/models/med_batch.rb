@@ -72,7 +72,7 @@ class MedBatch < ActiveRecord::Base
                                  transactions_attributes: [{amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id, med_batch_id: self.id,
                                                             due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'purchase',
                                                             purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price}])
-          self.receipt_id = r.id
+          self.update!(receipt_id: r.id)
         else
           # If there is already a receipt, simply add transaction
           Transaction.create!(receipt_id: receipt_id, amount: self.total_units, delivery_time: DateTime.now, med_batch_id: self.id,

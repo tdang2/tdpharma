@@ -55,6 +55,14 @@ class Image < ActiveRecord::Base
     end
   end
 
+  def photo_thumb
+    photo.url(:thumb) if photo
+  end
+
+  def photo_medium
+    photo.url(:medium) if photo
+  end
+
   def queue_processing
     Image.delay.transfer_and_cleanup(id) if direct_upload_url and processed == false
   end

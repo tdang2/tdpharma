@@ -12,7 +12,7 @@ class Api::V1::MedicinesController < ApplicationController
       # preventing SQL injection with search string
       med = @store.medicines.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
       med ||= @store.medicines.all.limit(100)
-      render json: prepare_json(med.as_json(store_id: current_user.store.id, methods: [:photo_thumb])), status: 200
+      render json: prepare_json(med.as_json(store_id: current_user.store.id, include: [image: {methods: [:photo_thumb, :photo_medium]}], methods: [:photo_thumb])), status: 200
   end
 
   def create
@@ -28,11 +28,11 @@ class Api::V1::MedicinesController < ApplicationController
       elsif params[:direct_upload_url]
         inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
       end
-      render json: prepare_json(inven.as_json(include: :itemable, methods: :photo_thumb)), status: 200
+      render json: prepare_json(inven.as_json(include: [:itemable, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
   end
 
   def show
-    render json: prepare_json(Medicine.find(params[:id]).as_json(methods: :photo_thumb)), status: 200
+    render json: prepare_json(Medicine.find(params[:id]).as_json(include: [image: {methods: [:photo_thumb, :photo_medium]}])), status: 200
   end
 
   def update
@@ -40,7 +40,7 @@ class Api::V1::MedicinesController < ApplicationController
     params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
     med.update!(medicine_params)
     item = @store.inventory_items.find_by(itemable: med)
-    render json: prepare_json(item.as_json(include: :itemable, methods: :photo_thumb)), status: 200
+    render json: prepare_json(item.as_json(include: [:itemable, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
   end
 
   def destroy

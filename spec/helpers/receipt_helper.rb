@@ -119,8 +119,6 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                 performed: true,
                 purchase_user_id: u2.id,    # User id who make the update
                 total_price: 100,           # total for the sale of this inventory item. Amount * sale price
-                buyer_item_id: item1.id,    # id of inventory item. only need to provide when change purchase inventory item
-                med_batch_id: item1.med_batches.last.id, # id of batch. batch must belong to matching inventory item
                 notes: 'Must have this for update transaction'
             }
         ],

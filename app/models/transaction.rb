@@ -87,7 +87,7 @@ class Transaction < ActiveRecord::Base
         end
       end
     end
-    self.receipt.update!(total: self.receipt.total - total_price_was + receipt_price_diff) if total_price_changed? and receipt
+    self.receipt.update!(total: self.receipt.total - total_price_was + receipt_price_diff) if (total_price_changed? or receipt_price_diff === 0) and receipt
   end
 
 

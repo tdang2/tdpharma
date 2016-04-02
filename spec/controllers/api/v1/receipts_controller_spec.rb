@@ -181,6 +181,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       it 'reverse a purchase transaction' do
         @params.delete :med_batches_attributes
         @params[:transactions_attributes][0] = @params[:transactions_attributes][0].merge({status: 'deprecated'})
+        @params[:transactions_attributes][0].delete :total_price
         receipt_total = @r.total
         pre_amount = @t.amount
         pre_price = @t.total_price

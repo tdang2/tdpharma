@@ -23,7 +23,7 @@ class MedBatch < ActiveRecord::Base
   after_create :create_receipt_transactions
 
   ### Validations ##################################################################################
-  validates :mfg_date, :expire_date, :amount_per_pkg, :package, :amount_unit, :total_units, presence: true
+  validates :mfg_date, :expire_date, :amount_per_pkg, :package, :number_pkg, :total_units, presence: true
   validate :must_have_medicine
   validate :have_matching_quantities
 
@@ -45,7 +45,7 @@ class MedBatch < ActiveRecord::Base
 
   private
   def have_matching_quantities
-    errors.add(:med_batch, 'has inconsistent quantities') unless (total_units / amount_per_pkg) % 1 == 0
+    errors.add(:med_batch, 'has inconsistent quantities') unless number_pkg * amount_per_pkg >= total_units
   end
 
   def must_have_medicine

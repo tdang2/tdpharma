@@ -96,15 +96,17 @@ Category.last_level.each do |c|
     mfg = manufacturer[rand(0..3)]
     m = Medicine.find_or_create_by(name: (c.name+t.to_s), concentration: c_a_list[rand(0..5)], mfg_location: mfg_l_list[rand(0..5)],
                                    concentration_unit: c_u_list[rand(0..2)], med_form: form, manufacturer: mfg)
+    num_pkg = rand(1..10)
+    amt_pkg = rand(20..120)
     m.update!(med_batches_attributes: [
                   {
                       mfg_date: (Date.today - mfg_d_list[rand(0..3)].months),
                       expire_date: (Date.today + exp_d_list[rand(0..3)].months),
                       package: pkg_list[rand(0..2)],
                       store_id: s.id,            # Same store as logged in user
-                      amount_per_pkg: rand(20..120),
-                      amount_unit: form,          # Most minimum unit inside the package
-                      total_units: rand(20..500), # Total number of units (number of package * amount_per_pkg)
+                      amount_per_pkg: amt_pkg,
+                      number_pkg: num_pkg,
+                      total_units: amt_pkg*num_pkg, # Total number of units (number of package * amount_per_pkg)
                       total_price: rand(10..3000),# Total price for the whole transaction
                       user_id: u_list[rand(0..1)].id,
                       category_id: c.id

@@ -4,7 +4,7 @@ FactoryGirl.define do
     expire_date {Date.today + 3.months}
     package 'Box'
     amount_per_pkg 20
-    amount_unit 'tablets'
+    number_pkg 5
     total_units 100
     total_price 200.5
     association :user, factory: :user

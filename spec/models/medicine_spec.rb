@@ -14,8 +14,8 @@ RSpec.describe Medicine, type: :model do
     before do
       prepare_data
     end
-    let(:b1) {create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 200, total_units: 100)}
-    let(:b2) {create(:med_batch, category_id: c2.id, user: u1s2, store: s2, medicine: med1, total_price: 250, total_units: 250)}
+    let(:b1) {create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 200, total_units: 100, amount_per_pkg: 5, number_pkg: 20)}
+    let(:b2) {create(:med_batch, category_id: c2.id, user: u1s2, store: s2, medicine: med1, total_price: 250, total_units: 250, amount_per_pkg: 50, number_pkg: 5)}
     describe 'when deleted' do
       it 'destroy all related inventory items from all stores' do
         i1 = b1.inventory_item.id

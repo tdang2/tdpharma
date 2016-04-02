@@ -26,7 +26,7 @@ RSpec.describe Api::V1::MedBatchesController, type: :controller do
     end
 
     it 'get store available batches only' do
-      item2.med_batches.each {|b| b.update!(total_units: 0)}
+      item2.med_batches.each {|b| b.update!(total_units: 0, number_pkg: 0)}
       get :index, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data'].count).to be >= 2
@@ -45,7 +45,7 @@ RSpec.describe Api::V1::MedBatchesController, type: :controller do
     end
 
     it 'get batches with barcode regardless empty or available batch' do
-      item2.med_batches.each {|b| b.update!(total_units: 0)}
+      item2.med_batches.each {|b| b.update!(total_units: 0, number_pkg: 0)}
       get :index, barcode: item2.med_batches.first.barcode, format: :json
       expect(JSON.parse(response.body)['data'].count).to eq 1
       expect(JSON.parse(response.body)['data'][0]['inventory_item']['id']).to eq item2.id

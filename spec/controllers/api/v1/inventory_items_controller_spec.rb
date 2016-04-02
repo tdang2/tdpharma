@@ -67,7 +67,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'should return inventory with no empty batches' do
-      b  = item1.med_batches.last.update!(total_units: 0)
+      b  = item1.med_batches.last.update!(total_units: 0, number_pkg: 0)
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
       get :show, id: item1.id, format: :json
       expect(response.status).to eq 200

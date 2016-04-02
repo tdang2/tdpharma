@@ -10,7 +10,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                      package: 'Bottle',
                                      store_id: s.id,             # Same store as logged in user. No need to provide for client with logged in
                                      amount_per_pkg: 100,
-                                     amount_unit: 'tablet',      # Most minimum unit inside the package
+                                     number_pkg: 1,
                                      total_units: 100,           # Total number of units (package * amount_per_pkg)
                                      total_price: 200,           # Total price for the whole transaction
                                      user_id: u1.id,
@@ -24,7 +24,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                      package: 'Box',
                                      store_id: s.id,            # Same store as logged in user. No need to provide for client with logged in
                                      amount_per_pkg: 27,
-                                     amount_unit: 'tablet',     # Most minimum unit inside the package
+                                     number_pkg: 2,
                                      total_units: 54,           # Total number of units (package * amount_per_pkg)
                                      total_price: 300,          # Total price for the whole transaction
                                      user_id: u1.id,
@@ -38,7 +38,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                      package: 'Bottle',
                                      store_id: s.id,            # Same store as logged in user
                                      amount_per_pkg: 27,
-                                     amount_unit: 'tablet',     # Most minimum unit inside the package
+                                     number_pkg: 1,
                                      total_units: 27,           # Total number of units (package * amount_per_pkg)
                                      total_price: 120,          # Total price for the whole transaction
                                      user_id: u1.id,
@@ -135,7 +135,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                 expire_date: (Date.today + 6.months),
                 package: 'Box',
                 amount_per_pkg: 150,
-                amount_unit: 'pills'       # Most minimum unit inside the package
+                number_pkg: 1
             }
         ]
     }

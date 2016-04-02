@@ -53,7 +53,7 @@ class Api::V1::MedicinesController < ApplicationController
     params.require(:medicine).permit(:name, :concentration, :concentration_unit, :med_form, :mfg_location, :manufacturer,
                                      image_attributes: [:id, :photo],
                                      med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,
-                                                              :amount_per_pkg, :amount_unit, :total_units, :total_price,
+                                                              :amount_per_pkg, :number_pkg, :total_units, :total_price,
                                                               :user_id, :category_id, :paid])
   end
 

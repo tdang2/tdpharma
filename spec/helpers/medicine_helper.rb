@@ -17,7 +17,7 @@ RSpec.shared_context 'medicine params', :m_a => :m_b do
               package: 'Bottle',
               store_id: s.id,            # Same store as logged in user
               amount_per_pkg: 100,
-              amount_unit: 'tablet',      # Most minimum unit inside the package
+              number_pkg: 4,
               total_units: 400,           # Total number of units (package * amount_per_pkg)
               total_price: 300,                 # Total price for the whole transaction
               user_id: u1.id,
@@ -30,7 +30,7 @@ RSpec.shared_context 'medicine params', :m_a => :m_b do
               mfg_location: 'USA',
               store_id: s.id,
               amount_per_pkg: 100,
-              amount_unit: 'tablet',      # Most minimum unit inside the package
+              number_pkg: 8,
               total_units: 800,           # Total number of units (package * amount_per_pkg)
               total_price: 500,                 # Total price for the whole transaction
               user_id: u1.id,

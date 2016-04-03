@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   protected
   def check_api_authentication?
-    !(devise_controller? or is_a?(HomeController))
+    params['controller'].include?('api/v1/')
   end
 
   def set_paper_trail_whodunnit

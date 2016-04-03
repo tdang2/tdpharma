@@ -54,6 +54,27 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['items'].all?{|i| i['itemable']['name'].include?('Calc')}).to eq true
       expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
+    it 'look up item name with titleize format' do
+      item1.itemable.update(name: 'Calcium Light')
+      get :index, search: 'calcium light', format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['items'].all?{|i| i['itemable']['name'].include?('Calcium Light')}).to eq true
+      expect(JSON.parse(response.body)['data']['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
+    end
+    describe 'with interested  item id' do
+      it 'return page of items' do
+        get :index, inventory_id: item1.id, format: :json
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['data']['items'].any?{|i| i['itemable']['name'] == item1.itemable.name}).to eq true
+      end
+
+      it 'works regardless of item state' do
+        get :index, inventory_id: item3.id, format: :json
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['data']['items'].any?{|i| i['itemable']['name'] == item3.itemable.name}).to eq true
+      end
+    end
+
   end
 
   describe 'GET show' do

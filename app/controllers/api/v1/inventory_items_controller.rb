@@ -13,13 +13,21 @@ class Api::V1::InventoryItemsController < ApplicationController
       render json: prepare_json({message: 'Current user has no associated store'}), status: 400
     else
       items = @store.inventory_items
-      items = items.by_type(Medicine).where('medicines.name LIKE ?', "%#{params[:search]}%") if params[:search]
-      items = items.active if params[:active] == true
-      items = items.inactive if params[:active] == false
-      items = items.by_category(params[:category_id]) if params[:category_id]
+      if params[:inventory_id]
+        # Return the page that contains the inventory id
+        position = items.where('id <= ?', params[:inventory_id]).count
+        params[:page] = (position.to_f/25).ceil
+      else
+        # Default pagination
+        items = items.by_type(Medicine).where('medicines.name LIKE ?', "%#{params[:search].titleize}%") if params[:search]
+        items = items.active if params[:active] == true
+        items = items.inactive if params[:active] == false
+        items = items.by_category(params[:category_id]) if params[:category_id]
+      end
       res = {
           items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category, :available_batches], methods: :photo_thumb),
-          total_count: items.count
+          total_count: items.count,
+          page: params[:page]
       }
       render json: prepare_json(res), status: 200
     end

@@ -16,19 +16,20 @@ class Api::V1::MedicinesController < ApplicationController
   end
 
   def create
-      med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
-                                        mfg_location: params[:medicine][:mfg_location], med_form: params[:medicine][:med_form],
-                                        concentration_unit: params[:medicine][:concentration_unit], manufacturer: params[:medicine][:manufacturer])
-      params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
-      med.update!(medicine_params)
-      # Identify the store inventory that represents this medicine
-      inven = @store.inventory_items.find_by(itemable: med)
-      if params[:image]
-        inven.update(image_attributes: {photo: params[:image]})
-      elsif params[:direct_upload_url]
-        inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
-      end
-      render json: prepare_json(inven.as_json(include: [:itemable, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
+    params[:medicine][:name] = params[:medicine][:name].titleize
+    med = Medicine.find_or_create_by!(name: params[:medicine][:name], concentration: params[:medicine][:concentration],
+                                      mfg_location: params[:medicine][:mfg_location], med_form: params[:medicine][:med_form],
+                                      concentration_unit: params[:medicine][:concentration_unit], manufacturer: params[:medicine][:manufacturer])
+    params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
+    med.update!(medicine_params)
+    # Identify the store inventory that represents this medicine
+    inven = @store.inventory_items.find_by(itemable: med)
+    if params[:image]
+      inven.update(image_attributes: {photo: params[:image]})
+    elsif params[:direct_upload_url]
+      inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
+    end
+    render json: prepare_json(inven.as_json(include: [:itemable, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
   end
 
   def show

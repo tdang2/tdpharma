@@ -30,9 +30,11 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
   end
 
   describe 'POST create' do
-    it 'create medicine and store inventory item' do
+    before do
       sign_in u1
       request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+    end
+    it 'create medicine and store inventory item' do
       post :create, medicine: med_params, format: :json
       mid = JSON.parse(response.body)['data']['id']
       expect(response.status).to eq 200
@@ -40,6 +42,12 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
       expect(InventoryItem.find(mid).amount).to eq 1200
       expect(JSON.parse(response.body)['data']['available_batches'].map{|b| b['receipt_id']}).to include(InventoryItem.find(mid).med_batches.first.receipt_id)
       expect(JSON.parse(response.body)['data']['available_batches'].map{|b| b['receipt_id']}).to include(InventoryItem.find(mid).med_batches.last.receipt_id)
+    end
+    it 'medicine name must be titleize' do
+      med_params['name'] = 'claritin light'
+      post :create, medicine: med_params, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['data']['itemable']['name']).to eq 'Claritin Light'
     end
   end
 

@@ -29,7 +29,7 @@ class Api::V1::MedicinesController < ApplicationController
     elsif params[:direct_upload_url]
       inven.update(image_attributes: {direct_upload_url: params[:direct_upload_url]})
     end
-    render json: prepare_json(inven.as_json(include: [:itemable, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
+    render json: prepare_json(inven.as_json(include: [:itemable, :sale_price, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
   end
 
   def show
@@ -41,7 +41,7 @@ class Api::V1::MedicinesController < ApplicationController
     params[:medicine][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:medicine][:med_batches_attributes]
     med.update!(medicine_params)
     item = @store.inventory_items.find_by(itemable: med)
-    render json: prepare_json(item.as_json(include: [:itemable, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
+    render json: prepare_json(item.as_json(include: [:itemable, :sale_price, :available_batches, image: {methods: [:photo_thumb, :photo_medium]}], methods: :photo_thumb)), status: 200
   end
 
   def destroy

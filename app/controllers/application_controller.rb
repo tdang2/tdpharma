@@ -37,11 +37,11 @@ class ApplicationController < ActionController::Base
       render json: {errors: 'No user information'}.to_json, status: 401
       return
     end
-    token = request.headers['Authorization'].gsub(/Bearer\s/, '');
-    @current_user = User.find_by_authentication_token(token)
+    info = request.headers['Authorization'].split(':')
+    @current_user = User.find_by_email(info[0])
     if @current_user
       # We use Devise.secure_compare to compare the token in the database with the token given in the params, mitigating timing attacks.
-      if !Devise.secure_compare(@current_user.authentication_token, token)
+      if !Devise.secure_compare(@current_user.authentication_token, info[1])
         sign_out @current_user
         render json: {errors: 'Invalid User Token'}.to_json, status: 401
       else

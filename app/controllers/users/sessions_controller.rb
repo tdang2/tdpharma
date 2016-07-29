@@ -15,7 +15,7 @@ class Users::SessionsController < Devise::SessionsController
     resource.update!(last_checked_in: DateTime.now) if resource.class == User
     yield resource if block_given?
     if request.format == 'application/json'
-      render json: resource.as_json, status: 201
+      render json: resource.as_json(include: [:roles]), status: 201
     else
       respond_with resource, location: after_sign_in_path_for(resource)
     end

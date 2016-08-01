@@ -13,7 +13,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     item2.create_sale_price(amount: 150, discount: 0)
     item4
     item3.update!(status: 'inactive')
-    request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+    request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
   end
 
   describe 'GET index' do
@@ -79,7 +79,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
 
   describe 'GET show' do
     it 'should return the inventory items' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       get :show, id: item1.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
@@ -89,7 +89,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     end
     it 'should return inventory with no empty batches' do
       b  = item1.med_batches.last.update!(total_units: 0, number_pkg: 0)
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       get :show, id: item1.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
@@ -97,7 +97,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
     end
     it 'should return inventory with no deprecated batches' do
       item1.med_batches.last.update!(status: 'deprecated')
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       get :show, id: item1.id, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
@@ -107,7 +107,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
 
   describe 'PATCH update' do
     it 'turn inventory to inactive' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       patch :update, id: item1.id, format: :json, inventory_item: {status: 'inactive'}
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id
@@ -115,7 +115,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'create sale price for inventory' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       patch :update, id: item4.id, format: :json, inventory_item: inventory_item_new_price_params
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item4.id
@@ -123,7 +123,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['data']['available_batches'].all? {|t| t['status'] == 'active'}).to eq true
     end
     it 'update sale price for inventory' do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       patch :update, id: item1.id, inventory_item: inventory_item_price_params, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['data']['id']).to eq item1.id

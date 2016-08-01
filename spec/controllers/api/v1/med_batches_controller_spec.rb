@@ -12,7 +12,7 @@ RSpec.describe Api::V1::MedBatchesController, type: :controller do
     item1.create_sale_price(amount: 100, discount: 0)
     item2.create_sale_price(amount: 150, discount: 0)
     item3
-    request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+    request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
   end
 
   describe 'GET index' do

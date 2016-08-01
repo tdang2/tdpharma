@@ -21,7 +21,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       Receipt.create!(purchase_receipt_params)
       Receipt.create!(sale_receipt_params)
       Receipt.create!(adjust_receipt_params)
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     it 'list all receipts' do
       get :index, format: :json
@@ -53,7 +53,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
 
   describe 'CREATE post' do
     before do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     it 'create purchase receipt' do
       item1_cnt = InventoryItem.find(item1.id).amount
@@ -114,7 +114,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
 
   describe 'SHOW get' do
     before do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     it 'show receipt purchase' do
       Receipt.create!(purchase_receipt_params)
@@ -149,7 +149,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
 
   describe 'PATCH update' do
     before do
-      request.headers['Authorization'] = "Bearer #{u2.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     describe 'Purchase receipt' do
       before do

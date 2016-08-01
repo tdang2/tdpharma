@@ -15,7 +15,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
 
   describe 'patch UPDATE' do
     before do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     describe 'For purchase transactions' do
       before do
@@ -157,7 +157,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
 
   describe 'show GET' do
     before do
-      request.headers['Authorization'] = "Bearer #{u1.authentication_token}"
+      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     it 'show correct purchase' do
       r = Receipt.create!(purchase_receipt_params)

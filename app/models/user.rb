@@ -21,10 +21,12 @@ class User < ActiveRecord::Base
   has_many :sales, class_name: Transaction, foreign_key: :sale_user_id
   has_many :purchases, class_name: Transaction, foreign_key: :purchase_user_id
   has_many :adjustments, class_name: Transaction, foreign_key: :adjust_user_id
+  has_one :profile_image, class_name: Image, as: :imageable, dependent: :destroy
 
   ### Callbacks ####################################################################################
   before_save :ensure_authentication_token
   after_create :assign_employee_role
+  after_create :set_default_image
 
   ### Validations ##################################################################################
   validates :first_name, :last_name, presence: true
@@ -48,6 +50,14 @@ class User < ActiveRecord::Base
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
 
+  def photo_thumb
+    {id: profile_image.id, photo: profile_image.photo_thumb, processed: profile_image.processed} if profile_image
+  end
+
+  def photo_medium
+    {id: profile_image.id, photo: profile_image.photo_medium, processed: profile_image.processed} if profile_image
+  end
+
   private
   def assign_employee_role
     role = Role.find_by(name: 'employee')
@@ -60,6 +70,12 @@ class User < ActiveRecord::Base
     loop do
       token = Devise.friendly_token
       break token unless User.where(authentication_token: token).first
+    end
+  end
+
+  def set_default_image
+    if profile_image.nil?
+      self.create_profile_image(photo: nil)
     end
   end
 

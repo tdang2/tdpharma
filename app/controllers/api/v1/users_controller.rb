@@ -6,7 +6,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     begin
       @users = @current_user.store.employees
-      render json: @users.as_json(only: [:id, :email, :first_name, :last_name]), status: 200
+      render json: @users.as_json(only: [:id, :email, :first_name, :last_name], methods: [:photo_medium]), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end
@@ -29,7 +29,7 @@ class Api::V1::UsersController < ApplicationController
       end
       @user.update!(user_params) if params[:user] and @current_user == @user
       assign_roles if params[:role_ids] and (@current_user.has_role?(:manager) or @current_user.has_role?(:owner))
-      render json: @user.as_json(include: :roles), status: 200
+      render json: @user.as_json(include: :roles, methods: :photo_medium), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}),  status: 400
     end
@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     begin
-      render json: @user.as_json(include: [:roles, :store]), status: 200
+      render json: @user.as_json(include: [:roles, :store], methods: [:photo_medium]), status: 200
     rescue StandardError => e
       render json: prepare_json({errors: e.message}), status: 400
     end

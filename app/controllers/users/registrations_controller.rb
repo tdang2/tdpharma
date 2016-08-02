@@ -16,7 +16,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
     if resource_saved
       if request.format == 'application/json'
-        render json: resource.as_json, status: 201
+        render json: resource.as_json(include: [:roles], methods: [:photo_medium]), status: 201
       else
         if resource.active_for_authentication?
           set_flash_message :notice, :signed_up if is_flashing_format?

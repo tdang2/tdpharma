@@ -15,6 +15,7 @@ RSpec.describe Users::SessionsController, type: :controller do
       expect(JSON.parse(response.body)['email']).to eq u1.email
       expect(JSON.parse(response.body)['authentication_token']).not_to eq nil
       expect(JSON.parse(response.body)['last_checked_in']).to be_between(DateTime.now - 2.seconds, DateTime.now + 2.seconds)
+      expect(JSON.parse(response.body)['photo_medium'].blank?).to eq false
     end
   end
 

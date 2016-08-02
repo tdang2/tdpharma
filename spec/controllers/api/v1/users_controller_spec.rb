@@ -22,6 +22,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       get :index, format: :json
       expect(response.status).to eq 200
+      expect(JSON.parse(response.body).all?{|u| u['photo_medium'].blank? == false}).to eq true
       expect(JSON.parse(response.body).count).to be > 1
     end
   end
@@ -50,6 +51,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       patch :update, id: u1.id, user: users_patch_params, format: :json
       expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['photo_medium'].blank?).to eq false
       expect(JSON.parse(response.body)['first_name']).to eq 'trung'
       expect(JSON.parse(response.body)['last_name']).to eq 'dang2'
     end
@@ -76,6 +78,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
       get :show, id: u1.id, format: :json
       expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['photo_medium'].blank?).to eq false
     end
     it 'get updated user info' do
       u1

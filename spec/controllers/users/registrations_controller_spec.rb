@@ -14,6 +14,7 @@ RSpec.describe Users::RegistrationsController, type: :controller do
       @request.env["devise.mapping"] = Devise.mappings[:user]
       post :create, user: user_params, :format => :json
       expect(response.status).to eq 201
+      expect(JSON.parse(response.body)['photo_medium'].blank?).to eq false
     end
   end
 end

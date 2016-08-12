@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
   describe 'User authentication' do

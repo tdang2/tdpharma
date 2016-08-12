@@ -1,6 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
-require 'helpers/category_helper'
 
 RSpec.describe Category, type: :model do
   it {should validate_presence_of :name}

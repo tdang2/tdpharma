@@ -11,12 +11,12 @@ require 'devise'
 require 'factory_girl_rails'
 require 'paperclip/matchers'
 
-require 'helpers/user_helper'
-require 'helpers/category_helper'
-require 'helpers/medicine_helper'
-require 'helpers/inventory_item_helper'
-require 'helpers/receipt_helper'
-require 'helpers/transaction_helper'
+require 'helpers/context/user_helper'
+require 'helpers/context/category_helper'
+require 'helpers/context/medicine_helper'
+require 'helpers/context/inventory_item_helper'
+require 'helpers/context/receipt_helper'
+require 'helpers/context/transaction_helper'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

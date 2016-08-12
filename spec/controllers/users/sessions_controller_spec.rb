@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'helpers/user_helper'
 
 RSpec.describe Users::SessionsController, type: :controller do
   describe 'Sign in User' do

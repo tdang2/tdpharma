@@ -4,27 +4,18 @@ FactoryGirl.define do
     total_price 120.5
     delivery_time DateTime.now
     due_date DateTime.now
-    association :seller, factory: :store
-    association :seller_item, factory: :inventory_item
-
-    trait :paid do
-      paid true
-    end
+    performed true
+    paid true
+    association :store, factory: :store
+    association :inventory_item, factory: :inventory_item
+    association :user, factory: :user
 
     trait :unpaid do
       paid false
     end
 
-    trait :done do
-      performed true
-    end
-
     trait :tbd do
       performed false
-    end
-
-    after(:build) do |t|
-      t.sale_user = t.seller.employees.first
     end
   end
 

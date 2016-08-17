@@ -16,9 +16,9 @@ class InventoryItem < ActiveRecord::Base
   has_many :good_batches, -> {where('expire_date > ?', Date.today)}, class_name: MedBatch
   has_many :empty_batches, -> {where('total_units <= 0')}, class_name: MedBatch
   has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price
-  has_many :sales, class_name: Transaction, foreign_key: :seller_item_id, dependent: :destroy
-  has_many :purchases, class_name: Transaction, foreign_key: :buyer_item_id, dependent: :destroy
-  has_many :adjustments, class_name: Transaction, foreign_key: :adjust_item_id, dependent: :destroy
+  has_many :sale_transactions, dependent: :destroy
+  has_many :purchase_transactions, dependent: :destroy
+  has_many :adjustment_transactions, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
 
   accepts_nested_attributes_for :med_batches

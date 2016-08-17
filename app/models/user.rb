@@ -18,9 +18,9 @@ class User < ActiveRecord::Base
   has_many :employees, class_name: User, foreign_key: :manager_id
   belongs_to :manager, class_name: User
   belongs_to :store
-  has_many :sales, class_name: Transaction, foreign_key: :sale_user_id
-  has_many :purchases, class_name: Transaction, foreign_key: :purchase_user_id
-  has_many :adjustments, class_name: Transaction, foreign_key: :adjust_user_id
+  has_many :purchase_transactions
+  has_many :sale_transactions
+  has_many :adjustment_transactions
   has_one :profile_image, class_name: Image, as: :imageable, dependent: :destroy
 
   ### Callbacks ####################################################################################

@@ -9,7 +9,7 @@ RSpec.configure do |config|
   config.include CategoryDataHelper
 end
 
-RSpec.shared_context 'category params', :cat_a => :cat_b do
+RSpec.shared_context 'category params' do
   let(:c1) {create(:category)}
   let(:c2) {create(:category)}
   let(:c3) {create(:category, parent_id: c1.id)} # first level sub cat

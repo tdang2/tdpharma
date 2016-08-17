@@ -1,4 +1,4 @@
-RSpec.shared_context 'user params', :a => :b do
+RSpec.shared_context 'user params' do
   let(:s)  { create(:store)}
   let(:s2) { create(:store)}
   let(:u1) { create(:employee, store_id: s.id)}

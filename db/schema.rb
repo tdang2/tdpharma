@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160402183225) do
+ActiveRecord::Schema.define(version: 20160812020423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -296,33 +296,24 @@ ActiveRecord::Schema.define(version: 20160402183225) do
     t.integer  "amount"
     t.datetime "delivery_time"
     t.datetime "due_date"
-    t.boolean  "paid",             default: false
+    t.boolean  "paid",              default: false
     t.boolean  "performed"
-    t.integer  "sale_user_id"
-    t.integer  "purchase_user_id"
-    t.integer  "buyer_id"
-    t.integer  "seller_id"
-    t.integer  "buyer_item_id"
-    t.integer  "seller_item_id"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.float    "total_price"
     t.integer  "transaction_type"
-    t.integer  "adjust_item_id"
-    t.integer  "adjust_user_id"
-    t.integer  "adjust_store_id"
     t.integer  "receipt_id"
     t.integer  "med_batch_id"
     t.string   "notes"
     t.integer  "new_total"
-    t.integer  "status",           default: 0
+    t.integer  "status",            default: 0
+    t.integer  "store_id"
+    t.integer  "user_id"
+    t.integer  "inventory_item_id"
   end
 
   add_index "transactions", ["med_batch_id"], name: "index_transactions_on_med_batch_id", using: :btree
   add_index "transactions", ["receipt_id"], name: "index_transactions_on_receipt_id", using: :btree
-  add_index "transactions", ["sale_user_id"], name: "index_transactions_on_sale_user_id", using: :btree
-  add_index "transactions", ["seller_id"], name: "index_transactions_on_seller_id", using: :btree
-  add_index "transactions", ["seller_item_id"], name: "index_transactions_on_seller_item_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

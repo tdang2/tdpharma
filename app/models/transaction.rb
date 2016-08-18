@@ -35,7 +35,7 @@ class Transaction < ActiveRecord::Base
   ### Instance Methods #############################################################################
 
 
-  private
+  protected
 
   def item_existence
     errors.add(:transaction, 'must have an item') if inventory_item.blank?
@@ -50,13 +50,15 @@ class Transaction < ActiveRecord::Base
   end
 
   def note_existence
-    errors.add(:transaction, 'must have explanation when being edited') if notes.blank? and ((!amount_was.nil? and amount_changed?) or (!total_price_was.nil? and total_price_changed?))
+    if notes.blank? and ((!amount_was.nil? and amount_changed?) or (!total_price_was.nil? and total_price_changed?))
+      errors[:notes] << 'must be provided when editing'
+    end
   end
 
   def matching_batch_item
     if med_batch_id
       b = MedBatch.find(med_batch_id)
-      errors.add(:transaction, 'must have matching batch with inventory item') unless b.inventory_item_id == inventory_item_id
+      errors.add(:med_batch, 'must match with inventory item') unless b.inventory_item_id == inventory_item_id
     end
   end
 

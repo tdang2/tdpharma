@@ -10,7 +10,7 @@ class AdjustmentTransaction < Transaction
   ### Callbacks ####################################################################################
   before_save  :set_transaction_type
   before_save  :process_adjustment
-  after_create :update_inventories
+  after_create :update_adjustment
 
   ### Validations ##################################################################################
 
@@ -34,7 +34,7 @@ class AdjustmentTransaction < Transaction
     self.total_price = (new_total - inventory_item.amount) * inventory_item.sale_price.amount if inventory_item.sale_price
   end
 
-  def update_inventories
+  def update_adjustment
     # TODO: rethink how to update inventory count while keeping track of which batch is missing
     if inventory_item.sale_price
       # must check for sale price existence because that is a condition to update a new total price

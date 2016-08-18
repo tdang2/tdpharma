@@ -9,8 +9,8 @@ class PurchaseTransaction < Transaction
 
   ### Callbacks ####################################################################################
   before_save  :set_transaction_type
-  after_create :update_inventories
-  after_update :edit_inventories
+  after_create :update_purchases
+  after_update :edit_purchases
 
   ### Validations ##################################################################################
 
@@ -29,7 +29,7 @@ class PurchaseTransaction < Transaction
     self.transaction_type = 'PurchaseTransaction'
   end
 
-  def update_inventories
+  def update_purchases
     # After a transaction, update respective inventories and med_batches
     self.inventory_item.update!(amount: self.inventory_item.amount + self.amount,
                             avg_purchase_price: self.inventory_item.purchase_transactions.active.average(:total_price),
@@ -37,7 +37,7 @@ class PurchaseTransaction < Transaction
   end
 
 
-  def edit_inventories
+  def edit_purchases
     # Callback to correct users' mistakes. This is not the process to reconcile mismatch inventory count
     receipt_price_diff = total_price
     if status_changed? and self.status == 'deprecated'

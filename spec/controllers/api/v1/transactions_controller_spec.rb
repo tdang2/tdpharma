@@ -27,14 +27,14 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         purchase_transaction_edit_params.delete(:notes)
         patch :update, id: @t.id, transaction: purchase_transaction_edit_params, format: :json
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have explanation when being edited'
+        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Notes must be provided when editing'
       end
 
       it 'fails editing purchase with mismatch batch and item' do
         purchase_transaction_edit_params['inventory_item_id'] = item2.id
         patch :update, id: @t.id, transaction: purchase_transaction_edit_params, format: :json
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have matching batch with inventory item'
+        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Med batch must match with inventory item'
       end
 
       it 'reverse a purchase transaction' do
@@ -84,14 +84,14 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         sale_transaction_edit_params.delete(:notes)
         patch :update, id: @t.id, transaction: sale_transaction_edit_params, format: :json
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have explanation when being edited'
+        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Notes must be provided when editing'
       end
 
       it 'fail editing sale with mismatch batch and item' do
         sale_transaction_edit_params['inventory_item_id'] = item2.id
         patch :update, id: @t.id, transaction: sale_transaction_edit_params, format: :json
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Transaction must have matching batch with inventory item'
+        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Med batch must match with inventory item'
       end
 
       it 'reverse sale transaction' do

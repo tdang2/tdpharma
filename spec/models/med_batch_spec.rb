@@ -40,11 +40,6 @@ RSpec.describe MedBatch, type: :model do
       b2 = create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 300, total_units: 300, amount_per_pkg: 150, number_pkg: 2)
       expect(b2.inventory_item.amount).to eq 400
     end
-    it 'update inventory item image' do
-      create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 200, total_units: 100, amount_per_pkg: 10, number_pkg: 10)
-      b2 = create(:med_batch, category_id: c3.id, user: u2, store: s, medicine: med1, total_price: 300, total_units: 300, amount_per_pkg: 1, number_pkg: 300)
-      expect(b2.inventory_item.image).not_to eq nil
-    end
   end
 
 end

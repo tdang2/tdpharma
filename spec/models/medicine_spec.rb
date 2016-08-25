@@ -31,13 +31,6 @@ RSpec.describe Medicine, type: :model do
         expect{MedBatch.find(i1)}.to raise_error ActiveRecord::RecordNotFound
         expect{MedBatch.find(i2)}.to raise_error ActiveRecord::RecordNotFound
       end
-      it 'destroy the related image' do
-        i1 = b1.inventory_item.image.id
-        i2 = b2.inventory_item.image.id
-        med1.destroy
-        expect{Image.find(i1)}.to raise_error ActiveRecord::RecordNotFound
-        expect{Image.find(i2)}.to raise_error ActiveRecord::RecordNotFound
-      end
     end
   end
 

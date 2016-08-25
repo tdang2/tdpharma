@@ -153,7 +153,6 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
     end
     describe 'Purchase receipt' do
       before do
-        @pre_item1_avg_pur_amt = item1.avg_purchase_amount
         @r = Receipt.create!(purchase_receipt_params)
         @t = @r.transactions.where(inventory_item_id: item1.id).last
         @params = purchase_receipt_update_params
@@ -195,14 +194,12 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         expect(MedBatch.find(@t.med_batch.id).user_id).to eq u2.id
         expect(Receipt.find(@r.id).total).to eq receipt_total - pre_price
         expect(InventoryItem.find(item1.id).amount).to eq i1_cnt - pre_amount
-        expect(InventoryItem.find(item1.id).avg_purchase_amount).to eq @pre_item1_avg_pur_amt
       end
       it 'update on both transaction and med_batch' do
         receipt_total = @r.total
         pre_transaction_amount = @t.amount
         pre_transaction_price = @t.total_price
         i1_cnt = InventoryItem.find(item1.id).amount
-        i1_avg_cnt = InventoryItem.find(item1.id).avg_purchase_amount
         patch :update, id: @r.id, receipt: @params, format: :json
         expect(response.status).to eq 200
         expect(Transaction.find(@t.id).amount).to eq 150
@@ -212,7 +209,6 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         expect(MedBatch.find(@t.med_batch.id).paid).to eq false
         expect(Receipt.find(@r.id).total).to eq receipt_total - pre_transaction_price + 100
         expect(InventoryItem.find(item1.id).amount).to eq i1_cnt - pre_transaction_amount + 150
-        expect(InventoryItem.find(item1.id).avg_purchase_amount).not_to eq i1_avg_cnt
       end
     end
 
@@ -289,14 +285,11 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         barcode1 = @s1.med_batch.barcode
         batch_cnt = @s1.med_batch.total_units
         s1_item_cnt = InventoryItem.find(item1.id).amount
-        s1_item_avg_cnt = InventoryItem.find(item1.id).avg_sale_amount
-
         s2_amt = @s2.amount
         s2_total = @s2.total_price
         s2_new_batch_cnt = item2.med_batches.last.total_units
         s2_new_item_cnt = item2.amount
         barcode2 = item2.med_batches.last.barcode
-        s2_new_item_avg_cnt = item2.avg_sale_amount
         s2_old_batch_cnt = @s2.med_batch.total_units
         s2_old_item_cnt = InventoryItem.find(item4.id).amount
         patch :update, id: @r.id, receipt: @params, format: :json
@@ -305,14 +298,11 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         expect(MedBatch.find(@s1.med_batch.id).total_units).to eq batch_cnt + s1_cnt - 10
         expect(MedBatch.find(@s1.med_batch.id).barcode).to eq barcode1
         expect(InventoryItem.find(item1.id).amount).to eq s1_item_cnt + s1_cnt - 10
-        expect(InventoryItem.find(item1.id).avg_sale_amount).not_to eq s1_item_avg_cnt
-
         expect(MedBatch.find(item2.med_batches.last.id).total_units).to eq s2_new_batch_cnt - 15
         expect(MedBatch.find(item2.med_batches.last.id).barcode).to eq barcode2
         expect(MedBatch.find(@s2.med_batch.id).total_units).to eq s2_old_batch_cnt + s2_amt
         expect(InventoryItem.find(item4.id).amount).to eq s2_old_item_cnt + s2_amt
         expect(InventoryItem.find(item2.id).amount).to eq s2_new_item_cnt - 15
-        expect(InventoryItem.find(item2.id).avg_sale_amount).not_to eq s2_new_item_avg_cnt
       end
     end
 

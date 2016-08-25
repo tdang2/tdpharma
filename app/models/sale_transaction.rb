@@ -53,8 +53,7 @@ class SaleTransaction < Transaction
   end
 
   def process_sale
-    self.inventory_item.update!(amount: self.inventory_item.amount - self.amount, avg_sale_price: self.inventory_item.sale_transactions.active.average(:total_price),
-                                avg_sale_amount: self.inventory_item.sale_transactions.active.average(:amount))
+    self.inventory_item.update!(amount: self.inventory_item.amount - self.amount)
     # Also update med_batch to reflect remaining quantity
     self.med_batch.update!(total_units: self.med_batch.total_units - self.amount) if self.med_batch
   end
@@ -63,17 +62,14 @@ class SaleTransaction < Transaction
     ob = MedBatch.find(med_batch_id_was)
     if ob
       ob.update!(total_units: ob.total_units + amount_was)
-      ob.inventory_item.update!(amount: ob.inventory_item.amount + amount_was,
-                                avg_sale_amount: ob.inventory_item.sale_transactions.active.average(:amount),
-                                avg_sale_price: ob.inventory_item.sale_transactions.active.average(:total_price)) if ob.inventory_item
+      ob.inventory_item.update!(amount: ob.inventory_item.amount + amount_was) if ob.inventory_item
     end
   end
 
   def edit_sale
     seller_item_params = {}
     med_batch.update!(total_units: med_batch.total_units + amount_was - amount) if med_batch and amount_changed?
-    seller_item_params = seller_item_params.merge({amount: inventory_item.amount + amount_was - amount, avg_sale_amount: self.inventory_item.sale_transactions.active.average(:amount)}) if amount_changed?
-    seller_item_params = seller_item_params.merge({avg_sale_price: self.inventory_item.sale_transactions.active.average(:total_price)}) if total_price_changed?
+    seller_item_params = seller_item_params.merge({amount: inventory_item.amount + amount_was - amount}) if amount_changed?
     inventory_item.update!(seller_item_params) unless seller_item_params.blank?
   end
 

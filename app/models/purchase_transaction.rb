@@ -31,9 +31,7 @@ class PurchaseTransaction < Transaction
 
   def update_purchases
     # After a transaction, update respective inventories and med_batches
-    self.inventory_item.update!(amount: self.inventory_item.amount + self.amount,
-                            avg_purchase_price: self.inventory_item.purchase_transactions.active.average(:total_price),
-                            avg_purchase_amount: self.inventory_item.purchase_transactions.active.average(:amount))
+    self.inventory_item.update!(amount: self.inventory_item.amount + self.amount)
   end
 
 
@@ -51,13 +49,13 @@ class PurchaseTransaction < Transaction
 
 
   def reverse_purchase
-    inventory_item.update!(amount: self.inventory_item.amount - amount_was, avg_purchase_amount: self.inventory_item.purchase_transactions.active.average(:amount))
+    inventory_item.update!(amount: self.inventory_item.amount - amount_was)
     self.med_batch.update!(user_id: self.user_id, status: 1) if self.med_batch # deprecate the new purchase med_batch
   end
 
   def edit_purchase
     if amount_changed?
-      self.inventory_item.update!(amount: inventory_item.amount - amount_was + amount, avg_purchase_amount: self.inventory_item.purchase_transactions.active.average(:amount))
+      self.inventory_item.update!(amount: inventory_item.amount - amount_was + amount)
     end
     if med_batch and amount_changed?
       batch_params = {total_units: amount, user_id: user_id}
@@ -65,7 +63,6 @@ class PurchaseTransaction < Transaction
       batch_params = batch_params.merge!(paid: paid) if paid_changed?
       self.med_batch.update!(batch_params)
     end
-    self.inventory_item.update!(avg_purchase_price: self.inventory_item.purchase_transactions.active.average(:total_price)) if total_price_changed?
   end
 
 

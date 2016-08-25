@@ -12,10 +12,10 @@ class Api::V1::InventoryItemsController < ApplicationController
     unless @store
       render json: prepare_json({message: 'Current user has no associated store'}), status: 400
     else
-      items = @store.inventory_items
+      items = @store.inventory_items.order(:item_name)
       if params[:inventory_id]
         # Return the page that contains the inventory id
-        position = items.where('id <= ?', params[:inventory_id]).count
+        position = items.map(&:id).index(params[:inventory_id].to_i) + 1
         params[:page] = (position.to_f/25).ceil
       else
         # Default pagination

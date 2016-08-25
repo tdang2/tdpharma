@@ -16,7 +16,9 @@ class MedBatch < ActiveRecord::Base
   belongs_to :category
   belongs_to :receipt
 
-  has_many :transactions
+  has_many :purchase_transactions
+  has_many :sale_transactions
+  has_many :adjustment_transactions
 
   ### Callbacks ####################################################################################
   before_save :add_inventory_item
@@ -66,18 +68,20 @@ class MedBatch < ActiveRecord::Base
       # Must query the database again to get the fresh copy of inventory in case item has just been created and not saved yet
       inventory = store.inventory_items.find_or_create_by!(store_id: store_id, itemable_type: 'Medicine', itemable_id: medicine_id, category_id: category_id)
       if inventory
-        unless receipt_id
+        if receipt_id
+          # If there is already a receipt, simply add transaction
+          PurchaseTransaction.create!(receipt_id: receipt_id, amount: self.total_units, delivery_time: DateTime.now,
+                                      med_batch_id: self.id, due_date: DateTime.now, paid: self.paid, performed: true,
+                                      user_id: user_id, inventory_item_id: inventory.id, total_price: self.total_price,
+                                      store_id: store_id)
+        else
           # If there is no associated, we need to create a receipt to update inventory item status and count
           r = store.receipts.create!(receipt_type: 'purchase', store_id: store_id, total: self.total_price,
-                                 transactions_attributes: [{amount: self.total_units, delivery_time: DateTime.now, buyer_id: store_id, med_batch_id: self.id,
-                                                            due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'purchase',
-                                                            purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price}])
+                                     purchase_transactions_attributes: [{amount: self.total_units, delivery_time: DateTime.now,
+                                                                         store_id: store_id, med_batch_id: self.id, due_date: DateTime.now,
+                                                                         paid: self.paid, performed: true, user_id: user_id,
+                                                                         inventory_item_id: inventory.id, total_price: self.total_price}])
           self.update!(receipt_id: r.id)
-        else
-          # If there is already a receipt, simply add transaction
-          Transaction.create!(receipt_id: receipt_id, amount: self.total_units, delivery_time: DateTime.now, med_batch_id: self.id,
-                              due_date: DateTime.now, paid: self.paid, performed: true, transaction_type: 'purchase',
-                              purchase_user_id: user_id, buyer_item_id: inventory.id, total_price: self.total_price, buyer_id: store_id)
         end
       end
     end

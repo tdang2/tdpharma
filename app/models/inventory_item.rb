@@ -16,9 +16,9 @@ class InventoryItem < ActiveRecord::Base
   has_many :good_batches, -> {where('expire_date > ?', Date.today)}, class_name: MedBatch
   has_many :empty_batches, -> {where('total_units <= 0')}, class_name: MedBatch
   has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price
-  has_many :sales, class_name: Transaction, foreign_key: :seller_item_id, dependent: :destroy
-  has_many :purchases, class_name: Transaction, foreign_key: :buyer_item_id, dependent: :destroy
-  has_many :adjustments, class_name: Transaction, foreign_key: :adjust_item_id, dependent: :destroy
+  has_many :sale_transactions, dependent: :destroy
+  has_many :purchase_transactions, dependent: :destroy
+  has_many :adjustment_transactions, dependent: :destroy
   has_one :image, as: :imageable, dependent: :destroy
 
   accepts_nested_attributes_for :med_batches
@@ -26,7 +26,7 @@ class InventoryItem < ActiveRecord::Base
   accepts_nested_attributes_for :image
 
   ### Callbacks ####################################################################################
-  after_create :set_default_image
+  after_create :set_item_name
 
   ### Validations ##################################################################################
   # We are deliberately not validate amount to be greater than or equal to zero to make sure any sale is recorded
@@ -46,13 +46,17 @@ class InventoryItem < ActiveRecord::Base
 
   ### Instance Methods #############################################################################
   def photo_thumb
-    {id: self.image.id, photo: self.image.photo_thumb, processed: self.image.processed} if self.image
+    if self.image
+      {id: self.image.id, photo: self.image.photo_thumb, processed: self.image.processed}
+    elsif itemable and itemable.image
+      self.itemable.photo_thumb
+    end
   end
 
   private
-  def set_default_image
-    if self.image.nil? and !self.itemable.nil? and !self.itemable.image.nil?
-      self.create_image(photo: self.itemable.image.photo)
+  def set_item_name
+    if itemable and itemable_type == 'Medicine' and self.item_name.blank?
+      self.update!(item_name: Medicine.find(itemable_id).name)
     end
   end
 

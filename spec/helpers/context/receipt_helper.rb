@@ -53,29 +53,29 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
     {
         receipt_type: 'sale',
         store_id: s.id,               # No need for client side with logged in
-        transactions_attributes: [{
-                                      amount: 1,                  # quantity sold
-                                      delivery_time: DateTime.now,
-                                      due_date: DateTime.now,
-                                      paid: true,
-                                      performed: true,
-                                      sale_user_id: u1.id,        # User id who make the sale
-                                      seller_item_id: item1.id,   # Item id no need to provide for api request. only need batch id
-                                      total_price: 100,           # total for the sale of this inventory item. Amount * sale price
-                                      seller_id: s.id,            # No need for client side with logged in
-                                      med_batch_id: item1.med_batches.first.id  # Batch id of the item
-                                  }, {
-                                      amount: 1,
-                                      delivery_time: DateTime.now,
-                                      due_date: DateTime.now,
-                                      paid: true,
-                                      performed: true,
-                                      sale_user_id: u1.id,
-                                      seller_item_id: item4.id,   # Item id no need to provide for api request. only need batch id
-                                      total_price: 54,            # total for the sale of this inventory item. Amount * sale price
-                                      seller_id: s.id,            # No need for client side with logged in
-                                      med_batch_id: item4.med_batches.first.id
-                                  }
+        sale_transactions_attributes: [{
+                                        amount: 1,                  # quantity sold
+                                        delivery_time: DateTime.now,
+                                        due_date: DateTime.now,
+                                        paid: true,
+                                        performed: true,
+                                        user_id: u1.id,        # User id who make the sale
+                                        inventory_item_id: item1.id,   # Item id no need to provide for api request. only need batch id
+                                        total_price: 100,           # total for the sale of this inventory item. Amount * sale price
+                                        store_id: s.id,            # No need for client side with logged in
+                                        med_batch_id: item1.med_batches.first.id  # Batch id of the item
+                                       }, {
+                                        amount: 1,
+                                        delivery_time: DateTime.now,
+                                        due_date: DateTime.now,
+                                        paid: true,
+                                        performed: true,
+                                        user_id: u1.id,
+                                        inventory_item_id: item4.id,   # Item id no need to provide for api request. only need batch id
+                                        total_price: 54,            # total for the sale of this inventory item. Amount * sale price
+                                        store_id: s.id,            # No need for client side with logged in
+                                        med_batch_id: item4.med_batches.first.id
+                                       }
         ]
     }
   end
@@ -83,15 +83,15 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
     {
         receipt_type: 'adjustment',
         store_id: s.id,
-        transactions_attributes: [{
+        adjustment_transactions_attributes: [{
                                       new_total: 80,                  # New total value of the item after adjustment
                                       delivery_time: DateTime.now,
                                       due_date: DateTime.now,
                                       paid: false,                    # no payment involved
                                       performed: true,                # action is performed set to true
-                                      adjust_user_id: u1.id,          # id of the user who makes the adjustment
-                                      adjust_item_id: item2.id,       # id of the item which adjustment is made
-                                      adjust_store_id: s.id,          # No need for client side with logged in user
+                                      user_id: u1.id,          # id of the user who makes the adjustment
+                                      inventory_item_id: item2.id,       # id of the item which adjustment is made
+                                      store_id: s.id,          # No need for client side with logged in user
                                       notes: 'Inventory Count Missing' # Note left by the user
                                   }, {
                                       new_total: 110,
@@ -99,9 +99,9 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                                       due_date: DateTime.now,
                                       paid: true,
                                       performed: true,
-                                      adjust_user_id: u1.id,
-                                      adjust_item_id: item3.id,
-                                      adjust_store_id: s.id,
+                                      user_id: u1.id,
+                                      inventory_item_id: item3.id,
+                                      store_id: s.id,
                                       notes: 'Found extra items on shelves'
                                   }
         ]
@@ -109,7 +109,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
   end
   let(:purchase_receipt_update_params) do
     {
-        transactions_attributes: [
+        purchase_transactions_attributes: [
             {
                 # id must be provided on the test level. Client must provide the id of the transaction that need to be updated
                 amount: 150,                # quantity bought
@@ -117,7 +117,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                 due_date: DateTime.now,
                 paid: false,
                 performed: true,
-                purchase_user_id: u2.id,    # User id who make the update
+                user_id: u2.id,    # User id who make the update
                 total_price: 100,           # total for the sale of this inventory item. Amount * sale price
                 notes: 'Must have this for update transaction'
             }
@@ -140,7 +140,7 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
   end
   let(:sale_receipt_update_params) do
     {
-        transactions_attributes: [
+        sale_transactions_attributes: [
             {
                 amount: 10,               # quantity sold
                 delivery_time: DateTime.tomorrow.beginning_of_day + 8.hours,    # New delivery time
@@ -148,8 +148,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                 paid: false,
                 performed: false,
                 total_price: 1000,                                              # user should have final decision how much to charge customers
-                sale_user_id: u2.id,                                            # must provide who made the update
-                seller_item_id: item1.id,                                       # must provide the item id as well. Server will check for consistency between batch and item
+                user_id: u2.id,                                            # must provide who made the update
+                inventory_item_id: item1.id,                                       # must provide the item id as well. Server will check for consistency between batch and item
                 med_batch_id: item1.med_batches.first.id,                       # must provide the batch id that get changed to
                 notes: 'Must have this for update transaction'                  # must provide to update
             },
@@ -160,8 +160,8 @@ RSpec.shared_context 'receipt params', :receipt_a => :receipt_b do
                 paid: false,
                 performed: false,
                 total_price: 875,
-                sale_user_id: u2.id,
-                seller_item_id: item2.id,                                      # in this edit, switch up the item
+                user_id: u2.id,
+                inventory_item_id: item2.id,                                      # in this edit, switch up the item
                 med_batch_id: item2.med_batches.last.id,                        # in this edit, switch up the batch that belong to the new item
                 notes: 'Must have this for update transaction'                  # must provide to update
             }

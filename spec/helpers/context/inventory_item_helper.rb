@@ -1,4 +1,4 @@
-RSpec.shared_context 'inventory item params', :ii_a => :ii_b do
+RSpec.shared_context 'inventory item params' do
   let(:item1) do
     b = create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med1)
     b.inventory_item

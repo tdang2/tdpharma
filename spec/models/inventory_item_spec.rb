@@ -8,9 +8,9 @@ RSpec.describe InventoryItem, type: :model do
   it {should have_many :empty_batches}
   it {should have_many :available_batches}
   it {should belong_to :itemable}
-  it {should have_many :purchases}
-  it {should have_many :sales}
-  it {should have_many :adjustments}
+  it {should have_many :purchase_transactions}
+  it {should have_many :sale_transactions}
+  it {should have_many :adjustment_transactions}
   it {should have_one :sale_price}
   it {should have_one :image}
 

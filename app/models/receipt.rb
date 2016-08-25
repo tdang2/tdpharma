@@ -14,8 +14,14 @@ class Receipt < ActiveRecord::Base
   has_many :transactions
   has_many :med_batches
 
+  has_many :purchase_transactions
+  has_many :sale_transactions
+  has_many :adjustment_transactions
+
   accepts_nested_attributes_for :med_batches
-  accepts_nested_attributes_for :transactions
+  accepts_nested_attributes_for :purchase_transactions
+  accepts_nested_attributes_for :sale_transactions
+  accepts_nested_attributes_for :adjustment_transactions
 
   ### Callbacks ####################################################################################
   after_save :calculate_total
@@ -43,7 +49,11 @@ class Receipt < ActiveRecord::Base
 
   private
   def calculate_total
-    self.update!(total: self.transactions.sum(:total_price)) if receipt_type != 'adjustment' and total.blank?
+    # Must not update total price of adjustment receipt. Will create infinite loop
+    # Adjustment transaction will update the total price once they are created successfully
+    if receipt_type != 'adjustment' and total.blank?
+      self.update!(total: self.transactions.sum(:total_price)) if total.blank?
+    end
   end
 
   def generate_barcode

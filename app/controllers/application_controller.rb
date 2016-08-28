@@ -16,20 +16,21 @@ class ApplicationController < ActionController::Base
     { locale: I18n.locale }.merge options
   end
 
+  #TODO: After set up doorkeeper, update this using current_user method instead
+  def user_for_paper_trail
+    author = 'Public User'
+    author = @current_user.id if @current_user
+    author = current_admin_user.id if admin_user_signed_in?
+    author
+  end
+
   protected
   def check_api_authentication?
     params['controller'].include?('api/v1/')
   end
 
-  def set_paper_trail_whodunnit
-    author = @current_user.id if @current_user
-    author ||= current_admin_user.id if admin_user_signed_in?
-    author ||= 'Public User'
-    author
-  end
-
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password, :first_name, :last_name, :phone )}
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :first_name, :last_name, :phone])
   end
 
   def authenticate_user_from_token!

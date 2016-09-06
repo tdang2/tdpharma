@@ -43,6 +43,7 @@ gem 'routing-filter'
 gem 'sprockets', '2.12.3' # require for rails angular template
 gem 'paper_trail'
 gem 'has_scope'
+gem 'doorkeeper'
 
 
 # Frontend asset

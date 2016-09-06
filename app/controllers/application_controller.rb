@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :current_resource_owner
   before_action :default_url_options
   before_action :set_locale
   before_filter :authenticate_user_from_token!, if: :check_api_authentication? # This is for mobile app api
@@ -25,6 +26,15 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  def current_resource_owner
+    if doorkeeper_token
+      # Authorization code grant flow
+      @author = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token.resource_owner_id
+      # If not, then request is made through client credentials grant flow
+      @author ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
+    end
+  end
+
   def check_api_authentication?
     params['controller'].include?('api/v1/')
   end

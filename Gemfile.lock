@@ -153,6 +153,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    doorkeeper (4.2.0)
+      railties (>= 4.2)
     dotenv (2.1.1)
     dotenv-rails (2.1.1)
       dotenv (= 2.1.1)
@@ -460,6 +462,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   devise_security_extension!
+  doorkeeper
   dotenv-rails
   email_validator
   factory_girl_rails

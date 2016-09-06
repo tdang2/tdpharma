@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   filter :locale,    :exclude => /^\/admin/
+  use_doorkeeper
 
   # config/routes.rb
   scope '(:locale)', locale: /en|vn/ do

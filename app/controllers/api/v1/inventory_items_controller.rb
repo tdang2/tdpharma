@@ -1,16 +1,10 @@
-class Api::V1::InventoryItemsController < ApplicationController
-  before_filter :authenticate_user!             # standard devise web app
+class Api::V1::InventoryItemsController < Api::ApiController
+  before_action :doorkeeper_authorize!
   before_action :get_store
-  rescue_from StandardError, with: :render_error
-
-  def render_error(e)
-    NewRelic::Agent.notice_error(e) if Rails.env.production?
-    render json: prepare_json({errors: e.message}), status: 400
-  end
 
   def index
     unless @store
-      render json: prepare_json({message: 'Current user has no associated store'}), status: 400
+      render json: {message: 'Current user has no associated store'}, status: 400
     else
       items = @store.inventory_items.order(:item_name)
       if params[:inventory_id]
@@ -29,18 +23,18 @@ class Api::V1::InventoryItemsController < ApplicationController
           total_count: items.count,
           page: params[:page]
       }
-      render json: prepare_json(res), status: 200
+      render json: res, status: 200
     end
   end
 
   def show
-    render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
+    render json: {message: 'Current user has no associated store'}, status: 400 unless @store
     item = @store.inventory_items.includes(:itemable, :sale_price, :med_batches).find(params[:id])
     render_item(item)
   end
 
   def update
-    render json: prepare_json({message: 'Current user has no associated store'}), status: 400 unless @store
+    render json: {message: 'Current user has no associated store'}, status: 400 unless @store
     item = @store.inventory_items.find(params[:id])
     item.update!(inventory_item_params)
     render_item(item)
@@ -48,7 +42,12 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   private
   def render_item(item)
-    render json: prepare_json(item.as_json(include: [:itemable, :sale_price, :available_batches, {image: {methods: [:photo_thumb, :photo_medium]}}], methods: :photo_thumb)), status: 200
+    render json: item.as_json(include: [:itemable,
+                                        :sale_price,
+                                        :available_batches, {image: {methods: [:photo_thumb,
+                                                                               :photo_medium]}
+                                        }],
+                              methods: :photo_thumb), status: 200
   end
 
   def inventory_item_params
@@ -61,7 +60,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   end
 
   def get_store
-    @store = @current_user.store if @current_user
+    @store = current_resource_owner.store if current_resource_owner
   end
 
 

@@ -1,61 +1,40 @@
-class Api::V1::UsersController < ApplicationController
-  before_filter :authenticate_user!             # standard devise web app
+class Api::V1::UsersController < Api::ApiController
+  before_action :doorkeeper_authorize!
   before_action :set_user, only: [:update, :show, :destroy]
   load_and_authorize_resource params_method: :user_params
 
   def index
-    begin
-      @users = @current_user.store.employees
-      render json: @users.as_json(only: [:id, :email, :first_name, :last_name], methods: [:photo_medium]), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    @users = current_resource_owner.store.employees
+    render json: @users.as_json(only: [:id, :email, :first_name, :last_name], methods: [:photo_medium]), status: 200
   end
 
   def create
-    begin
-      user = User.create(user_params)
-      render json: prepare_json(user.as_json), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    user = User.create(user_params)
+    render json: user.as_json, status: 200
   end
 
   def update
-    begin
-      if params[:old_password] and params[:user][:password]
-        # Check if user attempts to change password
-        raise 'Incorrect Password' unless @user.valid_password?(params[:old_password])
-      end
-      @user.update!(user_params) if params[:user] and @current_user == @user
-      assign_roles if params[:role_ids] and (@current_user.has_role?(:manager) or @current_user.has_role?(:owner))
-      render json: @user.as_json(include: :roles, methods: :photo_medium), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}),  status: 400
+    if params[:old_password] and params[:user][:password]
+      # Check if user attempts to change password
+      raise 'Incorrect Password' unless @user.valid_password?(params[:old_password])
     end
+    @user.update!(user_params) if params[:user] and current_resource_owner == @user
+    assign_roles if params[:role_ids] and (current_resource_owner.has_role?(:manager) or current_resource_owner.has_role?(:owner))
+    render json: @user.as_json(include: :roles, methods: :photo_medium), status: 200
   end
 
   def show
-    begin
-      render json: @user.as_json(include: [:roles, :store], methods: [:photo_medium]), status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    render json: @user.as_json(include: [:roles, :store], methods: [:photo_medium]), status: 200
   end
 
   def destroy
-    begin
-      sign_out @current_user if @user == @current_user
-      @user.destroy!
-      render json: {message: 'success'}.to_json, status: 200
-    rescue StandardError => e
-      render json: prepare_json({errors: e.message}), status: 400
-    end
+    @user.destroy!
+    render json: {message: 'success'}.to_json, status: 200
   end
 
   private
   def set_user
-    @user = params[:id].nil? || /me/.match(params[:id]) ? @current_user : User.find(params[:id])
+    @user = params[:id].nil? || /me/.match(params[:id]) ? current_resource_owner : User.find(params[:id])
   end
 
   def assign_roles

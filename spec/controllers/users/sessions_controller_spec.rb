@@ -8,7 +8,7 @@ RSpec.describe Users::SessionsController, type: :controller do
     end
 
     it 'should sign in user as json' do
-      @request.env["devise.mapping"] = Devise.mappings[:user]
+      @request.env['devise.mapping'] = Devise.mappings[:user]
       post :create, user: user_sign_in_params, :format => :json
       expect(response.status).to eq 201
       expect(JSON.parse(response.body)['email']).to eq u1.email

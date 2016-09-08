@@ -1,12 +1,6 @@
-class Api::V1::ReceiptsController < ApplicationController
-  before_filter :authenticate_user!             # standard devise web app
+class Api::V1::ReceiptsController < Api::ApiController
+  before_action :doorkeeper_authorize!
   before_action :get_store
-  rescue_from StandardError, with: :render_error
-
-  def render_error(e)
-    NewRelic::Agent.notice_error(e) if Rails.env.production?
-    render json: prepare_json({errors: e.message}), status: 400
-  end
 
   def index
     receipts = @store.receipts.purchase_receipts.includes(transactions: [:user, {inventory_item: :itemable}]) if params[:purchase]
@@ -25,7 +19,7 @@ class Api::V1::ReceiptsController < ApplicationController
                                                                                :med_batches]),
         total_count: receipts.count
     }
-    render json: prepare_json(res), status: 200
+    render json: res, status: 200
   end
 
   def show
@@ -84,18 +78,18 @@ class Api::V1::ReceiptsController < ApplicationController
   end
 
   def render_receipt(receipt)
-    render json: prepare_json(receipt.as_json(include: [{:transactions => {include: [:med_batch,
+    render json: receipt.as_json(include: [{:transactions => {include: [:med_batch,
                                                                                      :user,
                                                                                      {inventory_item: {include: :itemable}}
                                                                                     ]}
                                                         },
                                                         :med_batches
                                                         ]
-    )), status: 200
+    ), status: 200
   end
 
   def get_store
-    @store = @current_user.store if @current_user
+    @store = current_resource_owner.store if current_resource_owner
   end
 
 end

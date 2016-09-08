@@ -36,5 +36,7 @@ en:
   Simple to Use: 'Simple to Use'
   Logout: 'Logout'
   Change Password Title: 'Change Password Title'
+  unauthorized:
+      default: "You are not authorized to perform this action"
 
 

@@ -142,9 +142,6 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
   end
 
   describe 'show GET' do
-    before do
-      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
-    end
     it 'show correct purchase' do
       r = Receipt.create!(purchase_receipt_params)
       t_id = item1.purchase_transactions.last.id

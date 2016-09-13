@@ -48,8 +48,16 @@ class InventoryItem < ActiveRecord::Base
   def photo_thumb
     if self.image
       {id: self.image.id, photo: self.image.photo_thumb, processed: self.image.processed}
-    elsif itemable and itemable.image
+    elsif itemable
       self.itemable.photo_thumb
+    end
+  end
+
+  def photo_medium
+    if self.image
+      {id: self.image.id, photo: self.image.photo_medium, processed: self.image.processed}
+    elsif itemable
+      self.itemable.photo_medium
     end
   end
 

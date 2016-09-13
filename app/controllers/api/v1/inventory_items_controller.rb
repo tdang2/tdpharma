@@ -44,10 +44,9 @@ class Api::V1::InventoryItemsController < Api::ApiController
   def render_item(item)
     render json: item.as_json(include: [:itemable,
                                         :sale_price,
-                                        :available_batches, {image: {methods: [:photo_thumb,
-                                                                               :photo_medium]}
-                                        }],
-                              methods: :photo_thumb), status: 200
+                                        :available_batches],
+                              methods: [:photo_thumb,
+                                        :photo_medium]), status: 200
   end
 
   def inventory_item_params

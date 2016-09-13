@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
   has_one :profile_image, class_name: Image, as: :imageable, dependent: :destroy
 
   ### Callbacks ####################################################################################
-  before_save :ensure_authentication_token
   after_create :assign_employee_role
   after_create :set_default_image
 
@@ -39,12 +38,6 @@ class User < ActiveRecord::Base
 
 
   ### Instance Methods #############################################################################
-  def ensure_authentication_token(force=false)
-    if authentication_token.blank? or force == true
-      self.authentication_token = generate_authentication_token
-      self.save! if force
-    end
-  end
 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
@@ -63,13 +56,6 @@ class User < ActiveRecord::Base
     role = Role.find_by(name: 'employee')
     if role and self.roles.count == 0 and !self.roles.include?(role)
       self.roles << role
-    end
-  end
-
-  def generate_authentication_token
-    loop do
-      token = Devise.friendly_token
-      break token unless User.where(authentication_token: token).first
     end
   end
 

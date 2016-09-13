@@ -21,72 +21,68 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       Receipt.create!(purchase_receipt_params)
       Receipt.create!(sale_receipt_params)
       Receipt.create!(adjust_receipt_params)
-      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
     end
     it 'list all receipts' do
-      get :index, format: :json
+      get :index, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['receipts'].count).to be >= 3
+      expect(JSON.parse(response.body)['receipts'].count).to be >= 3
     end
     it 'list all sales' do
-      get :index, sale: true, format: :json
+      get :index, sale: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'sale'}
-      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
+      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'sale'}
+      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
       expect(type & id).to eq true
     end
     it 'list all purchases' do
-      get :index, purchase: true, format: :json
+      get :index, purchase: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'purchase'}
-      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
+      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'purchase'}
+      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
       expect(type & id).to eq true
     end
     it 'list all adjustment' do
-      get :index, adjustment: true, format: :json
+      get :index, adjustment: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['data']['receipts'].all?{|r| r['receipt_type'] == 'adjustment'}
-      id = JSON.parse(response.body)['data']['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
+      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'adjustment'}
+      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
       expect(type & id).to eq true
     end
   end
 
   describe 'CREATE post' do
-    before do
-      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
-    end
     it 'create purchase receipt' do
       item1_cnt = InventoryItem.find(item1.id).amount
       item2_cnt = InventoryItem.find(item2.id).amount
       item3_cnt = InventoryItem.find(item3.id).amount
-      post :create, receipt: purchase_receipt_params, format: :json
+      post :create, receipt: purchase_receipt_params, format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(InventoryItem.find(item1.id).amount).to eq item1_cnt + 100
       expect(InventoryItem.find(item2.id).amount).to eq item2_cnt + 54
       expect(InventoryItem.find(item3.id).amount).to eq item3_cnt + 27
-      expect(Receipt.find(JSON.parse(response.body)['data']['id']).transactions.count).to eq 3
-      expect(JSON.parse(response.body)['data']['receipt_type'] == 'purchase').to eq true
-      expect(JSON.parse(response.body)['data']['total']).to eq 620
-      expect(JSON.parse(response.body)['data']['barcode']).not_to eq nil
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| t['transaction_type'] == 'PurchaseTransaction'}).to eq true
+      expect(Receipt.find(JSON.parse(response.body)['id']).transactions.count).to eq 3
+      expect(JSON.parse(response.body)['receipt_type'] == 'purchase').to eq true
+      expect(JSON.parse(response.body)['total']).to eq 620
+      expect(JSON.parse(response.body)['barcode']).not_to eq nil
+      expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'PurchaseTransaction'}).to eq true
     end
     it 'create sale receipt' do
       item1_cnt = InventoryItem.find(item1.id).amount
       item4_cnt = InventoryItem.find(item4.id).amount
-      post :create, receipt: sale_receipt_params, format: :json
+      post :create, receipt: sale_receipt_params, format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(InventoryItem.find(item1.id).amount).to eq item1_cnt - 1
       expect(InventoryItem.find(item4.id).amount).to eq item4_cnt - 1
-      expect(JSON.parse(response.body)['data']['receipt_type'] == 'sale').to eq true
-      expect(JSON.parse(response.body)['data']['total']).to eq 154
-      expect(JSON.parse(response.body)['data']['barcode']).not_to eq nil
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| t['transaction_type'] == 'SaleTransaction'}).to eq true
+      expect(JSON.parse(response.body)['receipt_type'] == 'sale').to eq true
+      expect(JSON.parse(response.body)['total']).to eq 154
+      expect(JSON.parse(response.body)['barcode']).not_to eq nil
+      expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'SaleTransaction'}).to eq true
     end
     it 'same barcode for batch through purchase sale process' do
       item1_cnt = InventoryItem.find(item1.id).amount
-      post :create, receipt: purchase_receipt_params, format: :json
+      post :create, receipt: purchase_receipt_params, format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(InventoryItem.find(item1.id).amount).to eq item1_cnt + 100
       barcode = InventoryItem.find(item1.id).med_batches.first.barcode
@@ -100,57 +96,52 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
     it 'create adjustment receipt' do
       item2_cnt = InventoryItem.find(item2.id).amount
       item3_cnt = InventoryItem.find(item3.id).amount
-      post :create, receipt: adjust_receipt_params, format: :json
+      post :create, receipt: adjust_receipt_params, format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(InventoryItem.find(item2.id).amount).to eq item2_cnt - 20
       expect(InventoryItem.find(item3.id).amount).to eq item3_cnt + 10
-      expect(JSON.parse(response.body)['data']['total']).to eq -20*150 + 10*30
-      expect(JSON.parse(response.body)['data']['receipt_type'] == 'adjustment').to eq true
-      expect(JSON.parse(response.body)['data']['barcode']).not_to eq nil
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].all?{|t| t['transaction_type'] == 'AdjustmentTransaction'}).to eq true
+      expect(JSON.parse(response.body)['total']).to eq -20*150 + 10*30
+      expect(JSON.parse(response.body)['receipt_type'] == 'adjustment').to eq true
+      expect(JSON.parse(response.body)['barcode']).not_to eq nil
+      expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'AdjustmentTransaction'}).to eq true
     end
   end
 
   describe 'SHOW get' do
-    before do
-      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
-    end
     it 'show receipt purchase' do
       Receipt.create!(purchase_receipt_params)
       receipt_id = item1.purchase_transactions.last.receipt.id
-      get :show, id: receipt_id, format: :json
+      get :show, id: receipt_id, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'purchase'
-      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 3
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item1.id}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item2.id}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item3.id}).to eq true
+      expect(JSON.parse(response.body)['receipt_type']).to eq 'purchase'
+      expect(JSON.parse(response.body)['transactions'].length).to eq 3
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item1.id}).to eq true
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item2.id}).to eq true
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item3.id}).to eq true
     end
     it 'show sale receipt' do
       Receipt.create!(sale_receipt_params)
-      get :show, id:  item1.sale_transactions.last.receipt.id, format: :json
+      get :show, id:  item1.sale_transactions.last.receipt.id, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'sale'
-      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 2
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item1.id}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item4.id}).to eq true
+      expect(JSON.parse(response.body)['receipt_type']).to eq 'sale'
+      expect(JSON.parse(response.body)['transactions'].length).to eq 2
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item1.id}).to eq true
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item4.id}).to eq true
     end
     it 'show adjustment receipt' do
       Receipt.create!(adjust_receipt_params)
-      get :show, id: item2.adjustment_transactions.last.receipt.id, format: :json
+      get :show, id: item2.adjustment_transactions.last.receipt.id, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['data']['receipt_type']).to eq 'adjustment'
-      expect(JSON.parse(response.body)['data']['transactions'].length).to eq 2
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item2.id}).to eq true
-      expect(JSON.parse(response.body)['data']['transactions'].any?{|t| t['inventory_item_id'] == item3.id}).to eq true
+      expect(JSON.parse(response.body)['receipt_type']).to eq 'adjustment'
+      expect(JSON.parse(response.body)['transactions'].length).to eq 2
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item2.id}).to eq true
+      expect(JSON.parse(response.body)['transactions'].any?{|t| t['inventory_item_id'] == item3.id}).to eq true
     end
   end
 
   describe 'PATCH update' do
-    before do
-      request.headers['Authorization'] = "#{u1.email}:#{u1.authentication_token}"
-    end
+
     describe 'Purchase receipt' do
       before do
         @r = Receipt.create!(purchase_receipt_params)
@@ -161,21 +152,21 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       end
       it 'not allow to update without author' do
         @params[:purchase_transactions_attributes][0].delete :user_id
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Author is required'
+        expect(JSON.parse(response.body)['errors']).to eq 'Author is required'
       end
       it 'not allow to update without notes' do
         @params[:purchase_transactions_attributes][0].delete :notes
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Purchase transactions notes must be provided when editing'
+        expect(JSON.parse(response.body)['errors']).to eq 'Validation failed: Purchase transactions notes must be provided when editing'
       end
       it 'failed with mismatch batch and inventory item' do
         @params[:purchase_transactions_attributes][0]['med_batch_id'] = item2.med_batches.last.id
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Purchase transactions med batch must match with inventory item'
+        expect(JSON.parse(response.body)['errors']).to eq 'Validation failed: Purchase transactions med batch must match with inventory item'
       end
       it 'reverse a purchase transaction' do
         @params.delete :med_batches_attributes
@@ -185,7 +176,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         pre_amount = @t.amount
         pre_price = @t.total_price
         i1_cnt = InventoryItem.find(item1.id).amount
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 200
         expect(Transaction.find(@t.id).status).to eq 'deprecated'
         expect(Transaction.find(@t.id).user_id).to eq u2.id
@@ -200,7 +191,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         pre_transaction_amount = @t.amount
         pre_transaction_price = @t.total_price
         i1_cnt = InventoryItem.find(item1.id).amount
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 200
         expect(Transaction.find(@t.id).amount).to eq 150
         expect(Transaction.find(@t.id).user_id).to eq u2.id
@@ -223,35 +214,35 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       end
       it 'fail to update without second author' do
         @params[:sale_transactions_attributes][1].delete :user_id
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Author is required'
+        expect(JSON.parse(response.body)['errors']).to eq 'Author is required'
       end
       it 'fail to update without both author' do
         @params[:sale_transactions_attributes][0].delete :user_id
         @params[:sale_transactions_attributes][1].delete :user_id
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Author is required'
+        expect(JSON.parse(response.body)['errors']).to eq 'Author is required'
       end
       it 'fail without notes first note' do
         @params[:sale_transactions_attributes][0].delete :notes
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Sale transactions notes must be provided when editing'
+        expect(JSON.parse(response.body)['errors']).to eq 'Validation failed: Sale transactions notes must be provided when editing'
       end
       it 'fail without both notes' do
         @params[:sale_transactions_attributes][0].delete :notes
         @params[:sale_transactions_attributes][1].delete :notes
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Sale transactions notes must be provided when editing'
+        expect(JSON.parse(response.body)['errors']).to eq 'Validation failed: Sale transactions notes must be provided when editing'
       end
       it 'fails with mismatch batch and inventory' do
         @params[:sale_transactions_attributes][0]['med_batch_id'] = item3.med_batches.last.id
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 400
-        expect(JSON.parse(response.body)['data']['errors']).to eq 'Validation failed: Sale transactions med batch must match with inventory item'
+        expect(JSON.parse(response.body)['errors']).to eq 'Validation failed: Sale transactions med batch must match with inventory item'
       end
       it 'reverse sale transactions' do
         @params[:sale_transactions_attributes][0] = @params[:sale_transactions_attributes][0].merge({status: 'deprecated'})
@@ -267,9 +258,9 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         s2_total = @s2.total_price
         s2_batch_cnt = @s2.med_batch.total_units
         s2_item_cnt = InventoryItem.find(item4.id).amount
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)['data']['total']).to eq r_total - s1_total - s2_total
+        expect(JSON.parse(response.body)['total']).to eq r_total - s1_total - s2_total
         expect(Transaction.find(@s1.id).status).to eq 'deprecated'
         expect(MedBatch.find(@s1.med_batch.id).total_units).to eq s1_batch_cnt + s1_cnt
         expect(InventoryItem.find(item1.id).amount).to eq s1_item_cnt + s1_cnt
@@ -279,7 +270,6 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       end
       it 'update correctly' do
         r_total = @r.total
-
         s1_cnt = @s1.amount
         s1_total = @s1.total_price
         barcode1 = @s1.med_batch.barcode
@@ -292,9 +282,9 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
         barcode2 = item2.med_batches.last.barcode
         s2_old_batch_cnt = @s2.med_batch.total_units
         s2_old_item_cnt = InventoryItem.find(item4.id).amount
-        patch :update, id: @r.id, receipt: @params, format: :json
+        patch :update, id: @r.id, receipt: @params, format: :json, access_token: token.token
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)['data']['total']).to eq r_total - s1_total - s2_total + 1875
+        expect(JSON.parse(response.body)['total']).to eq r_total - s1_total - s2_total + 1875
         expect(MedBatch.find(@s1.med_batch.id).total_units).to eq batch_cnt + s1_cnt - 10
         expect(MedBatch.find(@s1.med_batch.id).barcode).to eq barcode1
         expect(InventoryItem.find(item1.id).amount).to eq s1_item_cnt + s1_cnt - 10

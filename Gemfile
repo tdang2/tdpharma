@@ -23,9 +23,8 @@ gem 'activeadmin', github: 'activeadmin'
 gem 'devise'
 gem 'devise_security_extension', :git => 'https://github.com/phatworx/devise_security_extension.git'
 gem 'autoprefixer-rails'
-gem 'paperclip', '~> 4.2'
+gem 'paperclip'
 gem 'aws-sdk', '~> 2'
-gem 'aws-sdk-v1'            # Need this for paperclip Jul-14-2015
 gem 'workflow'
 gem 'mailboxer', :git => 'git://github.com/div/mailboxer.git', :branch => 'rails42-foreigner'
 gem 'lazy_high_charts'
@@ -43,6 +42,8 @@ gem 'therubyrhino' # JRuby - dependency for less rails
 gem 'routing-filter'
 gem 'sprockets', '2.12.3' # require for rails angular template
 gem 'paper_trail'
+gem 'has_scope'
+gem 'doorkeeper'
 
 
 # Frontend asset

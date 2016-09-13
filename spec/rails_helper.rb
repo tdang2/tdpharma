@@ -81,7 +81,7 @@ RSpec.configure do |config|
   end
 
   # Set up devise
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   # Set up paperclip
   config.include Paperclip::Shoulda::Matchers

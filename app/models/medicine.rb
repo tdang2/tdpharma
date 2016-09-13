@@ -39,6 +39,10 @@ class Medicine < ActiveRecord::Base
     {id: self.image.id, photo: self.image.photo.url(:thumb), processed: self.image.processed} if self.image
   end
 
+  def photo_medium
+    {id: self.image.id, photo: self.image.photo.url(:medium), processed: self.image.processed} if self.image
+  end
+
   def store_thumb(store_id)
     item = Store.find(store_id).inventory_items.find_by(itemable_type: 'Medicine', itemable_id: self.id)
     item.photo_thumb if item

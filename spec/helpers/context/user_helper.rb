@@ -29,4 +29,5 @@ RSpec.shared_context 'user params' do
         password: 'password2'
     }
   end
+  let(:token) {create(:doorkeeper_access_token, resource_owner_id: u1.id)}
 end

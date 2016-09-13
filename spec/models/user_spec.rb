@@ -18,8 +18,4 @@ RSpec.describe User, type: :model do
   it {expect(create(:manager)).to be_valid}
   it {expect(create(:employee)).to be_valid}
 
-  it 'have authentication_token' do
-    expect(FactoryGirl.create(:user).authentication_token).not_to eq nil
-  end
-
 end

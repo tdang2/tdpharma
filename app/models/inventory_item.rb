@@ -37,6 +37,7 @@ class InventoryItem < ActiveRecord::Base
   scope :inactive, -> { where(status: 1) }
   scope :by_category, -> (cat_id) { where(category_id: cat_id)}
   scope :by_type, ->(type) { joins("JOIN #{type.table_name} ON #{type.table_name}.id = #{InventoryItem.table_name}.itemable_id AND #{InventoryItem.table_name}.itemable_type = '#{type.to_s}'") }
+  scope :by_medicine_name, ->(name) { by_type(Medicine).where('medicines.name LIKE ?', name.titleize) }
 
   ### Other ########################################################################################
 

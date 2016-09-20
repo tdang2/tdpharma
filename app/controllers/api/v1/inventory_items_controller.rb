@@ -2,21 +2,21 @@ class Api::V1::InventoryItemsController < Api::ApiController
   before_action :doorkeeper_authorize!
   before_action :get_store
 
+  has_scope :by_medicine_name
+  has_scope :active, type: :boolean
+  has_scope :inactive, type: :boolean
+  has_scope :by_category
+
   def index
     unless @store
       render json: {message: 'Current user has no associated store'}, status: 400
     else
-      items = @store.inventory_items.order(:item_name)
+      items = apply_scopes(@store.inventory_items).order(:item_name)
       if params[:inventory_id]
-        # Return the page that contains the inventory id
-        position = items.map(&:id).index(params[:inventory_id].to_i) + 1
-        params[:page] = (position.to_f/25).ceil
-      else
-        # Default pagination
-        items = items.by_type(Medicine).where('medicines.name LIKE ?', "%#{params[:search].titleize}%") if params[:search]
-        items = items.active if params[:active] == true
-        items = items.inactive if params[:active] == false
-        items = items.by_category(params[:category_id]) if params[:category_id]
+        # Return the page that contains the inventory id. Applied scope filter before search.
+        # Return empty value if the interested inventory item has already been filtered out
+        position = items.map(&:id).index(params[:inventory_id].to_i)
+        params[:page] = position.nil? ? ((items.count.to_f/25).ceil + 2) : (((position+1).to_f/25).ceil)
       end
       res = {
           items: items.page(params[:page]).as_json(include: [:itemable, :sale_price, :category, :available_batches], methods: :photo_thumb),

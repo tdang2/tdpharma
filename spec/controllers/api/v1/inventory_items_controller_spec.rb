@@ -22,40 +22,34 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['items'].count).to be >= 3
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).not_to include item3.id
       expect(JSON.parse(response.body)['items'].collect{|u| u['itemable']}).not_to include nil
-      expect(JSON.parse(response.body)['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'not include deprecated med_batch' do
       item4.med_batches.last.update!(status: 'deprecated')
       get :index, active: true, access_token: token.token, format: :json
       expect(response.status).to eq 200
-      result = JSON.parse(response.body)['items'].find {|i| i['id'] == item4.id}
-      expect(result['available_batches'].all?{|b| b['status'] == 'deprecated'}).to be true
     end
     it 'should return inactive inventory items' do
-      get :index, active: false, access_token: token.token, format: :json
+      get :index, inactive: true, access_token: token.token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item3.id
       expect(JSON.parse(response.body)['items'].collect{|u| u['sale_price']}).to include nil
-      expect(JSON.parse(response.body)['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'should return active item belong to c2' do
-      get :index, category_id: c2.id, access_token: token.token, format: :json
+      get :index, by_category: c2.id, access_token: token.token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item2.id
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item4.id
-      expect(JSON.parse(response.body)['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'should return item search by name' do
       item1.itemable.update(name: 'Calcium')
       item2.itemable.update(name: 'Calculus')
-      get :index, search: 'Calc', access_token: token.token, format: :json
+      get :index, by_medicine_name: 'Calc', access_token: token.token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['items'].all?{|i| i['itemable']['name'].include?('Calc')}).to eq true
-      expect(JSON.parse(response.body)['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
     end
     it 'look up item name with titleize format' do
       item1.itemable.update(name: 'Calcium Light')
-      get :index, search: 'calcium light', access_token: token.token, format: :json
+      get :index, by_medicine_name: 'calcium light', access_token: token.token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['items'].all?{|i| i['itemable']['name'].include?('Calcium Light')}).to eq true
       expect(JSON.parse(response.body)['items'].all? {|i| i['available_batches'].all? {|t| t['status'] == 'active'}}).to eq true
@@ -67,10 +61,16 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
         expect(JSON.parse(response.body)['items'].any?{|i| i['itemable']['name'] == item1.itemable.name}).to eq true
       end
 
-      it 'works regardless of item state' do
-        get :index, inventory_id: item3.id, access_token: token.token, format: :json
+      it 'works with other scope filter' do
+        get :index, inactive: true, inventory_id: item3.id, access_token: token.token, format: :json
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)['items'].any?{|i| i['itemable']['name'] == item3.itemable.name}).to eq true
+      end
+
+      it 'not return if scope blocks result' do
+        get :index, active: true, inventory_id: item3.id, access_token: token.token, format: :json
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['items']).to be_empty
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       get :show, id: item1.id, access_token: token.token, format: :json
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['id']).to eq item1.id
-      expect(JSON.parse(response.body)['available_batches']).to eq []
+      expect(JSON.parse(response.body)['available_batches']).to be_empty
     end
   end
 

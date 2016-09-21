@@ -52,6 +52,22 @@ RSpec.describe InventoryItem, type: :model do
       expect(items).not_to include item1
       expect(items.find(item3.id).available_batches).not_to be_empty
     end
+
+    it 'with zero sale price or no sale price' do
+      item3.create_sale_price(amount: 0)
+      items = s.inventory_items.without_sale_price
+      expect(items).to include item3
+      expect(items).to include item4
+      expect(items).not_to include item1, item2
+    end
+
+    it 'out_of_stock' do
+      sale = create(:sale_receipt, store: s)
+      create(:sale_transaction, store: s, med_batch: item1.med_batches.first, amount: 100, user: u1, inventory_item: item1, receipt: sale)
+      items = s.inventory_items.out_of_stock
+      expect(items).to include item1
+      expect(items).not_to include item2, item3, item4
+    end
   end
 
 end

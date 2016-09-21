@@ -26,16 +26,13 @@ RSpec.describe Api::V1::MedBatchesController, type: :controller do
 
     it 'get store available batches only' do
       item2.med_batches.each {|b| b.update!(total_units: 0, number_pkg: 0)}
-      get :index, format: :json, access_token: token.token
+      get :index, available_batches: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      expect(JSON.parse(response.body).count).to be >= 2
       expect(JSON.parse(response.body).map{|i| i['inventory_item']['id']}).not_to include item2.id
-      expect(JSON.parse(response.body).map{|i| i['medicine']['name']}).not_to include item2.itemable.name
-      expect(JSON.parse(response.body).map{|i| i['category']['name']}).not_to include item2.category.name
     end
 
     it 'get batches through barcode' do
-      get :index, barcode: item1.med_batches.first.barcode, format: :json, access_token: token.token
+      get :index, available_batches: true, barcode: item1.med_batches.first.barcode, format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(JSON.parse(response.body).count).to eq 1
       expect(JSON.parse(response.body)[0]['inventory_item']['id']).to eq item1.id

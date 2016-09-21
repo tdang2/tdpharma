@@ -9,5 +9,6 @@ FactoryGirl.define do
     store
     user
     inventory_item
+    receipt
   end
 end

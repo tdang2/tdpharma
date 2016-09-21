@@ -1,16 +1,17 @@
 FactoryGirl.define do
   factory :receipt do
+    store
 
-    factory :sale do
-      receipt_type 0
+    factory :sale_receipt do |r|
+      receipt_type 'sale'
     end
 
-    factory :purchase do
-      receipt_type 0
+    factory :purchase_receipt do
+      receipt_type 'purchase'
     end
 
-    factory :adjustment do
-      receipt_type 1
+    factory :adjustment_receipt do
+      receipt_type 'adjustment'
     end
   end
 

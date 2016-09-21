@@ -15,7 +15,7 @@ class InventoryItem < ActiveRecord::Base
   has_many :available_batches, -> { active.where('total_units > 0')}, class_name: MedBatch
   has_many :good_batches, -> {where('expire_date > ?', Date.today)}, class_name: MedBatch
   has_many :empty_batches, -> {where('total_units <= 0')}, class_name: MedBatch
-  has_one  :sale_price, class_name: Price, as: :priceable     # Smallest unit price
+  has_one  :sale_price, class_name: Price, as: :priceable, dependent: :destroy     # Smallest unit price
   has_many :sale_transactions, dependent: :destroy
   has_many :purchase_transactions, dependent: :destroy
   has_many :adjustment_transactions, dependent: :destroy
@@ -37,7 +37,12 @@ class InventoryItem < ActiveRecord::Base
   scope :inactive, -> { where(status: 1) }
   scope :by_category, -> (cat_id) { where(category_id: cat_id)}
   scope :by_type, ->(type) { joins("JOIN #{type.table_name} ON #{type.table_name}.id = #{InventoryItem.table_name}.itemable_id AND #{InventoryItem.table_name}.itemable_type = '#{type.to_s}'") }
-  scope :by_medicine_name, ->(name) { by_type(Medicine).where('medicines.name LIKE ?', name.titleize) }
+  scope :by_medicine_name, ->(name) { by_type(Medicine).where('medicines.name LIKE ?', "%#{name.titleize}%") }
+  scope :without_sale_price, -> {
+    zero_ids = Price.where('priceable_type = ? AND amount > ?', 'InventoryItem', 0).map(&:priceable_id).uniq
+    InventoryItem.where.not(id:  zero_ids)
+  }
+  scope :out_of_stock, -> {where(amount: 0)}
 
   ### Other ########################################################################################
 

@@ -40,6 +40,20 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item2.id
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item4.id
     end
+    it 'return no price items' do
+      item3.create_sale_price(amount: 0)
+      get :index, without_sale_price: true, access_token: token.token, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item3.id, item4.id
+    end
+    it 'return out of stock inventory' do
+      sale = create(:sale_receipt, store: s)
+      create(:sale_transaction, store: s, med_batch: item1.med_batches.first, amount: 100, user: u1, inventory_item: item1, receipt: sale)
+      get :index, out_of_stock: true, access_token: token.token, format: :json
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)['items'].count).to eq 1
+      expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item1.id
+    end
     it 'should return item search by name' do
       item1.itemable.update(name: 'Calcium')
       item2.itemable.update(name: 'Calculus')

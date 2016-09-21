@@ -35,6 +35,7 @@ class MedBatch < ActiveRecord::Base
   scope :non_expired_batches, -> {where('expire_date > ?', Date.today)}
   scope :expired_batches, -> {where('expire_date <= ?', Date.today)}
   scope :near_expire_batches, -> {where('expire_date <= ?', Date.today+30.days)}
+  scope :by_barcode, -> (code) {where(barcode: code)}
 
   ### Other ########################################################################################
 

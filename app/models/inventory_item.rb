@@ -43,6 +43,7 @@ class InventoryItem < ActiveRecord::Base
     InventoryItem.where.not(id:  zero_ids)
   }
   scope :out_of_stock, -> {where(amount: 0)}
+  scope :with_expired_batches, -> {joins(:med_batches).where('med_batches.expire_date < ?', Time.zone.today)}
 
   ### Other ########################################################################################
 

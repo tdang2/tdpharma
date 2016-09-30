@@ -8,6 +8,7 @@ class Api::V1::InventoryItemsController < Api::ApiController
   has_scope :by_category
   has_scope :without_sale_price, type: :boolean
   has_scope :out_of_stock, type: :boolean
+  has_scope :with_expired_batches, type: :boolean
 
   def index
     unless @store

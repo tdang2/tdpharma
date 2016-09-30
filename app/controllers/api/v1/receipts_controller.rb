@@ -79,13 +79,11 @@ class Api::V1::ReceiptsController < Api::ApiController
 
   def render_receipt(receipt)
     render json: receipt.as_json(include: [{:transactions => {include: [:med_batch,
-                                                                                     :user,
-                                                                                     {inventory_item: {include: :itemable}}
-                                                                                    ]}
-                                                        },
-                                                        :med_batches
-                                                        ]
-    ), status: 200
+                                                                        :user,
+                                                                        {inventory_item: {include: :itemable}}]
+                                                              }
+                                           },
+                                           :med_batches]), status: 200
   end
 
   def get_store

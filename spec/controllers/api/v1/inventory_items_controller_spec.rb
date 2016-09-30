@@ -46,6 +46,11 @@ RSpec.describe Api::V1::InventoryItemsController, type: :controller do
       expect(response.status).to eq 200
       expect(JSON.parse(response.body)['items'].collect{|u| u['id']}).to include item3.id, item4.id
     end
+    it 'return expired items' do
+      item4.med_batches.last.update!(expire_date: Time.zone.today - 2.days)
+      get :index, with_expired_batches: true, access_token: token.token, format: :json
+      expect(response.status).to eq 200
+    end
     it 'return out of stock inventory' do
       sale = create(:sale_receipt, store: s)
       create(:sale_transaction, store: s, med_batch: item1.med_batches.first, amount: 100, user: u1, inventory_item: item1, receipt: sale)

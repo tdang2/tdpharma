@@ -68,6 +68,12 @@ RSpec.describe InventoryItem, type: :model do
       expect(items).to include item1
       expect(items).not_to include item2, item3, item4
     end
+
+    it 'expired' do
+      item1.med_batches.last.update!(expire_date: Time.zone.today - 2.days)
+      expect(s.inventory_items.with_expired_batches).to include item1
+      expect(s.inventory_items.with_expired_batches).not_to include item2, item3, item4
+    end
   end
 
 end

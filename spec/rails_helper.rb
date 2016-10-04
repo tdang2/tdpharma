@@ -76,6 +76,12 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each) do
+    include ActiveJob::TestHelper
+    ActiveJob::Base.queue_adapter = :test
+    Timecop.return # must reset time back to normal after every test
+  end
+
   config.after(:each) do
     DatabaseCleaner.clean
   end

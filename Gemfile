@@ -44,6 +44,7 @@ gem 'sprockets', '2.12.3' # require for rails angular template
 gem 'paper_trail'
 gem 'has_scope'
 gem 'doorkeeper'
+gem 'faker'
 
 
 # Frontend asset

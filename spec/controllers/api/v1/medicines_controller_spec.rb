@@ -19,7 +19,7 @@ RSpec.describe Api::V1::MedicinesController, type: :controller do
 
     it 'checks search params' do
       u1.store.medicines << [med1, med2]
-      get :index, search: 'med', format: :json, access_token: token.token
+      get :index, by_name: 'med', format: :json, access_token: token.token
       expect(response.status).to eq 200
       expect(JSON.parse(response.body).count).to be >= 2
     end

@@ -30,23 +30,29 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
     it 'list all sales' do
       get :index, sale: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'sale'}
-      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
-      expect(type & id).to eq true
+      expect(JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'sale'}).to eq true
     end
     it 'list all purchases' do
       get :index, purchase: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'purchase'}
-      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
-      expect(type & id).to eq true
+      expect(JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'purchase'}).to eq true
     end
     it 'list all adjustment' do
       get :index, adjustment: true, format: :json, access_token: token.token
       expect(response.status).to eq 200
-      type = JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'adjustment'}
-      id = JSON.parse(response.body)['receipts'].all?{|r| r['transactions'].all? {|t| !t['inventory_item_id'].nil? } }
-      expect(type & id).to eq true
+      expect(JSON.parse(response.body)['receipts'].all?{|r| r['receipt_type'] == 'adjustment'}).to eq true
+    end
+    it 'list receipt with created_max' do
+      date = Time.zone.today
+      Timecop.travel(date + 4.days)
+      get :index, created_max: date + 2.days, format: :json, access_token: token.token
+      expect(response.status).to eq 200
+    end
+    it 'list receipts with created_min' do
+      date = Time.zone.today
+      Timecop.travel(date + 4.days)
+      get :index, created_min: date + 2.days, format: :json, access_token: token.token
+      expect(response.status).to eq 200
     end
   end
 

@@ -2,21 +2,16 @@ class Api::V1::ReceiptsController < Api::ApiController
   before_action :doorkeeper_authorize!
   before_action :get_store
 
+  has_scope :purchase, type: :boolean
+  has_scope :sale, type: :boolean
+  has_scope :adjustment, type: :boolean
+  has_scope :created_max
+  has_scope :created_min
+
   def index
-    receipts = @store.receipts.purchase_receipts.includes(transactions: [:user, {inventory_item: :itemable}]) if params[:purchase]
-    receipts = @store.receipts.sale_receipts.includes(transactions: [:user, {inventory_item: :itemable}]) if params[:sale]
-    receipts = @store.receipts.adjustment_receipts.includes(transactions: [:user, {inventory_item: :itemable}]) if params[:adjustment]
-    receipts ||= @store.receipts.includes(transactions: [{inventory_item: :itemable}])
-    receipts = receipts.created_max(params[:max_date]) if params[:max_date]
-    receipts = receipts.created_min(params[:min_date]) if params[:min_date]
+    receipts = apply_scopes(@store.receipts.includes(transactions: [:user, {inventory_item: :itemable}]))
     res = {
-        receipts: receipts.reverse_order.page(params[:page]).as_json(include: [{:transactions => {include: [:med_batch,
-                                                                                                            :user,
-                                                                                                            {inventory_item: {include: :itemable}}
-                                                                                                            ]
-                                                                                                  }
-                                                                               },
-                                                                               :med_batches]),
+        receipts: convert_json(receipts.reverse_order.page(params[:page])),
         total_count: receipts.count
     }
     render json: res, status: 200
@@ -24,11 +19,11 @@ class Api::V1::ReceiptsController < Api::ApiController
 
   def show
     receipt = @store.receipts.find(params[:id])
-    render_receipt(receipt)
+    render json: convert_json(receipt), status: 200
   end
 
   def create
-    params[:receipt][:purchase_transactions_attributes].each {|p| p[:store_id] ||= @store.id } if params[:receipt][:purchase_transactions_atttributes]
+    params[:receipt][:purchase_transactions_attributes].each {|p| p[:store_id] ||= @store.id } if params[:receipt][:purchase_transactions_attributes]
     params[:receipt][:adjustment_transactions_attributes].each {|p| p[:store_id] ||= @store.id } if params[:receipt][:adjustment_transactions_attributes]
     params[:receipt][:med_batches_attributes].each {|p| p[:store_id] ||= @store.id} if params[:receipt][:med_batches_attributes]
     if params[:receipt][:sale_transactions_attributes]
@@ -57,6 +52,17 @@ class Api::V1::ReceiptsController < Api::ApiController
   end
 
   private
+  def convert_json(receipts)
+    receipts.as_json(include: [{:transactions => {include: [:med_batch,
+                                                            :user,
+                                                            {inventory_item: {include: :itemable}}
+                                                            ]
+                                                  }
+                                },
+                               :med_batches])
+  end
+
+
   def receipt_params
     params.require(:receipt).permit(:receipt_type, :total, :store_id,
                                     med_batches_attributes: [:id, :mfg_date, :expire_date, :package, :store_id,

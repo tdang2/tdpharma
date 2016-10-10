@@ -2,10 +2,11 @@ class Api::V1::MedicinesController < Api::ApiController
   before_action :doorkeeper_authorize!
   before_action :get_store
 
+  has_scope :by_name
+
   def index
       # preventing SQL injection with search string
-      med = @store.medicines.where('name LIKE ?', "%#{params[:search]}%") if params[:search]
-      med ||= @store.medicines.all.limit(100)
+      med = apply_scopes(@store.medicines).limit(100)
       render json: med.as_json(store_id: current_resource_owner.store.id,
                                include: [image: {methods:
                                                      [:photo_thumb,

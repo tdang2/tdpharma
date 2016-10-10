@@ -21,6 +21,7 @@ class Medicine < ActiveRecord::Base
   validates :name, :med_form, presence: true
 
   ### Scopes #######################################################################################
+  scope :by_name, -> (name) { where('name LIKE ?', "%#{name.titleize}%") }
 
   ### Other ########################################################################################
 

@@ -77,9 +77,11 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    include ActiveJob::TestHelper
-    ActiveJob::Base.queue_adapter = :test
     Timecop.return # must reset time back to normal after every test
+    # Perform delayed job immediately. Use Delayed::Worker.delay_jobs = true to turn delayed job process off
+    Delayed::Worker.delay_jobs = ->(job) {
+      job.run_at && job.run_at > Time.now.utc
+    }
   end
 
   config.after(:each) do

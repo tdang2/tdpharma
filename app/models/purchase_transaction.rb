@@ -31,9 +31,9 @@ class PurchaseTransaction < Transaction
 
   def update_purchases
     # After a transaction, update respective inventories and med_batches
-    self.inventory_item.update!(amount: self.inventory_item.amount + self.amount)
+    self.inventory_item.update!(amount: self.inventory_item.reload.amount + self.amount)
   end
-
+  handle_asynchronously :update_purchases
 
   def edit_purchases
     # Callback to correct users' mistakes. This is not the process to reconcile mismatch inventory count
@@ -52,6 +52,7 @@ class PurchaseTransaction < Transaction
     inventory_item.update!(amount: self.inventory_item.amount - amount_was)
     self.med_batch.update!(user_id: self.user_id, status: 1) if self.med_batch # deprecate the new purchase med_batch
   end
+  handle_asynchronously :reverse_purchase
 
   def edit_purchase
     if amount_changed?
@@ -64,8 +65,7 @@ class PurchaseTransaction < Transaction
       self.med_batch.update!(batch_params)
     end
   end
-
-
+  handle_asynchronously :edit_purchases
 
 
 end

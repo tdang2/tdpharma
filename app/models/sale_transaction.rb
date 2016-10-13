@@ -9,7 +9,7 @@ class SaleTransaction < Transaction
 
   ### Callbacks ####################################################################################
   before_save  :set_transaction_type
-  after_create :update_inventories
+  after_create :process_sale
   after_update :edit_inventories
 
   ### Validations ##################################################################################
@@ -28,10 +28,6 @@ class SaleTransaction < Transaction
 
   def set_transaction_type
     self.transaction_type = 'SaleTransaction'
-  end
-
-  def update_inventories
-    process_sale
   end
 
   def edit_inventories
@@ -53,10 +49,11 @@ class SaleTransaction < Transaction
   end
 
   def process_sale
-    self.inventory_item.update!(amount: self.inventory_item.amount - self.amount)
-    # Also update med_batch to reflect remaining quantity
+    # Also update med_batch to reflect remaining quantity. Must use 'reload' on inventory item in case the data is not updated in the same thread
+    self.inventory_item.update!(amount: self.inventory_item.reload.amount - self.amount)
     self.med_batch.update!(total_units: self.med_batch.total_units - self.amount) if self.med_batch
   end
+  handle_asynchronously :process_sale
 
   def reverse_sale
     ob = MedBatch.find(med_batch_id_was)
@@ -65,6 +62,7 @@ class SaleTransaction < Transaction
       ob.inventory_item.update!(amount: ob.inventory_item.amount + amount_was) if ob.inventory_item
     end
   end
+  handle_asynchronously :reverse_sale
 
   def edit_sale
     seller_item_params = {}
@@ -72,6 +70,7 @@ class SaleTransaction < Transaction
     seller_item_params = seller_item_params.merge({amount: inventory_item.amount + amount_was - amount}) if amount_changed?
     inventory_item.update!(seller_item_params) unless seller_item_params.blank?
   end
+  handle_asynchronously :edit_sale
 
 
 end

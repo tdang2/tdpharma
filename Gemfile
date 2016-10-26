@@ -45,6 +45,7 @@ gem 'paper_trail'
 gem 'has_scope'
 gem 'doorkeeper'
 gem 'faker'
+gem 'active_model_serializers'
 
 
 # Frontend asset

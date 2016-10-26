@@ -13,7 +13,39 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
     u1.update!(store_id: s.id)
   end
 
-  describe 'patch UPDATE' do
+  describe 'GET index' do
+    before do
+      item1
+      item2
+      item3
+      item4
+      create(:med_batch, category_id: c3.id, user: u1, store: s, medicine: med1)
+      attrs = [
+          attributes_for(:med_batch, user_id: u1.id, category: c3, medicine_id: med1.id, store_id: s.id),
+          attributes_for(:med_batch, user_id: u1.id, category: c3, medicine_id: med1.id, store_id: s.id)
+      ]
+      create(:receipt, store: s, med_batches_attributes: attrs)
+      attrs = [
+          attributes_for(:sale_transaction, amount: 20, store_id: s.id, user_id: u1.id, inventory_item_id: item1.id, med_batch_id: item1.med_batches.first.id),
+          attributes_for(:sale_transaction, amount: 30, store_id: s.id, user_id: u1.id, inventory_item_id: item1.id, med_batch_id: item1.med_batches.last.id)
+      ]
+      create(:sale_receipt, store: s, sale_transactions_attributes: attrs)
+    end
+
+    it 'by_user' do
+      get :index, format: :json, access_token: token.token, by_user: u1.id
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body).map{|p| p['user']['id']}.uniq).to eq [u1.id]
+    end
+
+    it 'purchase' do
+      get :index, format: :json, access_token: token.token, purchase: true
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body).map{|p| p['transaction_type']}.uniq).to eq ['purchase']
+    end
+  end
+
+  describe 'PATCH update' do
     describe 'For purchase transactions' do
       before do
         @r = Receipt.create!(purchase_receipt_params)
@@ -57,7 +89,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)['receipt']['id']).to eq @r.id
         expect(JSON.parse(response.body)['amount']).to eq 50
-        expect(JSON.parse(response.body)['inventory_item_id']).to eq item1.id
+        expect(JSON.parse(response.body)['inventory_item']['id']).to eq item1.id
         expect(JSON.parse(response.body)['receipt']['total']).to eq r_total - t_total + 250
         expect(MedBatch.find(@t.med_batch.id).total_price).to eq 250
         expect(MedBatch.find(@t.med_batch.id).total_units).to eq 50
@@ -110,7 +142,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)['receipt']['id']).to eq @r.id
         expect(JSON.parse(response.body)['amount']).to eq 2
-        expect(JSON.parse(response.body)['inventory_item_id']).to eq item1.id
+        expect(JSON.parse(response.body)['inventory_item']['id']).to eq item1.id
         expect(JSON.parse(response.body)['receipt']['total']).to eq r_total - t_total + 200
         expect(MedBatch.find(@t.med_batch.id).total_units).to eq batch_cnt + t_cnt - 2
         expect(MedBatch.find(@t.med_batch.id).barcode).to eq barcode
@@ -130,7 +162,7 @@ RSpec.describe Api::V1::TransactionsController, type: :controller do
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)['receipt']['id']).to eq @r.id
         expect(JSON.parse(response.body)['amount']).to eq 5
-        expect(JSON.parse(response.body)['inventory_item_id']).to eq item2.id
+        expect(JSON.parse(response.body)['inventory_item']['id']).to eq item2.id
         expect(JSON.parse(response.body)['receipt']['total']).to eq r_total - t_total + 150
         expect(MedBatch.find(item2.med_batches.first.id).total_units).to eq new_batch_cnt - 5
         expect(MedBatch.find(item2.med_batches.first.id).barcode).to eq barcode

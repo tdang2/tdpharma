@@ -10,6 +10,7 @@ RSpec.describe Store, type: :model do
   it {should have_many :inventory_items}
   it {should have_many :med_batches}
   it {should have_and_belong_to_many :categories}
+  it {should have_many :transactions}
   it {should have_many :purchase_transactions}
   it {should have_many :sale_transactions}
   it {should have_many :adjustment_transactions}

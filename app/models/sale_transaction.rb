@@ -27,7 +27,7 @@ class SaleTransaction < Transaction
   private
 
   def set_transaction_type
-    self.transaction_type = 'SaleTransaction'
+    self.transaction_type = 'sale'
   end
 
   def edit_inventories

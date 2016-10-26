@@ -17,6 +17,7 @@ class Store < ActiveRecord::Base
   has_many :med_batches, dependent: :destroy
   has_and_belongs_to_many :categories
   has_many :receipts, dependent: :destroy
+  has_many :transactions, dependent: :destroy
   has_many :purchase_transactions, dependent: :destroy
   has_many :sale_transactions, dependent: :destroy
   has_many :adjustment_transactions, dependent: :destroy

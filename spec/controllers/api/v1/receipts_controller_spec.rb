@@ -71,7 +71,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       expect(JSON.parse(response.body)['total']).to eq 620
       expect(JSON.parse(response.body)['barcode']).not_to eq nil
       expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'PurchaseTransaction'}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'purchase'}).to eq true
     end
     it 'create sale receipt' do
       item1_cnt = InventoryItem.find(item1.id).amount
@@ -84,7 +84,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       expect(JSON.parse(response.body)['total']).to eq 154
       expect(JSON.parse(response.body)['barcode']).not_to eq nil
       expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'SaleTransaction'}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'sale'}).to eq true
     end
     it 'same barcode for batch through purchase sale process' do
       item1_cnt = InventoryItem.find(item1.id).amount
@@ -110,7 +110,7 @@ RSpec.describe Api::V1::ReceiptsController, type: :controller do
       expect(JSON.parse(response.body)['receipt_type'] == 'adjustment').to eq true
       expect(JSON.parse(response.body)['barcode']).not_to eq nil
       expect(JSON.parse(response.body)['transactions'].all?{|t| !t['inventory_item_id'].nil?}).to eq true
-      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'AdjustmentTransaction'}).to eq true
+      expect(JSON.parse(response.body)['transactions'].all?{|t| t['transaction_type'] == 'adjustment'}).to eq true
     end
   end
 

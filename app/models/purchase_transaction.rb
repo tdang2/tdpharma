@@ -26,7 +26,7 @@ class PurchaseTransaction < Transaction
 
   private
   def set_transaction_type
-    self.transaction_type = 'PurchaseTransaction'
+    self.transaction_type = 'purchase'
   end
 
   def update_purchases

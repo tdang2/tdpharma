@@ -1,6 +1,6 @@
 class Transaction < ActiveRecord::Base
   ### Attributes ###################################################################################
-  enum transaction_type: ['PurchaseTransaction', 'SaleTransaction', 'AdjustmentTransaction']
+  enum transaction_type: ['purchase', 'sale', 'adjustment']
 
   ### Constants ####################################################################################
   enum status: [:active, :deprecated]
@@ -25,6 +25,13 @@ class Transaction < ActiveRecord::Base
 
 
   ### Scopes #######################################################################################
+  scope :created_max, ->(date) {where('created_at <= ?', date)}
+  scope :created_min, ->(date) {where('created_at >= ?', date)}
+  scope :updated_max, ->(date) {where('updated_at <= ?', date)}
+  scope :updated_min, ->(date) {where('updated_at >= ?', date)}
+  scope :by_inventory_item, -> (id) {where(inventory_item_id: id)}
+  scope :by_user, -> (id) {where(user_id: id)}
+  scope :by_med_batch, -> (id) {where(med_batch_id: id)}
 
   ### Other ########################################################################################
 

@@ -26,7 +26,7 @@ class AdjustmentTransaction < Transaction
 
   private
   def set_transaction_type
-    self.transaction_type = 'AdjustmentTransaction'
+    self.transaction_type = 'adjustment'
   end
 
   def process_adjustment

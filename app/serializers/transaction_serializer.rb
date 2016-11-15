@@ -9,7 +9,8 @@ class TransactionSerializer < ActiveModel::Serializer
              :transaction_type,
              :notes,
              :new_total,
-             :status
+             :status,
+             :created_at
 
 
   belongs_to :receipt, serializer: ReceiptSimpleSerializer

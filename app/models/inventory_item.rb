@@ -42,7 +42,12 @@ class InventoryItem < ActiveRecord::Base
     zero_ids = Price.where('priceable_type = ? AND amount > ?', 'InventoryItem', 0).map(&:priceable_id).uniq
     InventoryItem.where.not(id:  zero_ids)
   }
+  scope :with_sale_price, -> {
+    ids = Price.where('priceable_type = ? AND amount > ?', 'InventoryItem', 0).map(&:priceable_id).uniq
+    InventoryItem.where(id: ids)
+  }
   scope :out_of_stock, -> {where(amount: 0)}
+  scope :has_stock, -> {where('amount > 0')}
   scope :with_expired_batches, -> {joins(:med_batches).where('med_batches.expire_date < ?', Time.zone.today)}
 
   ### Other ########################################################################################
